@@ -33,7 +33,10 @@ Every page and file needs a username and password (HTTP Basic sign-in, checked o
 ## Structure
 
 ```
-index.html                 Portal home: network view, disciplines, catalogue, details, Ctrl+K launcher
+index.html                 Portal home: network view, railway systems grid, Ctrl+K launcher
+systems.html               Railway systems; systems.html?s=<id> lists only that system's simulators by sub-system
+simulators.html            All simulators with search and filters (system, railway type, status)
+system.html                System-wide page: shared parameters, data flow, every simulator's latest result
 workspace.html             Shell that runs one simulator: workspace.html?m=<id>
 assets/
   css/railiq.css           Shared styles, light + dark themes
@@ -56,7 +59,28 @@ serve.ps1                  Local static server for Windows
 | APM Onboard Telecom Layout | Live | Telecom & Radio | `modules/apm-onboard-telecom/index.html` |
 | RAMS & Availability (Phase 1) | Beta | Systems Assurance | `modules/rams/index.html` |
 | Tunnel Ventilation (Phase 1) | Beta | Stations & Tunnels | `modules/tunnel-ventilation/index.html` |
-| AC 25 kV Traction Power, Train Performance, CBTC Headway, Radio Coverage, Timetable & Fleet, Tram OCS, Passenger Flow, Noise & Vibration | Pipeline | various | — |
+| Noise & Vibration (Phase 1) | Beta | Environment | `modules/noise-vibration/index.html` |
+| AC 25 kV Traction Power, Train Performance, CBTC Headway, Radio Coverage, Timetable & Fleet, Tram OCS, Passenger Flow | Pipeline | various | — |
+
+## System page and shared parameters
+
+`system.html` (the **System** tab) holds one set of system parameters: project, operation, route, rolling stock,
+traction power, tunnel, environment and design targets. They are defined in `assets/js/system-link.js`; each
+parameter lists the simulators that use it. Every linked simulator shows a **System** bar:
+
+- **Use System values** copies the shared values into the simulator.
+- **Send to System** copies the simulator's values back, so other simulators can use them.
+- Each run posts a result summary to the System page; a result is marked *out of date* when a shared value it
+  used has changed since.
+
+Values and results are stored in the browser (localStorage), so they are shared between simulators opened from
+the same site, not between users. To link a new simulator: include `../../assets/js/system-link.js`, add a
+`<div id="syslink">`, call `RailIQSystem.mountBar({ module, mount: "#syslink", map: [{ key, get, set }] })` and
+`RailIQSystem.publish(id, { status, headline, metrics, usedKeys })` after each run, and add the module id to the
+`usedBy` list of the parameters in `system-link.js`.
+
+The DC traction model is built from `src/` with `build.py` or, on Windows without Python, `build.ps1`
+(same output).
 
 **Tunnel Ventilation Phase 1** (`modules/tunnel-ventilation/`): `tv_engine.js` (pressure balance, critical velocity, sizing),
 `tv_tests.js` (verification cases), `tv_sample.js` (illustrative metro tunnel), `tv_app.js` (page).

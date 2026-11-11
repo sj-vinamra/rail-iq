@@ -5,27 +5,25 @@
   "use strict";
 
   // [x, y, stationName?, labelSide?]   labelSide: n | s | e | w | ne | nw | se | sw
+  // metro, APM and high-speed only; each line has its own colour (cvar), filtering is by domain
   const LINES = [
-    { id: "hsr", domain: "hsr", name: "HSR · Coastal Corridor", sys: "25 kV AC · 320 km/h", trains: 2, speed: 2.4, width: 6,
+    { id: "hsr", domain: "hsr", cvar: "--l-hsr", name: "HSR · Coastal Corridor", sys: "25 kV AC · 320 km/h", trains: 2, speed: 2.4, width: 6,
       pts: [[40, 70, "Northgate", "s"], [380, 70, "Ridge Parkway", "n"], [520, 210], [520, 280, "Central", "none"], [520, 330], [600, 410], [960, 410, "Southport", "s"]] },
-    { id: "metro", domain: "metro", name: "Metro M1 · East–West", sys: "750 V DC third rail · CBTC", trains: 4, speed: 1.25, width: 6,
+    { id: "m1", domain: "metro", cvar: "--l-metro", name: "Metro M1 · East–West", sys: "750 V DC third rail · CBTC", trains: 4, speed: 1.25, width: 6,
       pts: [[40, 280, "Westfield", "s"], [180, 280, "Oak St", "se"], [340, 280, "Museum", "se"], [520, 280], [680, 280, "Exchange", "s"], [800, 280], [880, 360, "Eastport", "e"]] },
-    { id: "lrt", domain: "lrt", name: "LRT L2 · University", sys: "750 V DC OCS", trains: 2, speed: 1.0, width: 5,
+    { id: "m2", domain: "metro", cvar: "--l-lrt", name: "Metro M2 · University", sys: "1500 V DC overhead · CBTC", trains: 3, speed: 1.1, width: 5,
       pts: [[80, 470, "Riverside", "n"], [250, 470, "Mill Lane", "s"], [340, 380, "Civic", "e"], [340, 280], [340, 150, "University", "e"]] },
-    { id: "tram", domain: "tram", name: "Tram T3 · Old Town", sys: "750 V DC OCS + catenary-free", trains: 2, speed: 0.75, width: 4,
-      pts: [[600, 540, "Promenade", "n"], [740, 540, "Market", "n"], [820, 460, "Old Town", "w"], [880, 400], [880, 360]] },
-    { id: "apm", domain: "apm", name: "APM · Airport Link", sys: "Driverless · 3-car", trains: 2, speed: 1.1, width: 5,
-      pts: [[680, 280], [760, 200, "Car Park", "nw"], [900, 200, "Terminal 1", "s"], [960, 140, "Terminal 2", "w"]] },
-    { id: "mono", domain: "monorail", name: "Monorail · Parklands", sys: "Straddle beam · 750 V DC", trains: 1, speed: 0.9, width: 4,
+    { id: "m3", domain: "metro", cvar: "--l-mono", name: "Metro M3 · Parklands", sys: "750 V DC third rail · driverless", trains: 2, speed: 1.0, width: 5,
       pts: [[60, 170, "Hillcrest", "s"], [180, 170, "Zoo", "n"], [180, 280], [180, 380, "Fairground", "e"]] },
-    { id: "main", domain: "mainline", name: "Mainline · Coast Freight", sys: "25 kV AC · mixed traffic", trains: 1, speed: 1.5, width: 5,
-      pts: [[40, 540, "Coast Jn", "n"], [300, 540, "Docklands", "n"], [430, 410, "Southbank", "e"], [506, 334], [506, 294]] }
+    { id: "apm", domain: "apm", cvar: "--l-apm", name: "APM · Airport Link", sys: "Driverless · 3-car", trains: 2, speed: 1.1, width: 5,
+      pts: [[680, 280], [760, 200, "Car Park", "nw"], [900, 200, "Terminal 1", "s"], [960, 140, "Terminal 2", "w"]] },
+    { id: "apm2", domain: "apm", cvar: "--l-apm", name: "APM · Terminal Shuttle", sys: "Driverless · 2-car", trains: 1, speed: 0.9, width: 4,
+      pts: [[960, 140], [960, 60, "Concourse D", "w"]] }
   ];
   const INTERCHANGES = [
-    { x: 520, y: 280, name: "Central" }, { x: 340, y: 280 }, { x: 180, y: 280 }, { x: 680, y: 280 }, { x: 880, y: 360 }
+    { x: 520, y: 280, name: "Central" }, { x: 340, y: 280 }, { x: 180, y: 280 }, { x: 680, y: 280 }, { x: 960, y: 140 }
   ];
   const VW = 1000, VH = 580;
-  const COLORVAR = { metro: "--l-metro", lrt: "--l-lrt", tram: "--l-tram", apm: "--l-apm", mainline: "--l-main", hsr: "--l-hsr", monorail: "--l-mono" };
 
   /* geometry: cumulative distances and station positions along each line */
   LINES.forEach(L => {
@@ -68,7 +66,7 @@
       const cs = getComputedStyle(document.documentElement);
       const g = n => cs.getPropertyValue(n).trim();
       colors = { bg: g("--map-bg"), grid: g("--map-grid"), label: g("--map-label"), ink: g("--ink"), surface: g("--surface"), accent: g("--accent") };
-      Object.keys(COLORVAR).forEach(d => (colors[d] = g(COLORVAR[d])));
+      LINES.forEach(L => (colors["line:" + L.id] = g(L.cvar)));
     }
 
     function resize() {
@@ -123,7 +121,7 @@
       LINES.forEach(L => {
         const dim = active && active !== L.domain;
         ctx.globalAlpha = dim ? 0.16 : 1;
-        ctx.strokeStyle = colors[L.domain];
+        ctx.strokeStyle = colors["line:" + L.id];
         ctx.lineWidth = L.width * k * (active === L.domain ? 1.35 : 1);
         ctx.lineJoin = "round"; ctx.lineCap = "round";
         ctx.beginPath();
@@ -132,7 +130,7 @@
         // station ticks
         L.pts.forEach(p => {
           if (!p[2]) return;
-          ctx.fillStyle = colors.surface; ctx.strokeStyle = colors[L.domain]; ctx.lineWidth = 2.2 * Math.max(0.7, k);
+          ctx.fillStyle = colors.surface; ctx.strokeStyle = colors["line:" + L.id]; ctx.lineWidth = 2.2 * Math.max(0.7, k);
           ctx.beginPath(); ctx.arc(X(p[0]), Y(p[1]), 4.6 * Math.max(0.75, k), 0, 7); ctx.fill(); ctx.stroke();
         });
       });
@@ -183,12 +181,12 @@
         // arrival ripple
         if (tr.dwell > 0 && tr.arrived) {
           const q = Math.min(1, (now - tr.arrived) / 900);
-          ctx.strokeStyle = colors[L.domain]; ctx.lineWidth = 2; ctx.globalAlpha = (dim ? 0.1 : 0.55) * (1 - q);
+          ctx.strokeStyle = colors["line:" + L.id]; ctx.lineWidth = 2; ctx.globalAlpha = (dim ? 0.1 : 0.55) * (1 - q);
           ctx.beginPath(); ctx.arc(0, 0, 6 + q * 18 * Math.max(0.7, k), 0, 7); ctx.stroke();
           ctx.globalAlpha = dim ? 0.2 : 1;
         }
-        ctx.shadowColor = colors[L.domain]; ctx.shadowBlur = dim ? 0 : 10;
-        ctx.fillStyle = colors[L.domain];
+        ctx.shadowColor = colors["line:" + L.id]; ctx.shadowBlur = dim ? 0 : 10;
+        ctx.fillStyle = colors["line:" + L.id];
         rr(ctx, -len / 2, -wid / 2, len, wid, wid / 2); ctx.fill();
         ctx.shadowBlur = 0;
         ctx.fillStyle = colors.surface; ctx.globalAlpha *= 0.85;
@@ -231,10 +229,10 @@
       if (tip) {
         if (L) {
           const n = (window.RAILIQ_CATALOG || []).filter(m => (m.domains || []).includes(L.domain));
-          const live = n.filter(m => m.status === "live").length;
+          const live = n.filter(m => m.status === "live" || m.status === "beta").length;
           tip.innerHTML = "<b>" + L.name + '</b><div class="k">' + L.sys + "</div><div>" +
             L.pts.filter(p => p[2]).length + " stations · " + L.trains + (L.trains > 1 ? " trains" : " train") + "</div>" +
-            '<div class="k" style="margin-top:4px">' + live + " live / " + n.length + " simulators → click to filter</div>";
+            '<div class="k" style="margin-top:4px">' + live + " available / " + n.length + " simulators → click to list them</div>";
           tip.style.left = mx + "px"; tip.style.top = my + "px"; tip.hidden = false;
         } else tip.hidden = true;
       }

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 40" role="img" aria-label="Rail-IQ">
+  <g transform="translate(4 4)">
+    <rect x="1" y="1" width="30" height="30" rx="8" fill="#121820"/>
+    <g stroke="#ECEEE9" stroke-linecap="round" opacity=".55"><path d="M7.2 24.6H19.3" stroke-width="2"/><path d="M10.9 20.4H20.7" stroke-width="1.7"/><path d="M14.2 16.8H21.9" stroke-width="1.4"/><path d="M16.9 13.9H22.8" stroke-width="1.15"/></g>
+    <path d="M6 27 19.5 12M17.5 27 22.5 12" stroke="#ECEEE9" stroke-width="2.3" stroke-linecap="round"/>
+    <circle cx="22.6" cy="7.6" r="3" fill="#FF7A33"/>
+  </g>
+  <text x="46" y="29" font-family="Saira Condensed, Arial Narrow, Arial, sans-serif" font-weight="700" font-size="27" fill="#121820">Rail<tspan fill="#D2480F">-</tspan>IQ</text>
+</svg>

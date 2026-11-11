@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Noise & Vibration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#ECEEE9; --panel:#FAFAF7; --panel-2:#E3E6DF; --input:#FFFFFF;
+  --ink:#121820; --ink-2:#44505A; --ink-3:#77828B; --line:#D2D6CD; --line-2:#B5BAB0;
+  --accent:#D2480F; --accent-soft:#F8E1D4;
+  --pass:#1E7A4A; --pass-soft:#DAF0E2; --fail:#B3261E; --fail-soft:#F8DEDB; --warn:#9A6200; --warn-soft:#F6EAD1;
+  --noise:#1F6FB2; --vib:#7A4AA0; --limit:#D2480F; --grid:#E2E5DD; --ground:#C9B79C; --wall:#44505A;
+  --f-disp:"Saira Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B0F13; --panel:#12181E; --panel-2:#18212A; --input:#0E1419;
+  --ink:#E8EDF1; --ink-2:#A6B1BB; --ink-3:#717D88; --line:#222C35; --line-2:#33404C;
+  --accent:#FF7A33; --accent-soft:#3A1F10;
+  --pass:#4FCB86; --pass-soft:#11291C; --fail:#F2756C; --fail-soft:#3B1C1A; --warn:#E5AE4A; --warn-soft:#30240F;
+  --noise:#4FA3EC; --vib:#B38BE0; --limit:#FF7A33; --grid:#1D252D; --ground:#5A4D3A; --wall:#A6B1BB;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B0F13; --panel:#12181E; --panel-2:#18212A; --input:#0E1419;
+  --ink:#E8EDF1; --ink-2:#A6B1BB; --ink-3:#717D88; --line:#222C35; --line-2:#33404C;
+  --accent:#FF7A33; --accent-soft:#3A1F10;
+  --pass:#4FCB86; --pass-soft:#11291C; --fail:#F2756C; --fail-soft:#3B1C1A; --warn:#E5AE4A; --warn-soft:#30240F;
+  --noise:#4FA3EC; --vib:#B38BE0; --limit:#FF7A33; --grid:#1D252D; --ground:#5A4D3A; --wall:#A6B1BB;
+  color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--f-body);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+.sheet{max-width:1480px;margin:0 auto;padding:16px 16px 60px;display:flex;flex-direction:column;gap:16px}
+h1,h2,h3{font-family:var(--f-disp);margin:0;letter-spacing:.01em}
+.mono{font-family:var(--f-mono)} .muted{color:var(--ink-3)}
+.tb{display:grid;grid-template-columns:2.2fr 1.4fr 1fr 1.1fr 1.1fr;border:1.5px solid var(--ink);background:var(--panel)}
+.tb>div{padding:10px 12px;border-left:1px solid var(--line-2);min-width:0}
+.tb>div:first-child{border-left:0}
+.tb label{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.tb input{width:100%;border:0;border-bottom:1px dashed var(--line-2);background:transparent;padding:2px 0;font-weight:600}
+.tb input.big{font-family:var(--f-disp);font-size:24px;font-weight:600}
+.tb .res{font-family:var(--f-disp);font-size:22px;font-weight:600}
+@media (max-width:900px){.tb{grid-template-columns:1fr 1fr}.tb>div{border-left:0;border-top:1px solid var(--line-2)}.tb>div:first-child{grid-column:1/-1;border-top:0}}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border:1px solid var(--line-2);border-radius:7px;background:var(--panel);cursor:pointer;font-size:13.5px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--ink-3)} .btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.btn.sm{height:28px;padding:0 9px;font-size:12.5px} .btn.icon{width:28px;padding:0;justify-content:center;color:var(--ink-3)}
+.btn.icon:hover{color:var(--fail);border-color:var(--fail)}
+.actions .sp{flex:1}
+.status{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2)}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--pass)} .status.bad i{background:var(--fail)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px}
+.panel>header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.panel>header h2{font-size:22px;font-weight:600}
+.panel>header .note{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);margin-left:auto}
+.panel .body{padding:14px 16px}
+.tabs{display:flex;gap:2px;padding:0 8px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{border:0;background:none;padding:10px 12px;cursor:pointer;color:var(--ink-2);border-bottom:2.5px solid transparent;font-weight:500;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.form{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px 18px}
+.fld label{display:block;font-size:12.5px;color:var(--ink-2);margin-bottom:4px}
+.fld input,.fld select{width:100%;height:34px;border:1px solid var(--line-2);border-radius:6px;background:var(--input);padding:0 9px}
+.fld small{display:block;color:var(--ink-3);font-size:11.5px;margin-top:3px}
+.fld .unit{position:relative} .fld .unit input{padding-right:52px}
+.fld .unit span{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);pointer-events:none}
+.fgroup{margin-top:20px} .fgroup:first-child{margin-top:0}
+.fgroup h3{font-size:16px;font-weight:600;margin-bottom:10px;color:var(--ink-2)}
+.review{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;border:1px solid var(--warn);background:var(--warn-soft);color:var(--ink);border-radius:6px;font-size:13px}
+.review b{color:var(--warn)}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);font-weight:500;text-align:left;padding:7px 8px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+td{padding:5px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap} td.num{font-family:var(--f-mono);font-size:12.5px}
+td.over{color:var(--fail);font-weight:600}
+table.edit td{padding:3px 4px}
+table.edit input[type=text],table.edit input[type=number]{width:100%;min-width:56px;height:30px;border:1px solid transparent;border-radius:5px;background:transparent;padding:0 6px}
+table.edit input:hover{border-color:var(--line-2)} table.edit input:focus{background:var(--input)}
+table.edit input[type=number]{text-align:right;font-family:var(--f-mono);font-size:12.5px}
+tr.sel td{background:var(--accent-soft)} tr.click{cursor:pointer} tr.click:hover td{background:var(--panel-2)}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.pill.pass{background:var(--pass-soft);color:var(--pass)} .pill.fail{background:var(--fail-soft);color:var(--fail)} .pill.na{background:var(--panel-2);color:var(--ink-3)}
+.toolrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0 8px}
+.jump{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;padding:8px 2px;background:var(--bg);font-size:13px}
+.jump b{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;color:var(--ink-3);font-weight:500}
+.jump a{color:var(--ink-2);text-decoration:none;border-bottom:1px dotted var(--line-2)} .jump a:hover{color:var(--accent)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:10px}
+.kpi{border:1px solid var(--line);border-radius:6px;padding:12px 14px;background:var(--panel)}
+.kpi .l{font-size:12px;color:var(--ink-3)} .kpi .v{font-family:var(--f-disp);font-size:32px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:16px} .kpi .s{font-size:12px;color:var(--ink-2);margin-top:4px}
+.kpi.pass{border-color:var(--pass)} .kpi.fail{border-color:var(--fail)}
+.chart{width:100%;display:block}
+.chart text{font-family:var(--f-mono);font-size:11px;fill:var(--ink-2)} .chart .lbl{font-family:var(--f-body);font-size:12px;fill:var(--ink)}
+.chart .gr{stroke:var(--grid)}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+@media (max-width:1000px){.two{grid-template-columns:1fr}}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ink-2);margin-top:6px}
+.legend i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:6px}
+.selbar{min-width:0;max-width:100%}.selbar select{height:32px;border:1px solid var(--line-2);border-radius:6px;background:var(--input);padding:0 8px;max-width:min(420px,100%)}
+.method p,.method li{color:var(--ink-2);max-width:95ch} .method h3{font-size:17px;margin:16px 0 4px}
+.method code{font-family:var(--f-mono);font-size:12.5px;background:var(--panel-2);padding:1px 5px;border-radius:3px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:13.5px;z-index:50}
+@media print{@page{size:A4 landscape;margin:12mm} body{background:#fff;color:#000;font-size:11px} .actions,.jump,#inputs,.btn,.selbar{display:none!important} .panel{border:0;break-inside:avoid-page} .sheet{padding:0;gap:10px}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="tb">
+    <div><label for="p-name">Project</label><input class="big" id="p-name" data-k="project.name"></div>
+    <div><label for="p-sec">Section</label><input id="p-sec" data-k="project.section"></div>
+    <div><label for="p-doc">Document ref.</label><input id="p-doc" data-k="project.docRef"></div>
+    <div><label>Model</label><div style="font-weight:600;padding-top:3px">Noise & vibration Phase 1 <span class="pill" style="background:var(--warn-soft);color:var(--warn)">beta</span></div></div>
+    <div><label>Receptors</label><div class="res" id="tb-result">—</div></div>
+  </header>
+
+  <div class="actions">
+    <button class="btn primary" id="b-export">Export results (Excel)</button>
+    <button class="btn" id="b-json">Save inputs (JSON)</button>
+    <button class="btn" id="b-jsonin">Open inputs (JSON)</button>
+    <button class="btn" id="b-print">Print / PDF report</button>
+    <button class="btn" id="b-sample">Reset to sample</button>
+    <span class="sp"></span>
+    <span class="status" id="status"><i></i><span>Ready</span></span>
+    <input type="file" id="f-json" accept=".json" hidden>
+  </div>
+
+  <div id="syslink"></div>
+
+  <div class="review"><b>Review needed.</b><span>Reference levels (per-car SEL, vibration reference curve), adjustments and criteria are placeholders. Check them against FTA (2018), project measurements or the client's criteria before using any result.</span></div>
+
+  <section class="panel" id="inputs">
+    <header><h2>Input data</h2><span class="note">All values editable · saved in this browser · results update as you type</span></header>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="t-traffic" aria-selected="true">Traffic & source</button>
+      <button class="tab" role="tab" data-tab="t-site" aria-selected="false">Propagation & barrier</button>
+      <button class="tab" role="tab" data-tab="t-vib" aria-selected="false">Vibration</button>
+      <button class="tab" role="tab" data-tab="t-rec" aria-selected="false">Receptors <span class="muted mono" id="cnt-rec" style="font-size:11px"></span></button>
+    </div>
+    <div class="body" id="t-traffic" role="tabpanel">
+      <div class="fgroup"><h3>Traffic</h3><div class="form">
+        <div class="fld"><label>Train speed past the receptors</label><div class="unit"><input type="number" step="any" data-k="traffic.speed"><span>km/h</span></div></div>
+        <div class="fld"><label>Cars per train</label><div class="unit"><input type="number" step="1" data-k="traffic.cars"><span>no.</span></div></div>
+        <div class="fld"><label>Train length</label><div class="unit"><input type="number" step="any" data-k="traffic.trainLength"><span>m</span></div></div>
+        <div class="fld"><label>Directions (tracks)</label><div class="unit"><input type="number" step="1" data-k="traffic.directions"><span>no.</span></div></div>
+        <div class="fld"><label>Headway, day (07–22)</label><div class="unit"><input type="number" step="any" data-k="traffic.headwayDay"><span>s</span></div></div>
+        <div class="fld"><label>Service hours in the day period</label><div class="unit"><input type="number" step="0.5" min="0" max="15" data-k="traffic.hoursDay"><span>h of 15</span></div></div>
+        <div class="fld"><label>Headway, night (22–07)</label><div class="unit"><input type="number" step="any" data-k="traffic.headwayNight"><span>s</span></div></div>
+        <div class="fld"><label>Service hours in the night period</label><div class="unit"><input type="number" step="0.5" min="0" max="9" data-k="traffic.hoursNight"><span>h of 9</span></div></div>
+        <div class="fld"><label>Pass-bys per day</label><div class="mono" id="c-pass" style="padding-top:7px;font-size:15px">—</div></div>
+      </div></div>
+      <div class="fgroup"><h3>Source (one car)</h3><div class="form">
+        <div class="fld"><label>Reference SEL per car</label><div class="unit"><input type="number" step="any" data-k="source.selRef"><span>dBA</span></div><small>placeholder; check (FTA 2018 rail car reference)</small></div>
+        <div class="fld"><label>at reference distance</label><div class="unit"><input type="number" step="any" data-k="source.dRef"><span>m</span></div></div>
+        <div class="fld"><label>at reference speed</label><div class="unit"><input type="number" step="any" data-k="source.vRef"><span>km/h</span></div></div>
+        <div class="fld"><label>Speed coefficient</label><div class="unit"><input type="number" step="any" data-k="source.kSpeed"><span>× log v</span></div><small>20 for steel wheel on rail</small></div>
+        <div class="fld"><label>Track / structure</label><select data-k="source.adjPreset"><option value="ballast">Ballasted, at grade (0 dB)</option><option value="aerial">Aerial structure (+4 dB)</option><option value="embedded">Embedded track (+3 dB)</option><option value="turnout">Turnouts / crossovers (+6 dB)</option><option value="custom">Custom</option></select><small>typical values; check</small></div>
+        <div class="fld"><label>Track / structure adjustment</label><div class="unit"><input type="number" step="any" data-k="source.adj"><span>dB</span></div></div>
+      </div></div>
+    </div>
+    <div class="body" id="t-site" role="tabpanel" hidden>
+      <div class="fgroup"><h3>Propagation</h3><div class="form">
+        <div class="fld"><label>Ground between track and receptors</label><select data-k="site.kDist"><option value="10">Hard (paved): 3 dB per doubling</option><option value="15">Soft (grass, soil): 4.5 dB per doubling</option></select></div>
+        <div class="fld"><label>Noise criterion metric</label><select data-k="site.metric"><option value="Ldn">Ldn (day-night, night +10 dB)</option><option value="Lpeak">LAeq, peak hour</option></select></div>
+      </div></div>
+      <div class="fgroup"><h3>Noise barrier (receptors marked "barrier")</h3><div class="form">
+        <div class="fld"><label>Source height above rail</label><div class="unit"><input type="number" step="any" data-k="site.srcHeight"><span>m</span></div><small>wheel / rail noise ≈ 0.5 m</small></div>
+        <div class="fld"><label>Barrier distance from track centre</label><div class="unit"><input type="number" step="any" data-k="site.barrierDist"><span>m</span></div></div>
+        <div class="fld"><label>Barrier height above rail</label><div class="unit"><input type="number" step="any" data-k="site.barrierHeight"><span>m</span></div></div>
+      </div></div>
+    </div>
+    <div class="body" id="t-vib" role="tabpanel" hidden>
+      <div class="fgroup"><h3>Ground-borne vibration</h3><div class="form">
+        <div class="fld"><label>Reference vibration level</label><div class="unit"><input type="number" step="any" data-k="vib.lvRef"><span>VdB</span></div><small>placeholder; use measured or FTA curve</small></div>
+        <div class="fld"><label>at reference distance</label><div class="unit"><input type="number" step="any" data-k="vib.dRef"><span>m</span></div></div>
+        <div class="fld"><label>at reference speed</label><div class="unit"><input type="number" step="any" data-k="vib.vRef"><span>km/h</span></div></div>
+        <div class="fld"><label>Geometric spreading exponent n</label><div class="unit"><input type="number" step="any" data-k="vib.n"><span>–</span></div><small>0.5 surface waves</small></div>
+        <div class="fld"><label>Material damping α</label><div class="unit"><input type="number" step="any" data-k="vib.alpha"><span>1/m</span></div></div>
+        <div class="fld"><label>Track adjustment</label><div class="unit"><input type="number" step="any" data-k="vib.adjTrack"><span>dB</span></div><small>e.g. resilient fasteners, floating slab (negative)</small></div>
+        <div class="fld"><label>Ground-borne noise conversion</label><select data-k="vib.kGbn"><option value="35">LA = Lv − 35 (low-frequency)</option><option value="50">LA = Lv − 50 (typical)</option><option value="55">LA = Lv − 55 (high-frequency)</option></select></div>
+      </div></div>
+    </div>
+    <div class="body" id="t-rec" role="tabpanel" hidden>
+      <div class="toolrow"><button class="btn sm" id="b-addrec">+ Add receptor</button><span class="muted" style="font-size:12.5px">Distance from the track centre. Building adjustment = coupling loss into the building (negative dB). Leave a limit blank to skip that check.</span></div>
+      <div class="tw"><table class="edit" id="rectable"></table></div>
+    </div>
+  </section>
+
+  <nav class="jump" aria-label="Results">
+    <b>RESULTS</b><a href="#r-rec">Receptors</a><a href="#r-dist">Level vs distance</a><a href="#r-section">Cross-section</a><a href="#r-verify">Verification</a><a href="#r-method">Method</a>
+  </nav>
+
+  <section class="panel" id="r-rec"><header><h2>Receptor results</h2><span class="note" id="rec-note"></span></header><div class="body"><div class="kpis" id="kpis"></div><div class="tw" id="recres" style="margin-top:14px"></div></div></section>
+  <section class="panel" id="r-dist"><header><h2>Level against distance</h2><span class="note">No barrier · receptors shown as points</span></header>
+    <div class="body two"><div><h3 style="font-size:15px;margin-bottom:6px">Airborne noise</h3><svg class="chart" id="noisechart" role="img" aria-label="Noise level against distance"></svg><div class="legend" id="noise-legend"></div></div>
+    <div><h3 style="font-size:15px;margin-bottom:6px">Ground-borne vibration</h3><svg class="chart" id="vibchart" role="img" aria-label="Vibration level against distance"></svg><div class="legend" id="vib-legend"></div></div></div></section>
+  <section class="panel" id="r-section"><header><h2>Cross-section to the selected receptor</h2><span class="selbar"><select id="selrec" aria-label="Selected receptor"></select></span><span class="note" id="sec-note"></span></header>
+    <div class="body"><svg class="chart" id="section" role="img" aria-label="Cross-section from track to receptor"></svg></div></section>
+  <section class="panel" id="r-verify"><header><h2>Verification</h2><span class="note" id="ver-note"></span></header><div class="body tw" id="verify"></div></section>
+  <section class="panel method" id="r-method"><header><h2>Method & assumptions</h2></header><div class="body">
+    <p>Phase 1 screening model for trains on a straight, uniform section, with receptors at a perpendicular distance from the track centre. All reference values are inputs and must be reviewed by an acoustic specialist.</p>
+    <h3>Airborne noise</h3>
+    <ul>
+      <li>Pass-by SEL: <code>SEL = SEL_ref + 10 log Ncars + K_v log(v / v_ref) + adj − K_d log(d / d_ref) − IL</code>, with <code>K_d</code> = 10 (hard ground) or 15 (soft ground) for a line source.</li>
+      <li>Period levels from the number of pass-bys: <code>LAeq,T = SEL + 10 log N − 10 log T</code>; <code>Ldn = 10 log[(15·10^(Ld/10) + 9·10^((Ln+10)/10)) / 24]</code>.</li>
+      <li>Approximate pass-by maximum: <code>Lmax ≈ SEL − 10 log(train length / speed)</code>, valid close to the track.</li>
+      <li>Barrier: Maekawa, <code>IL = 10 log(3 + 20 N)</code> with <code>N = 2δ / λ</code> at 500 Hz, capped at 20 dB; no loss if the barrier does not break the line of sight.</li>
+    </ul>
+    <h3>Vibration</h3>
+    <ul>
+      <li><code>Lv = Lv_ref + 20 log(v / v_ref) + adj_track + adj_building − 20 n log(d / d_ref) − 8.686 α (d − d_ref)</code> (geometric spreading and material damping).</li>
+      <li>Ground-borne noise <code>LA = Lv − K</code> with K = 35, 50 or 55 dB depending on the vibration spectrum.</li>
+    </ul>
+    <h3>Not in Phase 1</h3>
+    <p>Curved track and wheel squeal, multiple sources (fans, stations), existing ambient noise and relative impact criteria, frequency spectra, building floor amplification, and detailed vibration propagation from measurements. These need a detailed assessment.</p>
+  </div></section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="../../assets/js/system-link.js"></script>
+<script src="nv_engine.js"></script>
+<script src="nv_tests.js"></script>
+<script src="nv_sample.js"></script>
+<script src="nv_app.js"></script>
+</body>
+</html>

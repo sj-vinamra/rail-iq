@@ -66,6 +66,8 @@
       let x0 = 1, x1 = 3, f0 = TV.terms(mf, sc, x0).net, f1 = TV.terms(mf, sc, x1).net;
       for (let i = 0; i < 100 && Math.abs(f1) > 1e-12; i++) { const x2 = x1 - f1 * (x1 - x0) / (f1 - f0); x0 = x1; f0 = f1; x1 = x2; f1 = TV.terms(mf, sc, x1).net; }
       add("Full scenario", "Velocity: bisection vs secant method", x1, r.v, 1e-8, "independent root finder");
+      const pr = TV.profile(mf, sc, r.v);
+      add("Full scenario", "Pressure profile closes at 0 Pa at end B", 0, Math.abs(pr.closure) < 1e-6 ? 0 : pr.closure, 0, "walk along the tunnel");
     }
     // 6 fire buoyancy on a gradient
     {

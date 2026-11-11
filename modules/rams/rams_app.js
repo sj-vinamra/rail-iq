@@ -200,6 +200,42 @@
     updateInline();
     renderResults();
     save();
+    publishToSystem();
+  }
+
+  /* ---------------- System link: shared parameters and result ---------------- */
+  let sysBar = null;
+  const findItem = re => { for (const s of model.subsystems) for (const it of s.items) if (re.test(it.name || "")) return it; return null; };
+  const SYS_MAP = [
+    { key: "projectName", get: () => model.project.name, set: v => (model.project.name = v) },
+    { key: "lineName", get: () => model.project.system, set: v => (model.project.system = v) },
+    { key: "hoursPerDay", get: () => model.project.hoursPerDay, set: v => (model.project.hoursPerDay = +v) },
+    { key: "daysPerYear", get: () => model.project.daysPerYear, set: v => (model.project.daysPerYear = +v) },
+    { key: "availabilityTarget", get: () => model.targets.availability, set: v => (model.targets.availability = +v) },
+    { key: "mtbsafTarget", get: () => model.targets.mtbsaf, set: v => (model.targets.mtbsaf = +v) },
+    // rolling stock: the item named "Train in service ..." holds n = fleet, k = trains needed
+    { key: "fleetSize", get: () => { const it = findItem(/train in service/i); return it ? +it.n : undefined; }, set: v => { const it = findItem(/train in service/i); if (it) it.n = Math.round(+v); } },
+    { key: "trainsInService", get: () => { const it = findItem(/train in service/i); return it ? +it.k : undefined; }, set: v => { const it = findItem(/train in service/i); if (it) it.k = Math.round(+v); } },
+    // power: the item named "Traction substation ..." holds n = substations, k = n - 1 with N-1 redundancy
+    { key: "tssCount", get: () => { const it = findItem(/traction substation/i); return it ? +it.n : undefined; },
+      set: v => { const it = findItem(/traction substation/i); if (!it) return; it.n = Math.round(+v); it.k = window.RailIQSystem.get().tssRedundancy === "None" ? it.n : Math.max(1, it.n - 1); } },
+    { key: "tssRedundancy", get: () => { const it = findItem(/traction substation/i); return it && +it.n > 1 ? (+it.k < +it.n ? "N-1" : "None") : undefined; /* one substation cannot be N-1: not compared */ },
+      set: v => { const it = findItem(/traction substation/i); if (it) it.k = v === "None" ? it.n : Math.max(1, it.n - 1); } }
+  ];
+  function mountSystem() {
+    if (!window.RailIQSystem) return;
+    sysBar = window.RailIQSystem.mountBar({ module: "rams", mount: "#syslink", map: SYS_MAP, onApplied: () => { fillProject(); renderEquip(); recompute(); } });
+  }
+  function publishToSystem() {
+    if (!window.RailIQSystem || !res) return;
+    const S = res.sys, checks = [S.passA, S.passM].filter(x => x != null);
+    window.RailIQSystem.publish("rams", {
+      status: !checks.length ? "info" : checks.every(Boolean) ? "pass" : "fail",
+      headline: "Availability " + pct(S.A, 3) + (S.targetA != null ? " (target " + pct(S.targetA, 2) + ")" : "") + " · MTBSAF " + hrs(S.MUT) + " h",
+      metrics: [["Availability", pct(S.A, 4)], ["Downtime", mins(S.downMinYr) + " min/yr"], ["MTBSAF", hrs(S.MUT) + " h"], ["Service-affecting failures", nf(S.safYr, 1) + " /yr"]],
+      usedKeys: SYS_MAP.map(m => m.key)
+    });
+    if (sysBar) sysBar.refresh();
   }
 
   function renderResults() {
@@ -556,5 +592,6 @@
   wireProject(); wireEquip(); wireFmeca(); wireActions();
   fillProject(); renderEquip(); renderFmeca();
   renderVerify();
+  mountSystem();
   recompute();
 })();

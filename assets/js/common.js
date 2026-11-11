@@ -24,7 +24,8 @@
     grid: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
     file: '<path d="M14 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7l-4-4Z"/><path d="M14 3v4h4"/>',
-    chev: '<path d="m6 9 6 6 6-6"/>'
+    chev: '<path d="m6 9 6 6 6-6"/>',
+    nodes: '<circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="5.5" r="2.5"/><circle cx="19" cy="18.5" r="2.5"/><path d="M7.3 11 16.7 6.6M7.3 13l9.4 4.4"/>'
   };
 
   function icon(name, extra) {
@@ -32,11 +33,13 @@
       (extra ? " " + extra : "") + ">" + (P[name] || P.grid) + "</svg>";
   }
 
+  // Mark: a track running into the distance forms the stem of an "i"; the signal light is its dot.
   const LOGO =
     '<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="8" fill="var(--ink)"/>' +
-    '<path d="M9 25 14 7M23 25 18 7" stroke="var(--bg)" stroke-width="2.2" stroke-linecap="round"/>' +
-    '<path d="M11 19h10M12.2 14h7.6" stroke="var(--bg)" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>' +
-    '<circle cx="24.5" cy="8" r="3" fill="var(--accent)"/></svg>';
+    '<g stroke="var(--bg)" stroke-linecap="round" opacity=".55"><path d="M7.2 24.6H19.3" stroke-width="2"/><path d="M10.9 20.4H20.7" stroke-width="1.7"/>' +
+    '<path d="M14.2 16.8H21.9" stroke-width="1.4"/><path d="M16.9 13.9H22.8" stroke-width="1.15"/></g>' +
+    '<path d="M6 27 19.5 12M17.5 27 22.5 12" stroke="var(--bg)" stroke-width="2.3" stroke-linecap="round"/>' +
+    '<circle cx="22.6" cy="7.6" r="3" fill="var(--accent)"/></svg>';
 
   /* ---------- storage (may be unavailable: private mode, file://, blocked) ---------- */
   const store = {
@@ -109,11 +112,14 @@
         title: m.title,
         sub: (isOpenable(m) ? "Launch · " : "Pipeline · ") + ((D[m.discipline] || {}).label || "") + " · " + m.summary,
         hay: [m.title, m.summary, m.discipline, (m.domains || []).join(" "), (m.standards || []).join(" ")].join(" ").toLowerCase(),
-        run: () => isOpenable(m) ? (location.href = launchUrl(m)) : (opts.onDetails ? opts.onDetails(m) : (location.href = "index.html#m=" + m.id)),
+        run: () => isOpenable(m) ? (location.href = launchUrl(m)) : (opts.onDetails ? opts.onDetails(m) : (location.href = "simulators.html#m=" + m.id)),
         rank: isOpenable(m) ? 0 : 1
       }));
       const cmds = [
         { icon: "home", title: "Go to Rail-IQ home", sub: "Portal overview", hay: "home portal index", run: () => (location.href = "index.html"), rank: 2 },
+        { icon: "grid", title: "Browse railway systems", sub: "Power supply, telecom, ATC, tunnel ventilation, RAMS, noise, operations", hay: "systems power supply telecom atc signalling tunnel ventilation rams noise vibration operations", run: () => (location.href = "systems.html"), rank: 2 },
+        { icon: "search", title: "All simulators", sub: "Every simulator with search and filters", hay: "all simulators list catalogue", run: () => (location.href = "simulators.html"), rank: 2 },
+        { icon: "nodes", title: "Open the System-wide page", sub: "Shared parameters, data flow and results of every simulator", hay: "system parameters shared results data flow integration", run: () => (location.href = "system.html"), rank: 2 },
         { icon: "auto", title: "Change theme", sub: "Cycle auto / light / dark", hay: "theme dark light mode", run: () => cycleTheme(), rank: 2 }
       ];
       return mods.concat(cmds, opts.extra || []);

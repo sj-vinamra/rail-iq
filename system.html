@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System-wide · Rail-IQ</title>
+<meta name="description" content="System-wide view: shared parameters, data flow between simulators and their latest results.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/css/railiq.css">
+<style>
+  .navlinks a[aria-current="page"]{color:var(--ink);background:var(--surface-2);font-weight:600}
+  .sys-hero{padding:34px 0 26px;border-bottom:1px solid var(--line)}
+  .sys-hero h1{font-family:var(--f-disp);font-size:clamp(32px,4.2vw,50px);line-height:1;margin:10px 0 8px}
+  .sys-hero .sub{color:var(--ink-2);font-size:15px}
+  .sys-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin-top:22px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);overflow:hidden}
+  @media (max-width:760px){.sys-stats{grid-template-columns:repeat(2,1fr)}}
+  .sys-stats>div{padding:12px 16px;border-left:1px solid var(--line)}
+  .sys-stats>div:first-child{border-left:0}
+  .sys-stats b{display:block;font-family:var(--f-disp);font-size:32px;line-height:1;font-variant-numeric:tabular-nums}
+  .sys-stats span{display:block;font-size:12px;color:var(--ink-3);margin-top:5px}
+  .mods{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+  .mod{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+  .mod .hd{display:flex;align-items:center;gap:10px;padding:14px 16px 6px}
+  .mod .hd .ico{display:grid;place-items:center;width:32px;height:32px;border-radius:8px;background:var(--accent-soft);color:var(--accent);flex:none}
+  .mod .hd .ico svg{width:18px;height:18px}
+  .mod h3{font-family:var(--f-disp);font-size:21px;margin:0;line-height:1.1;flex:1}
+  .mod .hl{padding:0 16px;font-size:14px;color:var(--ink-2);min-height:40px}
+  .mod dl{margin:10px 16px 12px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px}
+  .mod dt{color:var(--ink-3)} .mod dd{margin:0;font-family:var(--f-mono);font-size:12.5px;text-align:right}
+  .mod footer{margin-top:auto;display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid var(--line);font-family:var(--f-mono);font-size:11px;color:var(--ink-3)}
+  .mod footer .sp{flex:1}
+  .pill.fail{background:color-mix(in srgb,#B3261E 14%,transparent);color:#C4362C}
+  .pill.stale{background:var(--beta-soft);color:var(--beta)}
+  .pill.none{background:var(--plan-soft);color:var(--plan)}
+  .pill.pass{background:var(--live-soft);color:var(--live)}
+  .flow{border:1px solid var(--line);border-radius:12px;background:var(--map-bg);padding:12px;overflow-x:auto}
+  .flow svg{display:block;width:100%;min-width:720px}
+  .flow text{font-family:var(--f-body);fill:var(--ink)}
+  .flow .sm{font-family:var(--f-mono);font-size:10.5px;fill:var(--ink-3)}
+  .flow path.ln{fill:none;stroke-width:2;opacity:.55;transition:opacity .15s,stroke-width .15s}
+  .flow.focus path.ln{opacity:.08}.flow.focus path.ln.on{opacity:.95;stroke-width:3}
+  .flow g.nd{cursor:pointer}
+  .params{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+  .pgrp{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:14px 16px}
+  .pgrp h4{margin:0 0 10px;font-family:var(--f-disp);font-size:19px}
+  .pf{display:grid;grid-template-columns:1fr 132px;gap:4px 10px;align-items:center;padding:7px 0;border-top:1px solid var(--line)}
+  .pf:first-of-type{border-top:0}
+  .pf label{font-size:13.5px}
+  .pf .in{position:relative}
+  .pf input,.pf select{width:100%;height:32px;border:1px solid var(--line);border-radius:6px;background:var(--bg);padding:0 8px;font-size:13.5px}
+  .pf input[type=number]{text-align:right;padding-right:44px;font-family:var(--f-mono);font-size:12.5px}
+  .pf .u{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--f-mono);font-size:11px;color:var(--ink-3);pointer-events:none}
+  .pf .use{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px}
+  .pf .use span{font-family:var(--f-mono);font-size:10.5px;padding:1px 6px;border-radius:4px;background:var(--surface-2);color:var(--ink-2)}
+  .pf .use em{font-style:normal;font-size:11px;color:var(--ink-3)}
+  .sec-tools{display:flex;gap:8px;flex-wrap:wrap}
+  .howto{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:14px}
+  .howto div{border:1px dashed var(--line-2);border-radius:10px;padding:12px 14px;font-size:13.5px;color:var(--ink-2)}
+  .howto b{display:block;color:var(--ink);font-family:var(--f-disp);font-size:17px;margin-bottom:4px}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Rail-IQ home"><span data-logo></span><b>Rail<span>-</span>IQ</b></a>
+    <nav class="navlinks" aria-label="Sections">
+      <a href="systems.html">Systems</a>
+      <a href="simulators.html">Simulators</a>
+      <a href="system.html" aria-current="page">System-wide</a>
+    </nav>
+    <span class="spacer"></span>
+    <button class="kbtn" data-palette-btn aria-label="Search simulators"><span data-icon="search"></span><span class="lbl">Search simulators…</span><kbd>Ctrl K</kbd></button>
+    <button class="iconbtn" data-theme-btn aria-label="Theme"></button>
+  </div>
+</header>
+
+<main>
+  <section class="sys-hero">
+    <div class="wrap">
+      <span class="eyebrow"><span class="dot"></span>System-wide view</span>
+      <h1 id="sysTitle">System</h1>
+      <div class="sub" id="sysSub"></div>
+      <div class="sys-stats" id="sysStats"></div>
+    </div>
+  </section>
+
+  <section class="block" id="results">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="sec-num">01 / RESULTS</span><h2>Simulator results for this system</h2></div>
+        <p>Each simulator posts its latest result here when it runs. <b>Out of date</b> means a shared value has changed since that run: open the simulator, press <i>Use System values</i> and re-run.</p>
+      </div>
+      <div class="mods" id="mods"></div>
+    </div>
+  </section>
+
+  <section class="block" id="flow" style="padding-top:8px">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="sec-num">02 / DATA FLOW</span><h2>How values move between simulators</h2></div>
+        <p>A value is defined once in the System and flows to every simulator that uses it. Hover a group or a simulator to see its links.</p>
+      </div>
+      <div class="flow" id="flowBox"><svg id="flowSvg" role="img" aria-label="Parameter groups linked to simulators"></svg></div>
+      <div class="howto">
+        <div><b>1 · Define once</b>Enter the line, fleet, train, power and tunnel data below.</div>
+        <div><b>2 · Pull into a simulator</b>In any simulator, press <i>Use System values</i> on the System bar.</div>
+        <div><b>3 · Share back</b><i>Send to System</i> copies a simulator's values here so the others can use them.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="params" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="sec-num">03 / PARAMETERS</span><h2>System parameters</h2></div>
+        <p>Saved in this browser as you type. Tags show which simulators use each value.</p>
+        <span class="sp"></span>
+        <div class="sec-tools">
+          <button class="btn sm" id="bExport">Export (JSON)</button>
+          <button class="btn sm" id="bImport">Import (JSON)</button>
+          <button class="btn sm" id="bReset">Reset to sample</button>
+          <input type="file" id="fImport" accept=".json" hidden>
+        </div>
+      </div>
+      <div class="params" id="paramGrid"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="sitefoot">
+  <div class="wrap">
+    <span>Rail-IQ · System parameters are stored in this browser only</span>
+    <span class="sp"></span>
+    <a href="index.html">Back to the portal</a>
+  </div>
+</footer>
+
+<script src="assets/js/catalog.js"></script>
+<script src="assets/js/common.js"></script>
+<script src="assets/js/system-link.js"></script>
+<script src="assets/js/system-page.js"></script>
+</body>
+</html>

@@ -311,6 +311,7 @@ function onWorker(e) {
     const fails = R.checks.filter(c => !c.pass).length;
     setStatus(fails ? 'bad' : 'ok', (fails ? fails + ' check' + (fails > 1 ? 's' : '') + ' failing' : 'All checks pass') + ' · ' + R.scenario);
     renderResults();
+    publishToSystem(fails);
   } else if (d.cmd === 'progress') {
     $('#dcProg').hidden = false; $('#dcProg i').style.width = (d.i / d.n * 100) + '%';
     setStatus('busy', 'Design check ' + d.i + ' / ' + d.n + ': ' + d.name);
@@ -324,6 +325,35 @@ function onWorker(e) {
     designBusy = false; $('#btnDesign').disabled = false; $('#btnDesign2').disabled = false;
     setStatus('bad', 'Calculation error: ' + d.msg);
   }
+}
+/* ---------------- Rail-IQ System link: shared parameters and result ---------------- */
+let sysBar = null;
+const SYS_MAP = [
+  { key: 'projectName', get: () => cfg.project.name, set: v => { cfg.project.name = v; } },
+  { key: 'tractionSystem', get: () => cfg.project.system, set: v => { cfg.project.system = v; } },
+  // every track runs the System's peak headway
+  { key: 'headway', get: () => (cfg.tracks && cfg.tracks.length ? num(cfg.tracks[0].headway, '') : undefined), set: v => { (cfg.tracks || []).forEach(t => { t.headway = +v; }); } },
+  // substations: count kept by the generator; the list is regenerated with the same first chainage and spacing
+  { key: 'tssCount', get: () => num(cfg.tss_gen.count, ''), set: v => { cfg.tss_gen.count = Math.max(1, Math.round(+v)); TPS.generateTSS(cfg); } },
+  { key: 'carsPerTrain', get: () => (cfg.trains[0] ? num(cfg.trains[0].cars, '') : undefined), set: v => { if (cfg.trains[0]) cfg.trains[0].cars = Math.round(+v); } },
+  { key: 'trainLength', get: () => (cfg.trains[0] ? num(cfg.trains[0].length_m, '') : undefined), set: v => { if (cfg.trains[0]) cfg.trains[0].length_m = +v; } }
+];
+function mountSystem() {
+  if (!window.RailIQSystem) return;
+  sysBar = window.RailIQSystem.mountBar({ module: 'dc-traction-power', mount: '#syslink', map: SYS_MAP,
+    onApplied: () => { save(); renderInputs(); changed(); } });
+}
+function publishToSystem(fails) {
+  if (!window.RailIQSystem || !R) return;
+  const n = R.checks.length, Lm = cfg.limits;
+  window.RailIQSystem.publish('dc-traction-power', {
+    status: fails ? 'fail' : 'pass',
+    headline: (fails ? fails + ' of ' + n + ' checks failing' : 'All ' + n + ' checks pass') + ' · ' + R.scenario,
+    metrics: [['Checks passing', (n - fails) + ' / ' + n], ['Minimum train voltage', fmt(R.trainV.min) + ' V (limit ' + fmt(Lm.V_min) + ' V)'],
+      ['Energy from substations', fmt(R.energy.tss_kWh) + ' kWh per ' + fmt(R.period / 60) + ' min'], ['Substations', String((cfg.tss || []).length)]],
+    usedKeys: SYS_MAP.map(m => m.key)
+  });
+  if (sysBar) sysBar.refresh();
 }
 function syncTextInputs() {
   cfg.scenarios.extra = $('#extraCases').value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
@@ -934,6 +964,7 @@ function init() {
   cfg = loadCfg();
   initTabs(); initDigitiser();
   renderInputs();
+  mountSystem();
   $$('[data-path]').forEach(el => el.addEventListener('change', () => { setPath(cfg, el.dataset.path, el.type === 'number' ? parseVal('num', el) : el.value); if (el.closest('.titleblock') || el.id === 'projNotes' || el.id === 'n_up' || el.id === 'n_dn') { save(); return; } changed(); }));
   $('#btnTracks').addEventListener('click', () => { TPS.generateTracks(cfg); renderTracks(); renderScenarioSel(); changed(); toast(cfg.tracks.length + ' tracks set up'); });
   $('#btnGenTss').addEventListener('click', () => { TPS.generateTSS(cfg); scenOutage = []; renderTss(); renderScenarioSel(); changed(); toast(cfg.tss.length + ' substations generated'); });

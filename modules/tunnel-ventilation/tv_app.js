@@ -117,6 +117,43 @@
     st.querySelector("span").textContent = allOk ? "All checked scenarios pass" : fires.length - ok + " scenario(s) fail";
     renderResults();
     save();
+    publishToSystem(fires, ok);
+  }
+
+  /* ---------------- System link: shared parameters and result ---------------- */
+  let sysBar = null;
+  const fireScenarios = () => model.scenarios.filter(s => +s.hrr > 0);
+  const SYS_MAP = [
+    { key: "projectName", get: () => model.project.name, set: v => (model.project.name = v) },
+    { key: "tunnelLength", get: () => model.tunnel.length, set: v => (model.tunnel.length = +v) },
+    { key: "tunnelArea", get: () => model.tunnel.area, set: v => (model.tunnel.area = +v) },
+    { key: "tunnelPerimeter", get: () => model.tunnel.perimeter, set: v => (model.tunnel.perimeter = +v) },
+    { key: "tunnelHeight", get: () => model.tunnel.height, set: v => (model.tunnel.height = +v) },
+    { key: "tunnelGrade", get: () => model.tunnel.grade, set: v => (model.tunnel.grade = +v) },
+    { key: "trainLength", get: () => model.train.length, set: v => (model.train.length = +v) },
+    { key: "trainArea", get: () => model.train.area, set: v => (model.train.area = +v) },
+    { key: "trainPerimeter", get: () => model.train.perimeter, set: v => (model.train.perimeter = +v) },
+    { key: "ambientTemp", get: () => model.air.tempC, set: v => (model.air.tempC = +v) },
+    { key: "airDensity", get: () => model.air.rho, set: v => (model.air.rho = +v) },
+    // design fire: applied to every fire scenario (scenarios with a heat release rate)
+    { key: "designFire", get: () => { const f = fireScenarios(); return f.length ? +f[0].hrr : undefined; }, set: v => fireScenarios().forEach(s => (s.hrr = +v)) }
+  ];
+  function mountSystem() {
+    if (!window.RailIQSystem) return;
+    sysBar = window.RailIQSystem.mountBar({ module: "tunnel-ventilation", mount: "#syslink", map: SYS_MAP, onApplied: () => { fillInputs(); renderScenarios(); recompute(); } });
+  }
+  function publishToSystem(fires, ok) {
+    if (!window.RailIQSystem) return;
+    const best = evals.filter(e => e.ok && e.pass != null);
+    const worst = best.reduce((m, e) => (m == null || e.margin < m.margin ? e : m), null);
+    window.RailIQSystem.publish("tunnel-ventilation", {
+      status: !fires.length ? "info" : ok === fires.length ? "pass" : "fail",
+      headline: fires.length ? ok + " of " + fires.length + " fire scenarios keep smoke downstream" : "No fire scenarios checked",
+      metrics: [["Fire scenarios passing", ok + " / " + fires.length], ["Worst margin", worst ? (worst.margin >= 0 ? "+" : "") + nf(worst.margin * 100, 0) + " %" : "—"],
+        ["Worst case", worst ? trunc(worst.sc.name, 40) : "—"], ["Critical velocity", worst && worst.Vc ? nf(worst.Vc, 2) + " m/s" : "—"]],
+      usedKeys: SYS_MAP.map(m => m.key)
+    });
+    if (sysBar) sysBar.refresh();
   }
 
   /* ---------------- results ---------------- */
@@ -134,7 +171,7 @@
     const sel = $("#selsc");
     sel.innerHTML = model.scenarios.map((s, i) => '<option value="' + i + '"' + (i === model.selected ? " selected" : "") + ">" + (i + 1) + ". " + esc(s.name) + "</option>").join("");
     const e = evals[model.selected];
-    renderDetail(e); renderSchematic(e); renderBalance(e); renderFanCurve(e); renderFire(e); renderSizing(e);
+    renderDetail(e); renderSchematic(e); renderProfile(e); renderBalance(e); renderFanCurve(e); renderFire(e); renderSizing(e);
   }
 
   function renderDetail(e) {
@@ -211,6 +248,37 @@
       g += '<text x="' + X(L * 0.18) + '" y="' + (Y(L * 0.18) + 19) + '" text-anchor="middle" style="fill:var(--air);font-weight:600">' + nf(Math.abs(e.v), 2) + " m/s</text>";
     }
     g += '<text x="' + x0 + '" y="' + (H - 6) + '" style="fill:var(--ink-3);font-size:10px">chainage (m) · gradient ' + nf(+t.grade || 0, 1) + " % (drawn exaggerated)</text>";
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H); svg.style.height = H + "px"; svg.innerHTML = g;
+  }
+
+  function renderProfile(e) {
+    const svg = $("#profchart");
+    if (!e.ok) { svg.innerHTML = ""; return; }
+    const pr = TV.profile(model, e.sc, e.v), L = +model.tunnel.length;
+    const W = Math.max(600, svg.clientWidth || 1200), H = 260, Lm = 60, Rm = 24, T = 26, B = 40;
+    const ps = pr.pts.map(p => p[1]);
+    let lo = Math.min(0, ...ps), hi = Math.max(0, ...ps); if (hi - lo < 10) { hi += 5; lo -= 5; }
+    const step = nice((hi - lo) * 1.15, 5); lo = Math.floor(lo / step) * step; hi = Math.ceil(hi * 1.08 / step) * step || step;
+    const sx = x => Lm + (x / L) * (W - Lm - Rm), sy = p => T + (1 - (p - lo) / (hi - lo)) * (H - T - B);
+    let g = "";
+    if (pr.hot) g += '<rect x="' + sx(pr.hot[0]) + '" y="' + T + '" width="' + Math.max(1, sx(pr.hot[1]) - sx(pr.hot[0])) + '" height="' + (H - T - B) + '" style="fill:var(--smoke);opacity:.13"/>' +
+      '<text x="' + (sx(pr.hot[0]) + 6) + '" y="' + (T + 12) + '" style="fill:var(--ink-3)">smoke (buoyancy)</text>';
+    if (pr.train) g += '<rect x="' + sx(pr.train[0]) + '" y="' + T + '" width="' + Math.max(2, sx(pr.train[1]) - sx(pr.train[0])) + '" height="' + (H - T - B) + '" style="fill:var(--ink);opacity:.08"/>' +
+      '<text x="' + ((sx(pr.train[0]) + sx(pr.train[1])) / 2) + '" y="' + (H - B - 6) + '" text-anchor="middle" style="fill:var(--ink-3)">train</text>';
+    for (let p = lo; p <= hi + 1e-9; p += step) g += '<line class="gr" x1="' + Lm + '" y1="' + sy(p) + '" x2="' + (W - Rm) + '" y2="' + sy(p) + '"/><text x="' + (Lm - 6) + '" y="' + (sy(p) + 4) + '" text-anchor="end">' + nf(p, 0) + "</text>";
+    g += '<line x1="' + Lm + '" y1="' + sy(0) + '" x2="' + (W - Rm) + '" y2="' + sy(0) + '" style="stroke:var(--ink-3)"/>';
+    const xs = nice(L, 6); for (let x = 0; x <= L + 1e-9; x += xs) g += '<text x="' + sx(x) + '" y="' + (H - 20) + '" text-anchor="middle">' + nf(x, 0) + "</text>";
+    g += '<text x="' + (W - Rm) + '" y="' + (H - 3) + '" text-anchor="end" style="fill:var(--ink-3)">chainage from end A (m) · pressure (Pa)</text>';
+    g += '<path d="' + pr.pts.map((p, i) => (i ? "L" : "M") + sx(p[0]).toFixed(1) + " " + sy(p[1]).toFixed(1)).join("") + '" style="fill:none;stroke:var(--air);stroke-width:2.4;stroke-linejoin:round"/>';
+    const xf = Math.min(Math.max(+e.sc.fireX || 0, 0), L);
+    if (+e.sc.hrr > 0) g += '<circle cx="' + sx(xf) + '" cy="' + (T - 10) + '" r="5" style="fill:var(--fire)"/><text x="' + (sx(xf) + 9) + '" y="' + (T - 6) + '" style="fill:var(--fire);font-weight:600">' + nf(+e.sc.hrr, 1) + " MW</text>";
+    const seen = {};
+    pr.marks.forEach(mk => {
+      const k = mk.label === "jet fan" ? "jet" : mk.label; if (seen[k] && k === "jet") return; seen[k] = 1;
+      const x = sx(mk.x), anchor = mk.x === 0 ? "start" : mk.x >= L ? "end" : "middle";
+      g += '<text x="' + (x + (anchor === "start" ? 4 : anchor === "end" ? -4 : 0)) + '" y="' + (T - 6) + '" text-anchor="' + anchor + '" style="fill:var(--src)">' + (k === "jet" ? "jet fans +" + nf(mk.dp, 0) + " Pa each" : mk.label + " +" + nf(mk.dp, 0) + " Pa") + "</text>";
+    });
+    $("#prof-note").textContent = "Static pressure relative to outside at end B · closes at " + nf(pr.closure, 3) + " Pa (should be 0)";
     svg.setAttribute("viewBox", "0 0 " + W + " " + H); svg.style.height = H + "px"; svg.innerHTML = g;
   }
 
@@ -375,5 +443,5 @@
 
   model = load();
   wireInputs(); wireScenarios(); wireActions();
-  fillInputs(); renderScenarios(); renderVerify(); recompute();
+  fillInputs(); renderScenarios(); renderVerify(); mountSystem(); recompute();
 })();

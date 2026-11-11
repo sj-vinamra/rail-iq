@@ -4,7 +4,8 @@
 # Sign-in: if a file named .railiq-users exists next to this script (one "user:password"
 # per line, # for comments), the browser asks for a username and password. The file is
 # excluded from git and never served. Without the file the local server is open.
-param([int]$Port = 8080)
+# -Open skips sign-in (local testing only).
+param([int]$Port = 8080, [switch]$Open)
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $types = @{
@@ -20,7 +21,7 @@ $types = @{
 # users for sign-in
 $users = @{}
 $usersFile = Join-Path $root ".railiq-users"
-if (Test-Path $usersFile) {
+if ((Test-Path $usersFile) -and -not $Open) {
   foreach ($line in Get-Content $usersFile) {
     $l = $line.Trim()
     if ($l -eq "" -or $l.StartsWith("#")) { continue }

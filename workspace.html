@@ -15,7 +15,7 @@
   .wsbar{display:flex;align-items:center;gap:10px;height:54px;padding:0 12px 0 14px;border-bottom:1px solid var(--line);background:var(--surface);flex:none}
   .wsbar .brand b{font-size:21px}
   .wsbar .sep{width:1px;height:26px;background:var(--line)}
-  .switch{position:relative}
+  .switch{position:relative;min-width:0}
   .switch>button{display:flex;align-items:center;gap:10px;height:38px;padding:0 10px;border:1px solid transparent;border-radius:8px;background:transparent;cursor:pointer;max-width:46vw}
   .switch>button:hover,.switch>button[aria-expanded="true"]{background:var(--surface-2);border-color:var(--line)}
   .switch .ico{display:grid;place-items:center;width:28px;height:28px;border-radius:7px;background:var(--accent-soft);color:var(--accent);flex:none}
@@ -42,7 +42,7 @@
   .notfound{max-width:520px;margin:12vh auto;padding:0 16px;text-align:center}
   .notfound h1{font-family:var(--f-disp);font-size:40px;margin:0 0 8px}
   .notfound p{color:var(--ink-2)}
-  @media (max-width:760px){.wsmeta,.wsbar .brand b,.wsbar .sep,.hide-sm{display:none}}
+  @media (max-width:760px){.wsmeta,.wsbar .brand b,.wsbar .sep,.hide-sm,.wsbar #wsstatus{display:none!important}.switch{flex:1}.switch>button{max-width:100%}.wsbar{gap:6px;padding:0 8px}}
 </style>
 </head>
 <body>
@@ -57,11 +57,12 @@
   <span class="pill live" id="wsstatus" hidden></span>
   <span class="wsmeta" id="wsmeta"></span>
   <span class="sp"></span>
+  <a class="iconbtn" href="system.html" title="System-wide: shared parameters and all results" aria-label="System-wide page"><span data-icon="nodes"></span></a>
   <a class="iconbtn hide-sm" id="details" title="Details" aria-label="Details"><span data-icon="info"></span></a>
-  <button class="iconbtn" id="reload" title="Reload simulator" aria-label="Reload simulator"><span data-icon="reload"></span></button>
+  <button class="iconbtn hide-sm" id="reload" title="Reload simulator" aria-label="Reload simulator"><span data-icon="reload"></span></button>
   <button class="iconbtn hide-sm" id="full" title="Full screen" aria-label="Full screen"><span data-icon="full"></span></button>
   <a class="iconbtn" id="standalone" target="_blank" rel="noopener" title="Open standalone in a new tab" aria-label="Open standalone"><span data-icon="ext"></span></a>
-  <button class="iconbtn" data-palette-btn title="Search (Ctrl K)" aria-label="Search"><span data-icon="search"></span></button>
+  <button class="iconbtn hide-sm" data-palette-btn title="Search (Ctrl K)" aria-label="Search"><span data-icon="search"></span></button>
   <button class="iconbtn" data-theme-btn aria-label="Theme"></button>
 </div>
 
@@ -88,7 +89,7 @@
       $("#swico").innerHTML = R.icon("info");
       $("#stage").innerHTML = '<div class="notfound"><h1>No simulator here</h1><p>' +
         (m ? "“" + R.esc(m.title) + "” is in the Rail-IQ pipeline and is not available yet." : "There is no simulator with the id “" + R.esc(id || "") + "”.") +
-        '</p><p><a class="btn primary" href="index.html#simulators">Back to the catalogue</a></p></div>';
+        '</p><p><a class="btn primary" href="simulators.html">Back to all simulators</a></p></div>';
       ["#details", "#reload", "#full", "#standalone"].forEach(s => ($(s).hidden = true));
       return;
     }
@@ -99,7 +100,7 @@
     $("#swico").innerHTML = R.icon(d.icon);
     const st = $("#wsstatus"); st.hidden = false; st.className = "pill " + m.status; st.textContent = m.status;
     $("#wsmeta").textContent = [d.label, m.version].filter(Boolean).join(" · ");
-    $("#details").href = "index.html#m=" + encodeURIComponent(m.id);
+    $("#details").href = "simulators.html#m=" + encodeURIComponent(m.id);
     $("#standalone").href = m.entry;
     $("#loadtxt").textContent = "Loading " + m.title + "…";
 
@@ -131,7 +132,7 @@
     menu.innerHTML = live.map(x =>
       '<a href="' + R.launchUrl(x) + '" aria-current="' + (m && x.id === m.id) + '"><span class="ico" style="display:grid;place-items:center;width:28px;height:28px;border-radius:7px;background:var(--accent-soft);color:var(--accent)">' +
       R.icon((DIS[x.discipline] || {}).icon, 'width="16" height="16"') + '</span><span class="t"><b>' + R.esc(x.title) + "</b><small>" + R.esc(x.summary) + "</small></span></a>").join("") +
-      '<div class="ft"><a href="index.html#simulators"><span class="ico" style="display:grid;place-items:center;width:28px;height:28px">' + R.icon("grid", 'width="16" height="16"') +
+      '<div class="ft"><a href="simulators.html"><span class="ico" style="display:grid;place-items:center;width:28px;height:28px">' + R.icon("grid", 'width="16" height="16"') +
       '</span><span class="t"><b>All simulators</b><small>Back to the Rail-IQ catalogue</small></span></a></div>';
     const set = o => { menu.hidden = !o; btn.setAttribute("aria-expanded", o); };
     btn.addEventListener("click", e => { e.stopPropagation(); set(menu.hidden); });

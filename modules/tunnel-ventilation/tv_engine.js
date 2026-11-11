@@ -191,7 +191,41 @@
     return { jets, jetMin: jetMin ? jetMin.n : null, combos, plantMin: passing[0] || null };
   }
 
-  const API = { g, CP, geom, tunnelK, trainLoss, jetFans, plant, fireTemp, buoyancy, terms, solve, kennedy, liIngason, critical, evaluate, fireSweep, sizing };
+  /**
+   * Static pressure along the tunnel (Pa, relative to the outside at end B) at velocity v.
+   * Walks from end A to end B adding each source and subtracting each loss where it acts:
+   * entry/exit losses and fan plants at the portals, jet fans at their positions, wall friction
+   * and other local losses spread evenly, the stalled-train loss over the train, buoyancy over
+   * the hot length. If v solves the pressure balance, the profile closes at 0 Pa at end B.
+   */
+  function profile(m, sc, v) {
+    const t = m.tunnel, rho = +m.air.rho, L = +t.length, A = +t.area, G = geom(t), T = terms(m, sc, v);
+    const dyn = (rho / 2) * sq(v), zA = v >= 0 ? (+t.zIn || 0) : (+t.zOut || 0), zB = v >= 0 ? (+t.zOut || 0) : (+t.zIn || 0);
+    const gFric = (T.l.friction + (+t.zOther || 0) * dyn) / L;   // Pa per metre, signed with the flow
+    const xf = Math.min(Math.max(+sc.fireX || 0, 0), L), Lt = sc.train ? +m.train.length || 0 : 0;
+    const ta = Math.max(0, xf - Lt / 2), tb = Math.min(L, xf + Lt / 2), gTrain = Lt > 0 && tb > ta ? T.l.train / (tb - ta) : 0;
+    const ha = v >= 0 ? xf : 0, hb = v >= 0 ? L : xf, gBuoy = hb > ha ? T.s.buoy / (hb - ha) : 0;
+    const nJ = Math.round(+m.jet.installed || 0), run = Math.min(nJ, Math.round(+sc.jetRun || 0));
+    const jets = []; for (let i = 0; i < run; i++) jets.push((L * (i + 1)) / (nJ + 1));
+    const dJet = run > 0 ? T.s.jet / run : 0;
+    const marks = [];
+    const grad = x => -gFric - (x > ta && x < tb ? gTrain : 0) + (x > ha && x < hb ? gBuoy : 0);
+    const bps = [...new Set([0, L, ta, tb, ha, hb, ...jets].filter(x => x >= 0 && x <= L))].sort((a, b) => a - b);
+    let p = +sc.portal || 0;                         // outside end A
+    const pts = [[0, p]];
+    p += T.s.plantA; if (T.s.plantA) marks.push({ x: 0, label: "end A fans", dp: T.s.plantA });
+    p -= zA * dyn; pts.push([0, p]);
+    for (let i = 0; i < bps.length - 1; i++) {
+      const x0 = bps[i], x1 = bps[i + 1];
+      if (x1 > x0) { p += grad((x0 + x1) / 2) * (x1 - x0); pts.push([x1, p]); }
+      if (x1 < L) jets.filter(j => Math.abs(j - x1) < 1e-9).forEach(() => { p += dJet; pts.push([x1, p]); marks.push({ x: x1, label: "jet fan", dp: dJet }); });
+    }
+    p -= zB * dyn; p += T.s.plantB; pts.push([L, p]);
+    if (T.s.plantB) marks.push({ x: L, label: "end B fans", dp: T.s.plantB });
+    return { pts, marks, closure: p, train: Lt > 0 ? [ta, tb] : null, hot: T.s.buoy ? [ha, hb] : null };
+  }
+
+  const API = { profile, g, CP, geom, tunnelK, trainLoss, jetFans, plant, fireTemp, buoyancy, terms, solve, kennedy, liIngason, critical, evaluate, fireSweep, sizing };
   if (typeof module !== "undefined" && module.exports) module.exports = API;
   root.TV = API;
 })(typeof window !== "undefined" ? window : globalThis);

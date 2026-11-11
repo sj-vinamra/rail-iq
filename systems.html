@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Railway systems · Rail-IQ</title>
+<meta name="description" content="Rail-IQ simulators by railway system: power supply, telecom, ATC, tunnel ventilation, RAMS, noise and operations.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/css/railiq.css">
+<style>
+  body:not(.one-system) .only-one{display:none}
+  body.one-system .only-all{display:none}
+</style>
+</head>
+<body data-page="systems">
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Rail-IQ home"><span data-logo></span><b>Rail<span>-</span>IQ</b></a>
+    <nav class="navlinks" aria-label="Sections">
+      <a href="systems.html" aria-current="page">Systems</a>
+      <a href="simulators.html">Simulators</a>
+      <a href="system.html">System-wide</a>
+    </nav>
+    <span class="spacer"></span>
+    <button class="kbtn" data-palette-btn aria-label="Search simulators"><span data-icon="search"></span><span class="lbl">Search simulators…</span><kbd>Ctrl K</kbd></button>
+    <button class="iconbtn" data-theme-btn aria-label="Theme"></button>
+  </div>
+</header>
+
+<main>
+  <!-- all systems -->
+  <section class="page-hero only-all">
+    <div class="wrap">
+      <div class="crumb"><a href="index.html">Rail-IQ</a> / Systems</div>
+      <div class="ttl"><h1>Railway systems</h1></div>
+      <p class="lede">Pick a system to see only its simulators, grouped by sub-system. Rail-IQ currently covers metro, APM and high-speed rail.</p>
+    </div>
+  </section>
+
+  <!-- one system -->
+  <section class="page-hero only-one">
+    <div class="wrap">
+      <div class="crumb"><a href="index.html">Rail-IQ</a> / <a href="systems.html">Systems</a> / <span id="crumbHere"></span></div>
+      <div class="ttl"><span class="ico" id="sysIco"></span><h1 id="sysName"></h1></div>
+      <p class="lede" id="sysBlurb"></p>
+      <div class="meta" id="sysMeta"></div>
+    </div>
+  </section>
+
+  <div class="wrap"><nav class="systabs" id="systabs" aria-label="Systems"></nav></div>
+  <section class="block only-all" style="padding-top:18px"><div class="wrap"><div class="sysgrid" id="systemsGrid"></div></div></section>
+
+  <section class="block only-one" style="padding-top:18px">
+    <div class="wrap">
+      <div class="toolbar">
+        <label class="search"><span data-icon="search"></span><input id="q" type="search" placeholder="Search in this system…  ( / )" aria-label="Search in this system"></label>
+        <div class="seg" id="statseg" role="group" aria-label="Status">
+          <button data-status="all" aria-pressed="true">All</button>
+          <button data-status="live" aria-pressed="false">Available</button>
+          <button data-status="planned" aria-pressed="false">Pipeline</button>
+        </div>
+        <div class="chips" id="domchips"></div>
+      </div>
+      <div class="resultline" id="resultline"></div>
+      <div id="grid"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="sitefoot">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Rail-IQ home"><span data-logo style="display:inline-flex;width:22px;height:22px"></span></a>
+    <span>Rail-IQ · Railway systems simulation</span>
+    <span class="sp"></span>
+    <a href="systems.html">All systems</a>
+    <a href="simulators.html">All simulators</a>
+    <a href="system.html">System-wide</a>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" hidden></aside>
+
+<script src="assets/js/catalog.js"></script>
+<script src="assets/js/common.js"></script>
+<script src="assets/js/home.js"></script>
+</body>
+</html>
