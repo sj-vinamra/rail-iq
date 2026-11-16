@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rail-IQ</title>
-<meta name="description" content="Rail-IQ — browser-based simulation workbench for metro, APM and high-speed rail systems.">
+<meta name="description" content="Rail-IQ — railway systems simulators for metro, APM and high-speed rail.">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,84 +28,27 @@
 </header>
 
 <main>
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <span class="eyebrow"><span class="dot"></span>Railway systems simulation platform</span>
-        <h1>Simulate the <em>whole railway</em> before it is built.</h1>
-        <p class="lede">Rail-IQ brings power supply, telecom, ATC, tunnel ventilation, RAMS and noise simulators for metro, APM and high-speed rail into one browser workbench. No install — open a model, load your project data, and get report-ready results.</p>
-        <div class="cta">
-          <a class="btn primary" href="systems.html"><span data-icon="grid"></span>Browse by system</a>
-          <a class="btn" href="simulators.html"><span data-icon="search"></span>All simulators</a>
-        </div>
-        <div class="stats" role="list">
-          <div class="stat" role="listitem"><b data-stat="live">0</b><span>simulators available</span></div>
-          <div class="stat" role="listitem"><b data-stat="pipe">0</b><span>in the pipeline</span></div>
-          <div class="stat" role="listitem"><b data-stat="sys">0</b><span>railway systems</span></div>
-          <div class="stat" role="listitem"><b data-stat="dom">0</b><span>railway types</span></div>
-        </div>
-      </div>
-
-      <div class="netpanel" aria-label="Animated network schematic. Click a line to see the simulators for that railway type.">
-        <header>
-          <span class="t">Network view</span>
-          <span class="live"><i></i>Live</span>
-          <span class="tc"><span id="trains">0</span> trains in service</span>
-          <span class="sp"></span>
-          <span class="clock" id="clock">--:--:--</span>
-        </header>
-        <div style="position:relative;flex:1;display:flex">
-          <canvas id="net"></canvas>
-          <div class="nettip" id="nettip" hidden></div>
-        </div>
-        <div class="netlegend" id="netlegend" aria-label="Railway types"></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="block" id="systems">
+  <section class="home-simple">
     <div class="wrap">
-      <div class="sec-head">
-        <div><span class="sec-num">01 / SYSTEMS</span><h2>Railway systems</h2></div>
-        <p>Each system has its own page listing only its simulators, grouped by sub-system.</p>
-        <span class="sp"></span>
-        <a class="btn sm" href="simulators.html">All simulators</a>
-      </div>
-      <div class="recent" id="recent" hidden></div>
-      <div class="sysgrid" id="systemsGrid"></div>
-    </div>
-  </section>
-
-  <section class="block" id="platform" style="border-top:1px solid var(--line)">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><span class="sec-num">02 / PLATFORM</span><h2>How Rail-IQ works</h2></div>
-      </div>
-      <div class="pillars">
-        <div class="pillar"><span class="n">A</span><h4>Runs in the browser</h4><p>Every simulator is a self-contained web page behind one sign-in. Nothing to install.</p></div>
-        <div class="pillar"><span class="n">B</span><h4>Define the system once</h4><p>Line, fleet, train, power and tunnel data entered on the System-wide page flow into every simulator that uses them.</p></div>
-        <div class="pillar"><span class="n">C</span><h4>Checked engines</h4><p>Each simulator carries its own verification checks against independent results.</p></div>
-        <div class="pillar"><span class="n">D</span><h4>Report-ready results</h4><p>Charts, pass/fail checks and Excel, Word and PDF outputs ready for design submissions.</p></div>
-      </div>
+      <h1>Rail-IQ</h1>
+      <p class="lede">Railway systems simulators for Metro, APM and High-speed rail. Pick a system to open its simulators.</p>
+      <div class="hometiles" id="homeTiles"></div>
     </div>
   </section>
 </main>
 
 <footer class="sitefoot">
   <div class="wrap">
-    <a class="brand" href="index.html" aria-label="Rail-IQ home"><span data-logo style="display:inline-flex;width:22px;height:22px"></span></a>
     <span>Rail-IQ · Railway systems simulation · © <span id="year"></span></span>
     <span class="sp"></span>
     <a href="systems.html">Systems</a>
     <a href="simulators.html">Simulators</a>
     <a href="system.html">System-wide</a>
-    <span class="mono" style="font-size:12px">Press <kbd>Ctrl K</kbd> anywhere</span>
   </div>
 </footer>
 
 <script src="assets/js/catalog.js"></script>
 <script src="assets/js/common.js"></script>
-<script src="assets/js/network.js"></script>
 <script src="assets/js/home.js"></script>
 </body>
 </html>

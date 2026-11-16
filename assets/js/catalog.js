@@ -35,17 +35,19 @@ window.RAILIQ_SYSTEMS = {
                 subsystems: ["DC traction (750 V / 1500 V)", "AC traction (25 kV)", "HV network & catenary"] },
   telecom:    { label: "Telecom", icon: "antenna", blurb: "Onboard and wayside communications: radio, CCTV, PA / PIDS and data networks.",
                 subsystems: ["Onboard telecom", "Radio & wayside"] },
-  atc:        { label: "ATC & Signalling", icon: "signal", blurb: "Automatic train control and signalling: CBTC, headway and line capacity.",
-                subsystems: ["CBTC / ATC"] },
-  tvs:        { label: "Tunnel Ventilation & E&M", icon: "station", blurb: "Tunnel ventilation, smoke control and station evacuation.",
-                subsystems: ["Tunnel ventilation", "Stations & evacuation"] },
   rams:       { label: "RAMS & Assurance", icon: "shield", blurb: "Reliability, availability and failure-mode analysis for the whole system.",
                 subsystems: ["Reliability & availability"] },
   nv:         { label: "Noise & Vibration", icon: "wave", blurb: "Wayside noise, ground-borne vibration and ground-borne noise.",
                 subsystems: ["Wayside noise & vibration"] },
   operations: { label: "Operations", icon: "clock", blurb: "Running time, energy, timetable and fleet.",
-                subsystems: ["Running time & energy", "Timetable & fleet"] }
+                subsystems: ["Running time & energy", "Timetable & fleet"] },
+  atc:        { label: "ATC & Signalling", icon: "signal", blurb: "Automatic train control and signalling: CBTC, headway and line capacity.",
+                subsystems: ["CBTC / ATC"] },
+  tvs:        { label: "Tunnel Ventilation & E&M", icon: "station", blurb: "Tunnel ventilation, smoke control and station evacuation.",
+                subsystems: ["Tunnel ventilation", "Stations & evacuation"] }
 };
+// every system, including ones with no working simulator yet (the home page shows them as "Coming soon")
+window.RAILIQ_SYSTEMS_ALL = JSON.parse(JSON.stringify(window.RAILIQ_SYSTEMS));
 window.RAILIQ_DISCIPLINES = window.RAILIQ_SYSTEMS; // older name, still used by some pages
 
 window.RAILIQ_CATALOG = [

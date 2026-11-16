@@ -65,6 +65,17 @@
     }).join("");
   }
 
+  /* ---------- simple home tiles: every system, "Coming soon" where nothing works yet ---------- */
+  function renderHomeTiles(box) {
+    const ALL = window.RAILIQ_SYSTEMS_ALL || SYS;
+    box.innerHTML = Object.entries(ALL).map(([k, s]) => {
+      const n = CAT.filter(m => m.discipline === k && R.isOpenable(m)).length;
+      const inner = '<span class="ico">' + R.icon(s.icon) + "</span><h3>" + esc(s.label) + "</h3><p>" + esc(s.blurb || "") + "</p>" +
+        '<span class="ft">' + (n ? n + " simulator" + (n === 1 ? "" : "s") + R.icon("arrow") : "Coming soon") + "</span>";
+      return n && SYS[k] ? '<a class="hometile" href="' + sysUrl(k) + '">' + inner + "</a>" : '<div class="hometile soon">' + inner + "</div>";
+    }).join("");
+  }
+
   /* ---------- system tabs (systems pages) ---------- */
   function renderSystemTabs(box) {
     box.innerHTML = '<a href="systems.html"' + (!SYS_ID ? ' aria-current="page"' : "") + ">" + R.icon("grid") + "All systems</a>" +
@@ -243,6 +254,7 @@
     const deep = readHash();
     renderStats(); renderRecent(); mountNetwork();
     const sg = $("#systemsGrid"); if (sg && !SYS_ID) renderSystemsGrid(sg);
+    const ht = $("#homeTiles"); if (ht) renderHomeTiles(ht);
     const tabs = $("#systabs"); if (tabs) renderSystemTabs(tabs);
     if (PAGE === "systems") {
       document.body.classList.toggle("one-system", !!SYS_ID);
