@@ -10,7 +10,7 @@ same inputs file, and give the same numbers (checked to 1 part in 10^9).
 
 | File | What it is |
 |---|---|
-| `TPS_Model.html` | The interactive model. Double-click to open in Chrome / Edge (needs internet once for the chart, Word and Excel libraries). |
+| `DC_Traction_Power_Model.html` | The interactive model. Double-click to open in Chrome / Edge (needs internet once for the chart, Word and Excel libraries). |
 | `python/tps_model.py` | Python program (command line). Writes `TPS_Results.xlsx`, PNG charts and a JSON summary. |
 | `python/tps_engine.py` | Python calculation engine (mirror of `src/engine.js`). |
 | `python/tps_readers.py` | Python readers for the Excel alignment and the Word train data (text, tables, Word charts, graph images). |

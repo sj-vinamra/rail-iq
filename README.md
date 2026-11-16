@@ -54,7 +54,7 @@ serve.ps1                  Local static server for Windows
 
 | Module | Status | Discipline | Entry |
 |---|---|---|---|
-| DC Traction Power Model | Live | Traction Power | `modules/dc-traction-power/TPS_Model.html` |
+| DC Traction Power Model | Live | Traction Power | `modules/dc-traction-power/DC_Traction_Power_Model.html` |
 | APM Onboard Telecom Layout | Live | Telecom & Radio | `modules/apm-onboard-telecom/index.html` |
 | RAMS & Availability (Phase 1) | Beta | Systems Assurance | `modules/rams/index.html` |
 | Tunnel Ventilation (Phase 1) | Beta | Stations & Tunnels | `modules/tunnel-ventilation/index.html` |

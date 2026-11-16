@@ -59,7 +59,7 @@ window.RAILIQ_CATALOG = [
     discipline: "power",
     subsystem: "DC traction (750 V / 1500 V)",
     status: "live",
-    entry: "modules/dc-traction-power/TPS_Model.html",
+    entry: "modules/dc-traction-power/DC_Traction_Power_Model.html",
     version: "2026.10",
     updated: "2026-10-20",
     standards: ["EN 50163", "EN 50122-1", "EN 50122-2", "IEC 60909", "IEC 61000-3-6"],
