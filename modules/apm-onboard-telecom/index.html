@@ -9,207 +9,357 @@ html,body{margin:0}
 img{max-width:100%}
 [hidden]{display:none!important}
 </style>
-<title>Onboard Telecom Layout Rev 16</title>
+<title>Onboard Telecom Layout Rev 25</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <style>
 :root{
-  --ground:#F1F0EC; --panel:#FBFAF8; --panel-2:#E9E7E1;
-  --ink:#15181A; --ink-2:#484F55; --ink-3:#7B848B;
-  --line:#D8D5CD; --line-strong:#BCB8AE;
-  --accent:#B0761C; --accent-soft:#F3E8D2;
-  --vp-bg:#EEEDE9;
-  --sig:#6B5BA8; --sig-soft:#E6E2F2;
-  --b58:#0B6E85; --b58-soft:#DCEDF1;
-  --lte:#A62B62; --lte-soft:#F6E0EA;
-  --ok:#2E7A58; --ok-soft:#DFEDE6;
-  --warn:#9A5A12; --warn-soft:#F6E8D4;
-  --tetra:#A5501F; --cctv:#D9532B; --pa:#C7900F; --pids:#17808F; --net:#3F68BC; --comp:#7E52BC; --radio:#26855A; --pwr:#B23C56; --rack:#66717B;
-  --f-disp:"Saira Condensed","Arial Narrow",Helvetica,sans-serif;
-  --f-body:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --ground:#F5F5F7; --panel:#FFFFFF; --panel-2:#F5F5F7; --panel-3:#E8E8ED;
+  --ink:#1D1D1F; --ink-2:#424245; --ink-3:#86868B;
+  --line:rgba(0,0,0,.08); --line-strong:rgba(0,0,0,.16);
+  --accent:#0071E3; --accent-soft:#E8F1FD;
+  --vp-bg:#F2F2F4;
+  --sig:#5E5CE6; --sig-soft:#ECECFB;
+  --b58:#0A7EA4; --b58-soft:#E3F1F6;
+  --lte:#BF3A6A; --lte-soft:#F8E6EE;
+  --ok:#248A3D; --ok-soft:#E5F3E9;
+  --warn:#B25E00; --warn-soft:#F8EEDF;
+  --tetra:#C25B1E; --cctv:#E0532E; --pa:#C9900B; --pids:#1A8A9A; --net:#3B6ED0; --comp:#7E52BC; --radio:#2E9A62; --pwr:#C7385B; --rack:#6E7781;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 10px 30px rgba(0,0,0,.06);
+  --radius:18px;
+  --f-body:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Inter","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --f-disp:var(--f-body);
+  --f-mono:ui-monospace,"SF Mono",Menlo,"JetBrains Mono",Consolas,monospace;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --ground:#0F1317; --panel:#161B20; --panel-2:#1D242A;
-    --ink:#EDEFF1; --ink-2:#AAB2B9; --ink-3:#768088;
-    --line:#262F37; --line-strong:#38434D;
-    --accent:#DFA53A; --accent-soft:#31270F;
-    --vp-bg:#0A0E12;
-    --sig:#A794E0; --sig-soft:#221D33;
-    --tetra:#DD8B4B;
-    --b58:#48BDD6; --b58-soft:#0E2A31;
-    --lte:#F07AAE; --lte-soft:#301120;
-    --ok:#57BC8C; --ok-soft:#12291F;
-    --warn:#DE9E45; --warn-soft:#2E2211;
-    --cctv:#F2724A; --pa:#E8B33F; --pids:#43BACD; --net:#7FA0E8; --comp:#B48EE8; --radio:#57C68B; --pwr:#E4788F; --rack:#96A1AB;
+    --ground:#000000; --panel:#1C1C1E; --panel-2:#2C2C2E; --panel-3:#3A3A3C;
+    --ink:#F5F5F7; --ink-2:#C7C7CC; --ink-3:#8E8E93;
+    --line:rgba(255,255,255,.10); --line-strong:rgba(255,255,255,.20);
+    --accent:#0A84FF; --accent-soft:#17304D;
+    --vp-bg:#121214;
+    --sig:#9D9BFF; --sig-soft:#26264A;
+    --tetra:#E98A4A;
+    --b58:#5AC8E8; --b58-soft:#11303B;
+    --lte:#F27DAE; --lte-soft:#3A1526;
+    --ok:#4CD964; --ok-soft:#122A18;
+    --warn:#F0A94A; --warn-soft:#332511;
+    --cctv:#F4764F; --pa:#EBB844; --pids:#4CC2D4; --net:#80A6F0; --comp:#B795EC; --radio:#5ECF92; --pwr:#EC7A93; --rack:#9AA3AD;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
   }
 }
 :root[data-theme="dark"]{
-  --ground:#0F1317; --panel:#161B20; --panel-2:#1D242A;
-  --ink:#EDEFF1; --ink-2:#AAB2B9; --ink-3:#768088;
-  --line:#262F37; --line-strong:#38434D;
-  --accent:#DFA53A; --accent-soft:#31270F;
-  --vp-bg:#0A0E12;
-  --sig:#A794E0; --sig-soft:#221D33;
-  --tetra:#DD8B4B;
-  --b58:#48BDD6; --b58-soft:#0E2A31;
-  --lte:#F07AAE; --lte-soft:#301120;
-  --ok:#57BC8C; --ok-soft:#12291F;
-  --warn:#DE9E45; --warn-soft:#2E2211;
-  --cctv:#F2724A; --pa:#E8B33F; --pids:#43BACD; --net:#7FA0E8; --comp:#B48EE8; --radio:#57C68B; --pwr:#E4788F; --rack:#96A1AB;
+  --ground:#000000; --panel:#1C1C1E; --panel-2:#2C2C2E; --panel-3:#3A3A3C;
+  --ink:#F5F5F7; --ink-2:#C7C7CC; --ink-3:#8E8E93;
+  --line:rgba(255,255,255,.10); --line-strong:rgba(255,255,255,.20);
+  --accent:#0A84FF; --accent-soft:#17304D;
+  --vp-bg:#121214;
+  --sig:#9D9BFF; --sig-soft:#26264A;
+  --tetra:#E98A4A;
+  --b58:#5AC8E8; --b58-soft:#11303B;
+  --lte:#F27DAE; --lte-soft:#3A1526;
+  --ok:#4CD964; --ok-soft:#122A18;
+  --warn:#F0A94A; --warn-soft:#332511;
+  --cctv:#F4764F; --pa:#EBB844; --pids:#4CC2D4; --net:#80A6F0; --comp:#B795EC; --radio:#5ECF92; --pwr:#EC7A93; --rack:#9AA3AD;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1400px;margin:0 auto;padding:18px 18px 56px}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.wrap{max-width:1440px;margin:0 auto;padding:40px 28px 64px}
+button{font-family:inherit;font-size:inherit}
+.tab:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:999px}
 
-.mast{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:flex-end;justify-content:space-between;padding-bottom:12px;border-bottom:2px solid var(--ink)}
-.mast h1{font-family:var(--f-disp);font-weight:700;font-size:clamp(26px,4vw,44px);line-height:.95;margin:0}
-.mast h1 span{display:block;font-size:.42em;font-weight:600;color:var(--ink-3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
-.stamp{display:flex;flex-wrap:wrap;border:1px solid var(--line-strong);font-family:var(--f-mono);font-size:11px}
-.stamp div{padding:5px 11px;border-right:1px solid var(--line-strong)}
+/* ---------- masthead ---------- */
+.mast{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between;padding:0 4px 8px}
+.mast h1{font-weight:600;font-size:clamp(28px,3.4vw,40px);line-height:1.08;margin:0;letter-spacing:-.022em}
+.mast h1 span{display:block;font-size:15px;font-weight:400;color:var(--ink-3);letter-spacing:0;text-transform:none;margin-bottom:10px}
+.stamp{display:flex;flex-wrap:wrap;gap:8px;font-size:12.5px;font-family:var(--f-body)}
+.stamp div{display:flex;gap:6px;align-items:baseline;padding:5px 12px;border-radius:999px;background:var(--panel-3);color:var(--ink-2);border:0}
 .stamp div:last-child{border-right:0}
-.stamp b{display:block;font-size:9px;letter-spacing:.13em;color:var(--ink-3);font-weight:500;text-transform:uppercase}
-.stamp .rev{background:var(--accent);color:#111}
-.stamp .rev b{color:#111;opacity:.7}
+.stamp b{display:inline;font-size:12.5px;letter-spacing:0;color:var(--ink-3);font-weight:400;text-transform:none}
+.stamp b::after{content:""}
+.stamp .rev{background:var(--ink);color:var(--ground)}
+.stamp .rev b{color:var(--ground);opacity:.6}
 
-.nav{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-top:14px;padding:8px 0;border-bottom:1px solid var(--line)}
-.tabs{display:flex;gap:0;flex-wrap:wrap}
-.tab{background:transparent;border:0;border-bottom:2px solid transparent;padding:6px 15px 8px;font-family:var(--f-disp);font-size:18px;font-weight:600;color:var(--ink-3);cursor:pointer}
-.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+/* ---------- navigation ---------- */
+.nav{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin:26px 0 18px;padding:0 4px;border:0}
+.tabs{display:inline-flex;gap:2px;padding:3px;border-radius:12px;background:var(--panel-3)}
+.tab{background:transparent;border:0;padding:7px 18px;border-radius:9px;font-size:14px;font-weight:500;color:var(--ink-2);cursor:pointer;transition:background .18s,color .18s,box-shadow .18s}
+.tab[aria-selected="true"]{color:var(--ink);background:var(--panel);box-shadow:0 1px 3px rgba(0,0,0,.10),0 0 0 .5px rgba(0,0,0,.04)}
+:root[data-theme="dark"] .tab[aria-selected="true"]{background:#48484A}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .tab[aria-selected="true"]{background:#48484A} }
 .navr{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
-button{font-family:inherit}
-.themebtn{background:transparent;border:1px solid var(--line-strong);color:var(--ink-2);padding:5px 12px;font-family:var(--f-mono);font-size:11px;cursor:pointer;display:flex;gap:7px;align-items:center}
-.themebtn:hover{border-color:var(--ink-2);color:var(--ink)}
-.tab:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.themebtn{background:var(--panel-3);border:0;color:var(--ink-2);padding:7px 14px;border-radius:999px;font-size:13px;cursor:pointer;display:flex;gap:7px;align-items:center;transition:background .18s}
+.themebtn:hover{background:var(--line-strong);color:var(--ink)}
 
-.toolbar{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;margin:12px 0;padding:9px 0;border-bottom:1px solid var(--line)}
+/* ---------- toolbar and capsule buttons ---------- */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center;margin:0;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--panel);border-radius:var(--radius) var(--radius) 0 0}
 .tgroup{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.tlabel{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
-.vbtn{background:transparent;border:1px solid var(--line-strong);color:var(--ink-2);padding:5px 11px;font-family:var(--f-mono);font-size:11px;cursor:pointer}
-.vbtn:hover{border-color:var(--ink-2);color:var(--ink)}
-.vbtn[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
-input[type=range]{accent-color:var(--accent);width:180px}
+.tlabel{font-size:12.5px;letter-spacing:0;text-transform:none;color:var(--ink-3);margin-right:4px}
+.vbtn{background:var(--panel-3);border:0;color:var(--ink-2);padding:6px 13px;border-radius:999px;font-size:12.5px;font-weight:500;cursor:pointer;transition:background .18s,color .18s,transform .08s;line-height:1.3}
+.vbtn:hover{background:var(--line-strong);color:var(--ink)}
+.vbtn:active{transform:scale(.97)}
+.vbtn[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
+input[type=range]{accent-color:var(--accent);width:160px;height:4px}
+.bnote{font-size:12px;color:var(--ink-3);font-family:var(--f-body)}
+.vbtn.b58btn[aria-pressed="true"],.vbtn.covbtn[aria-pressed="true"],.vbtn.chbtn[aria-pressed="true"],.vbtn.cnbtn[aria-pressed="true"]{background:var(--b58);color:#fff}
+.vbtn.ltebtn[aria-pressed="true"]{background:var(--lte);color:#fff}
+.vbtn.tetbtn[aria-pressed="true"]{background:var(--tetra);color:#fff}
+.vbtn.camcovbtn[aria-pressed="true"]{background:var(--cctv);color:#fff}
+.vbtn.vehbtn[aria-pressed="true"]{background:#E0801A;color:#fff}
+.vbtn.ss-cctv[aria-pressed="true"]{background:var(--cctv);color:#fff}
+.vbtn.ss-pa[aria-pressed="true"]{background:var(--pa);color:#fff}
+.vbtn.ss-pis[aria-pressed="true"]{background:var(--pids);color:#fff}
+.vbtn.ss-net[aria-pressed="true"]{background:#8A5BD6;color:#fff}
+.vbtn.brkbtn[aria-pressed="true"],.vbtn.failbtn[aria-pressed="true"]{background:var(--pwr);color:#fff}
 
-.t2w{padding:11px 13px;border-bottom:1px solid var(--line);background:var(--panel-2)}
-.t2w .hd{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:5px}
-.t2w .ttl{font-family:var(--f-mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-2);line-height:1.35}
-.t2w .tagp{font-family:var(--f-mono);font-size:8.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);padding:2px 6px;flex:none}
-.t2w .opt{display:flex;align-items:center;gap:7px;font-family:var(--f-mono);font-size:11px;color:var(--ink-2);padding:2px 0}
-.t2w .opt .ring{width:9px;height:9px;flex:none;border-radius:50%;border:1px solid var(--line-strong)}
-.t2w .nt{font-size:10.5px;color:var(--ink-3);margin-top:5px;line-height:1.4}
-.nsglg{padding:7px 13px 10px;border-top:1px solid var(--line);background:var(--panel-2)}
-.nsglg .r{display:flex;align-items:center;gap:9px;padding:3px 0;font-size:11.5px;color:var(--ink-2)}
-.nsglg .sq{width:10px;height:10px;flex:none;border-radius:2px}
-.nsglg .sq.s58{background:var(--b58)} .nsglg .sq.slte{background:var(--lte)} .nsglg .sq.sob{background:var(--radio)} .nsglg .sq.stet{background:var(--tetra)}
-.nsglg .sq.cf1{background:var(--cctv)} .nsglg .sq.cf2{background:var(--pa)} .nsglg .sq.cf3{background:var(--pids)}
-.nsglg .hdd{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+/* ---------- stage card ---------- */
+.stage{display:grid;grid-template-columns:250px 1fr;gap:0;background:var(--panel);border:0}
+@media(max-width:940px){.stage{grid-template-columns:1fr}}
+#page-arch,#page-comms,#page-build{background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.col{background:var(--panel);min-width:0}
+.stage .col:first-child{border-right:1px solid var(--line)}
+.colhead{padding:14px 18px 6px;border:0;font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink-3);display:flex;justify-content:space-between}
+.lay{display:flex;align-items:center;gap:10px;width:calc(100% - 16px);margin:0 8px;text-align:left;background:transparent;border:0;padding:6px 10px;border-radius:8px;color:var(--ink-2);cursor:pointer;transition:background .15s,opacity .15s}
+.lay:hover{background:var(--panel-2)}
+.lay[aria-pressed="false"]{opacity:.38}
+.swatch{width:10px;height:10px;flex:none;border-radius:50%;background:var(--c)}
+.lay .nm{flex:1;font-size:13px;color:var(--ink)}
+.lay .ct{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.itemlist{border:0;padding:2px 0 10px;max-height:320px;overflow-y:auto}
+.row{display:grid;grid-template-columns:8px 1fr auto;gap:9px;align-items:baseline;width:calc(100% - 16px);margin:0 8px;text-align:left;background:transparent;border:0;padding:6px 10px;border-radius:8px;color:var(--ink-2);cursor:pointer;transition:background .15s}
+.row:hover{background:var(--panel-2)}
+.row.sel{background:var(--accent-soft)}
+.row .dot{width:8px;height:8px;border-radius:50%;background:var(--c);transform:translateY(1px)}
+.row .nm{font-size:12.5px;color:var(--ink);line-height:1.3}
+.row .q{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+.t2w{padding:16px 18px 12px;border-bottom:1px solid var(--line);background:transparent}
+.t2w .hd{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px}
+.t2w .ttl{font-size:13px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink);line-height:1.3}
+.t2w .tagp{font-size:11px;letter-spacing:0;text-transform:none;color:var(--accent);background:var(--accent-soft);border:0;border-radius:999px;padding:2px 9px;flex:none;font-weight:500}
+.t2w .opt{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-2);padding:3px 0;font-family:var(--f-body)}
+.t2w .opt .ring{width:9px;height:9px;flex:none;border-radius:50%;border:1.5px solid var(--line-strong);transition:background .2s,border-color .2s}
+.t2w .nt{font-size:11.5px;color:var(--ink-3);margin-top:8px;line-height:1.45}
 .t2w .ring.r58[data-on="1"]{background:var(--b58);border-color:var(--b58)}
 .t2w .ring.rlte[data-on="1"]{background:var(--lte);border-color:var(--lte)}
 .t2w .ring.rtet[data-on="1"]{background:var(--tetra);border-color:var(--tetra)}
-.vbtn.b58btn[aria-pressed="true"]{background:var(--b58);border-color:var(--b58);color:#fff}
-.vbtn.ltebtn[aria-pressed="true"]{background:var(--lte);border-color:var(--lte);color:#fff}
-.vbtn.tetbtn[aria-pressed="true"]{background:var(--tetra);border-color:var(--tetra);color:#fff}
-.vbtn.covbtn[aria-pressed="true"]{background:var(--b58);border-color:var(--b58);color:#fff}
-.vbtn.camcovbtn[aria-pressed="true"]{background:var(--cctv);border-color:var(--cctv);color:#fff}
-.hud2{position:absolute;left:12px;top:10px;font-family:var(--f-mono);font-size:11px;line-height:1.55;color:var(--ink-2);pointer-events:none;background:color-mix(in srgb, var(--panel) 82%, transparent);border-left:2px solid var(--b58);padding:6px 10px;max-width:70%}
-.hud2 b{font-weight:500}
-.hud2 .c{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;transform:translateY(1px)}
-.stage{display:grid;grid-template-columns:236px 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
-@media(max-width:940px){.stage{grid-template-columns:1fr}}
-.col{background:var(--panel);min-width:0}
-.colhead{padding:9px 13px;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between}
-.lay{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:transparent;border:0;padding:6px 13px;color:var(--ink-2);cursor:pointer}
-.lay:hover{background:var(--panel-2)}
-.lay[aria-pressed="false"]{opacity:.38}
-.swatch{width:10px;height:10px;flex:none;border-radius:2px;background:var(--c)}
-.lay .nm{flex:1;font-size:12px;color:var(--ink)}
-.lay .ct{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
-.itemlist{border-top:1px solid var(--line);padding:4px 0 8px;max-height:300px;overflow-y:auto}
-.row{display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:baseline;width:100%;text-align:left;background:transparent;border:0;border-left:3px solid transparent;padding:5px 13px;color:var(--ink-2);cursor:pointer}
-.row:hover{background:var(--panel-2)}
-.row.sel{border-left-color:var(--c);background:var(--panel-2)}
-.row .dot{width:8px;height:8px;border-radius:50%;background:var(--c);transform:translateY(1px)}
-.row .nm{font-size:12px;color:var(--ink);line-height:1.3}
-.row .q{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.nsglg{padding:10px 18px 14px;border-top:1px solid var(--line);background:transparent}
+.nsglg .r{display:flex;align-items:center;gap:9px;padding:3px 0;font-size:12px;color:var(--ink-2)}
+.nsglg .sq{width:10px;height:10px;flex:none;border-radius:3px}
+.nsglg .sq.s58{background:var(--b58)} .nsglg .sq.slte{background:var(--lte)} .nsglg .sq.sob{background:var(--radio)} .nsglg .sq.stet{background:var(--tetra)}
+.nsglg .sq.cf1{background:var(--cctv)} .nsglg .sq.cf2{background:var(--pa)} .nsglg .sq.cf3{background:var(--pids)}
+.nsglg .hdd{font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink-3);margin-bottom:6px}
 
-.view{position:relative;background:var(--vp-bg);min-height:470px;overflow:hidden}
-#cv{display:block;width:100%;height:100%}
-.hud{position:absolute;left:12px;bottom:10px;font-family:var(--f-mono);font-size:10px;color:var(--ink-3);pointer-events:none}
-.carlabel{position:absolute;pointer-events:none;font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;color:var(--ink-3);transform:translate(-50%,-50%)}
-.tip{position:absolute;pointer-events:none;transform:translate(-50%,calc(-100% - 14px));background:var(--ink);color:var(--ground);padding:5px 9px;font-family:var(--f-mono);font-size:11px;white-space:nowrap;opacity:0;transition:opacity .12s}
+/* ---------- viewport ---------- */
+.view{position:relative;background:var(--vp-bg);min-height:520px;overflow:hidden}
+#cv,#cv2{display:block;width:100%;height:100%}
+.glass{background:color-mix(in srgb,var(--panel) 72%,transparent);-webkit-backdrop-filter:saturate(180%) blur(18px);backdrop-filter:saturate(180%) blur(18px);border-radius:12px;box-shadow:0 0 0 .5px var(--line),0 4px 16px rgba(0,0,0,.06)}
+.hud{position:absolute;left:14px;bottom:12px;font-size:11.5px;color:var(--ink-3);pointer-events:none;font-family:var(--f-body)}
+.hud2{position:absolute;left:14px;top:14px;font-family:var(--f-body);font-size:12px;line-height:1.6;color:var(--ink-2);pointer-events:none;padding:9px 13px;max-width:70%;
+  background:color-mix(in srgb,var(--panel) 72%,transparent);-webkit-backdrop-filter:saturate(180%) blur(18px);backdrop-filter:saturate(180%) blur(18px);border-radius:12px;box-shadow:0 0 0 .5px var(--line),0 4px 16px rgba(0,0,0,.06);border:0}
+.hud2 b{font-weight:600;color:var(--ink)}
+.hud2 .c{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;transform:translateY(0)}
+.chud{position:absolute;left:14px;top:14px;max-width:380px;font-family:var(--f-body);font-size:12px;line-height:1.6;color:var(--ink-2);padding:9px 13px;pointer-events:none;border:0;
+  background:color-mix(in srgb,var(--panel) 72%,transparent);-webkit-backdrop-filter:saturate(180%) blur(18px);backdrop-filter:saturate(180%) blur(18px);border-radius:12px;box-shadow:0 0 0 .5px var(--line),0 4px 16px rgba(0,0,0,.06)}
+.chud b{color:var(--ink);font-weight:600}
+.chud .cdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.carlabel{position:absolute;pointer-events:none;font-family:var(--f-body);font-size:11px;font-weight:500;letter-spacing:.04em;color:var(--ink-3);transform:translate(-50%,-50%)}
+.tip{position:absolute;pointer-events:none;transform:translate(-50%,calc(-100% - 14px));background:var(--ink);color:var(--ground);padding:6px 11px;border-radius:9px;font-family:var(--f-body);font-size:12px;white-space:nowrap;opacity:0;transition:opacity .12s;box-shadow:0 6px 20px rgba(0,0,0,.18)}
 .tip.on{opacity:1}
-.tip i{display:block;font-style:normal;opacity:.6;font-size:10px}
-.strip{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;border:1px solid var(--line);border-top:0;background:var(--panel);padding:10px 14px;min-height:58px}
-.strip .l{display:flex;gap:12px;align-items:center;min-width:0}
-.strip h4{margin:0;font-family:var(--f-disp);font-size:18px;font-weight:600;line-height:1.1}
-.strip .m{font-family:var(--f-mono);font-size:11px;color:var(--ink-3)}
-.qs{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);flex:none}
-.qs div{background:var(--panel);padding:4px 10px;text-align:center;min-width:54px}
-.qs b{display:block;font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums}
-.qs span{font-family:var(--f-mono);font-size:8.5px;letter-spacing:.1em;color:var(--ink-3)}
+.tip i{display:block;font-style:normal;opacity:.6;font-size:11px}
 
-/* signalling tab */
-section{margin-top:26px}
-h2{font-family:var(--f-disp);font-weight:700;font-size:22px;margin:0 0 3px;display:flex;gap:11px;align-items:baseline;flex-wrap:wrap}
-h2 em{font-family:var(--f-mono);font-style:normal;font-size:10.5px;color:var(--ink-3);letter-spacing:.12em}
-.sub{color:var(--ink-2);margin:0 0 12px;max-width:80ch;font-size:13px}
-.scopebar{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--sig);border-left:3px solid var(--sig);background:var(--sig-soft);padding:11px 14px;margin:14px 0 16px}
-.scopebar .tagx{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--sig);border:1px solid var(--sig);padding:3px 8px;flex:none;white-space:nowrap}
-.scopebar p{margin:0;font-size:12.5px;color:var(--ink-2)}
-.scopebar b{color:var(--ink)}
-.diagwrap{border:1px solid var(--line);background:var(--panel);padding:12px;overflow-x:auto}
-.diagwrap svg{display:block;min-width:1000px;width:100%;height:auto}
-.scopebar.ours{border-color:var(--ok);background:var(--ok-soft)}
-.scopebar.ours .tagx{color:var(--ok);border-color:var(--ok)}
-.scopebar.warn2{border-color:var(--warn);background:var(--warn-soft)}
-.scopebar.warn2 .tagx{color:var(--warn);border-color:var(--warn)}
-.vbtn.chbtn[aria-pressed="true"],.vbtn.cnbtn[aria-pressed="true"]{background:var(--b58);border-color:var(--b58);color:#fff}
-.vbtn.failbtn[aria-pressed="true"]{background:var(--pwr);border-color:var(--pwr);color:#fff}
-.statrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-top:0}
-.statrow .st{background:var(--panel);padding:9px 13px}
-.statrow .st .k{font-family:var(--f-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
-.statrow .st .v{font-family:var(--f-mono);font-size:13px;margin-top:3px;color:var(--ink);font-variant-numeric:tabular-nums}
-.statrow .st .v small{font-size:10px;color:var(--ink-3);letter-spacing:.04em}
-.statrow .st.warn .v{color:var(--pwr)}
-.statrow .st.good .v{color:var(--ok)}
-.statrow .st.roam .v{color:var(--accent)}
-.cards4{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:14px}
-.cards2{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:14px}
-.ca.ok .kick{color:var(--ok)} .ca.b58 .kick{color:var(--b58)} .ca.lte .kick{color:var(--lte)}
-.cap{font-family:var(--f-mono);font-size:10px;color:var(--ink-3);margin:7px 0 0}
-.bsel{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin:10px 0}
-.bnote{font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3)}
-table.cmp td:first-child{background:var(--panel-2);white-space:normal}
-td.c58{background:var(--b58-soft)} td.clte{background:var(--lte-soft)}
-tr.tot td{background:var(--panel-2);border-top:1px solid var(--line-strong)}
-.cards3{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:16px}
-.ca{background:var(--panel);padding:14px}
-.ca .kick{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sig)}
-.ca h3{margin:3px 0 8px;font-family:var(--f-disp);font-size:19px;font-weight:600;line-height:1.1}
-.ca p{margin:0 0 8px;font-size:12.5px;color:var(--ink-2)}
-.ca p:last-child{margin-bottom:0}
-.ca b{color:var(--ink)}
-.tablewrap{overflow-x:auto;border:1px solid var(--line);margin-top:6px}
-table{border-collapse:collapse;width:100%;min-width:560px;font-size:12px;background:var(--panel)}
-th,td{text-align:left;padding:7px 11px;border-bottom:1px solid var(--line);vertical-align:top}
-thead th{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);font-weight:500;background:var(--panel-2);border-bottom:1px solid var(--line-strong)}
+/* ---------- detail strip ---------- */
+.strip{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;border:0;border-top:1px solid var(--line);background:var(--panel);padding:14px 20px;min-height:64px}
+.strip .l{display:flex;gap:12px;align-items:center;min-width:0}
+.strip h4{margin:0;font-size:16px;font-weight:600;line-height:1.2;letter-spacing:-.01em}
+.strip .m{font-size:12.5px;color:var(--ink-3);font-family:var(--f-body)}
+.qs{display:flex;gap:6px;background:transparent;border:0;flex:none}
+.qs div{background:var(--panel-2);padding:6px 12px;text-align:center;min-width:58px;border-radius:10px}
+.qs b{display:block;font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;color:var(--ink)}
+.qs span{font-size:10px;letter-spacing:.02em;color:var(--ink-3)}
+
+/* ---------- onboard comms tab ---------- */
+#page-comms .stage{grid-template-columns:280px 1fr;height:700px}
+#page-comms .col:first-child{overflow-y:auto}
+#page-comms .view{height:100%;min-height:0}
+.netbox{padding:16px 18px 10px;border-bottom:1px solid var(--line);background:transparent}
+.netbox .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
+.netbox .ttl{font-size:13px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink);line-height:1.5}
+#cstep{font-weight:400;color:var(--ink-3);font-size:12px}
+.path{padding:0}
+.pstep{display:flex;gap:10px;align-items:flex-start;padding:6px 0;font-size:12.5px;line-height:1.45;color:var(--ink-3);border-top:1px solid var(--line)}
+.pstep:first-child{border-top:0}
+.pstep .pn{flex:none;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:600;color:var(--panel);background:var(--ink-3);margin-top:1px;transition:background .2s;font-family:var(--f-body)}
+.pstep.on{color:var(--ink)}
+.pstep.on .pn{background:var(--accent);color:#fff}
+.pstep b{color:var(--ink);font-weight:600}
+.flowpick{padding:10px 10px 10px;border-bottom:1px solid var(--line)}
+.flowpick .hdd{font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink-3);margin:2px 8px 6px}
+.fb{display:flex;gap:9px;align-items:center;width:100%;text-align:left;background:transparent;border:0;border-radius:8px;
+  padding:6px 10px;color:var(--ink-2);cursor:pointer;font:inherit;font-size:12.5px;transition:background .15s}
+.fb:hover{background:var(--panel-2)}
+.fb[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink)}
+.fb .fdot{width:8px;height:8px;border-radius:50%;flex:none}
+.clg{padding:10px 18px 16px;border-top:1px solid var(--line)}
+.clg .hdd{font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink-3);margin-bottom:6px}
+.clg .r{display:flex;align-items:center;gap:10px;padding:3px 0;font-size:11.5px;color:var(--ink-2)}
+.clg .ln{width:18px;height:0;flex:none;border-top:2.5px solid currentColor;border-radius:2px}
+.clg .llan{color:var(--net)} .clg .lring{color:#8A5BD6} .clg .laud{color:var(--radio)}
+.clg .lrf{color:var(--b58)}  .clg .ltet{color:var(--tetra)} .clg .ltrg{color:var(--pwr);border-top-style:dashed}
+.clg .lsig{color:#C2399A} .clg .lveh{color:#E0801A}
+.cnote{border:0;border-top:1px solid var(--line);background:var(--panel-2);padding:16px 20px 18px}
+.cnote p{margin:0;font-size:12.5px;line-height:1.65;color:var(--ink-3);max-width:120ch}
+.cnote b{color:var(--ink);font-weight:600}
+#citems .grp{font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink-3);padding:12px 18px 4px;border:0}
+#citems .it{display:flex;gap:9px;align-items:center;margin:0 8px;padding:5px 10px;border-radius:8px;font-size:12.5px;color:var(--ink-2);cursor:pointer;border:0;transition:background .15s,opacity .15s}
+#citems .it:hover{background:var(--panel-2)}
+#citems .it.on{background:var(--accent-soft);color:var(--ink)}
+#citems .it.dim{opacity:.38}
+#citems .sw{width:9px;height:9px;flex:none;border-radius:50%}
+#cstrip .nm{font-size:16px;font-weight:600;line-height:1.2;color:var(--ink);letter-spacing:-.01em}
+#cstrip .ds{font-size:12.5px;line-height:1.55;color:var(--ink-3);margin-top:3px;max-width:88ch}
+#cstrip .qt{text-align:right;flex:none}
+#cstrip .qt b{display:block;font-family:var(--f-mono);font-size:15px;color:var(--ink)}
+#cstrip .qt span{font-size:11px;color:var(--ink-3)}
+
+/* ---------- tables and cards kept for any text sections ---------- */
+section{margin-top:28px}
+h2{font-weight:600;font-size:22px;margin:0 0 4px;display:flex;gap:11px;align-items:baseline;flex-wrap:wrap;letter-spacing:-.015em}
+h2 em{font-style:normal;font-size:12px;color:var(--ink-3)}
+.sub{color:var(--ink-2);margin:0 0 12px;max-width:80ch;font-size:13.5px}
+.tablewrap{overflow-x:auto;border-radius:14px;background:var(--panel);box-shadow:var(--shadow);margin-top:8px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:12.5px;background:var(--panel)}
+th,td{text-align:left;padding:9px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{font-size:12px;color:var(--ink-3);font-weight:600;background:var(--panel-2);border-bottom:1px solid var(--line)}
 td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
 tbody tr:last-child td{border-bottom:0}
-td.sg{background:var(--sig-soft)}
-td.nsg{background:var(--ok-soft)}
-.pill{display:inline-block;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.05em;padding:2px 7px;border:1px solid;white-space:nowrap}
-.p-sig{background:var(--sig-soft);color:var(--sig);border-color:var(--sig)}
-.p-ours{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
-.srcnote{font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3);margin-top:10px}
+.pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:999px;border:0;white-space:nowrap;font-weight:500}
+.p-sig{background:var(--sig-soft);color:var(--sig)}
+.p-ours{background:var(--ok-soft);color:var(--ok)}
 
-footer{margin-top:34px;padding-top:12px;border-top:1px solid var(--line);font-family:var(--f-mono);font-size:10px;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:6px 22px;justify-content:space-between}
+/* ---------- train builder ---------- */
+#page-build .stage{grid-template-columns:316px 1fr;height:660px}
+#page-build .col:first-child{overflow-y:auto;overflow-x:hidden}
+#page-build .view{height:100%;min-height:0}
+#cv3{display:block;width:100%;height:100%;cursor:pointer;touch-action:none}
+.bsec{padding:14px 18px 12px;border-bottom:1px solid var(--line)}
+.bh{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.bh span{font-size:11.5px;font-weight:400;color:var(--ink-3);text-align:right}
+.bdet summary{list-style:none;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink);display:flex;justify-content:space-between;align-items:center;margin:-2px 0 2px}
+.bdet summary::-webkit-details-marker{display:none}
+.bdet summary span{font-size:11.5px;font-weight:400;color:var(--ink-3)}
+.bdet summary::after{content:"";width:7px;height:7px;border-right:1.5px solid var(--ink-3);border-bottom:1.5px solid var(--ink-3);transform:rotate(-45deg);transition:transform .2s;margin-left:8px;flex:none}
+.bdet[open] summary::after{transform:rotate(45deg)}
+.bdet[open] summary{margin-bottom:8px}
+.bsel{display:grid;grid-template-columns:1fr 150px;gap:8px;align-items:center;padding:3px 0}
+.bsel label{font-size:12.5px;color:var(--ink-2)}
+.bsel select,.bins select{width:100%;font:inherit;font-size:12px;padding:5px 8px;border-radius:8px;border:0;background:var(--panel-3);color:var(--ink);-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--ink-3) 50%),linear-gradient(135deg,var(--ink-3) 50%,transparent 50%);background-position:calc(100% - 14px) 55%,calc(100% - 9px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:26px}
+.bapply{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.bapply .vbtn{font-size:11.5px;padding:5px 11px}
+.bmenu{position:fixed;z-index:60;width:330px;max-height:70vh;overflow-y:auto;padding:12px 14px 14px;border-radius:14px;background:color-mix(in srgb,var(--panel) 88%,transparent);-webkit-backdrop-filter:saturate(180%) blur(22px);backdrop-filter:saturate(180%) blur(22px);box-shadow:0 0 0 .5px var(--line-strong),0 18px 50px rgba(0,0,0,.22);font-size:12.5px;color:var(--ink-2);opacity:0;transform:scale(.96);transform-origin:top left;transition:opacity .14s,transform .14s}
+.bmenu.on{opacity:1;transform:scale(1)}
+.bmenu .mh{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.bins .opts{display:flex;flex-wrap:wrap;gap:4px;margin:2px 0 4px}
+.bins .opt{border:0;border-radius:999px;padding:4px 10px;font-size:11.5px;background:var(--panel-3);color:var(--ink-2);cursor:pointer;transition:background .15s,color .15s}
+.bins .opt:hover{background:var(--line-strong);color:var(--ink)}
+.bins .opt[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
+.bins .lrow{display:grid;grid-template-columns:1fr 118px 22px;gap:6px;align-items:center;padding:3px 0;font-size:12px}
+.bins .lrow.add{grid-template-columns:1fr auto;margin-top:4px}
+.bins .lrow select{width:100%;font:inherit;font-size:11.5px;padding:4px 6px;border-radius:7px;border:0;background:var(--panel-3);color:var(--ink)}
+.bins .lrow .x{border:0;background:transparent;color:var(--ink-3);font-size:15px;cursor:pointer;border-radius:50%;width:22px;height:22px;line-height:1}
+.bins .lrow .x:hover{background:var(--lte-soft);color:var(--pwr)}
+.bins>select,.bins select[data-ansamp]{width:100%;font:inherit;font-size:12px;padding:5px 8px;border-radius:8px;border:0;background:var(--panel-3);color:var(--ink);margin:2px 0 4px}
+.bapply .vbtn:disabled{opacity:.4;cursor:default}
+.bins .kv input[type=text]{width:100%;font:inherit;font-size:12px;padding:4px 8px;border-radius:7px;border:0;background:var(--panel-3);color:var(--ink)}
+.plist{display:flex;flex-direction:column;gap:2px}
+.prow{display:grid;grid-template-columns:10px 44px 1fr 22px;gap:6px;align-items:center;font-size:11.5px;padding:2px 0}
+.prow .pt{width:8px;height:8px;border-radius:2px;background:#8A5BD6} .prow .pt.sfp{background:#E0801A} .prow .pt.audio{background:var(--pa)}
+.prow .pn{font-family:var(--f-mono);font-size:11px;color:var(--ink)} .prow .pv{color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prow .x,.frow .x{border:0;background:transparent;color:var(--ink-3);font-size:14px;cursor:pointer;border-radius:50%;width:22px;height:22px;line-height:1}
+.prow .x:hover,.frow .x:hover{background:var(--lte-soft);color:var(--pwr)}
+.flows{display:flex;flex-direction:column-reverse;gap:3px}
+.frow,.fhead{display:grid;grid-template-columns:1fr 84px 54px 54px 20px;gap:4px;align-items:center}
+.fhead{font-size:10px;color:var(--ink-3);padding:0 2px}
+.frow input,.frow select{font:inherit;font-size:11px;padding:4px 5px;border-radius:6px;border:0;background:var(--panel-3);color:var(--ink);min-width:0;width:100%}
+.frow input[type=number]{font-family:var(--f-mono);text-align:right;-moz-appearance:textfield}
+.frow.bad input,.frow.bad select{box-shadow:0 0 0 1px var(--pwr) inset}
+.vbtn.acc{background:var(--accent);color:#fff} .vbtn.acc:hover{background:var(--accent);opacity:.9}
+
+
+/* train tree */
+.tveh{margin:0 0 6px}
+.tveh .tv{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:600;color:var(--ink-2);padding:4px 0 3px}
+.tveh .tv span{font-weight:400;color:var(--ink-3);font-size:11.5px}
+.tveh .tv.on{color:var(--accent)}
+.tcars{display:flex;flex-wrap:wrap;gap:5px}
+.tcar{border:0;border-radius:9px;padding:6px 9px;background:var(--panel-3);color:var(--ink-2);font-size:12px;font-weight:500;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:62px;transition:background .15s,color .15s,transform .1s}
+.tcar small{font-weight:400;font-size:10.5px;color:var(--ink-3)}
+.tcar:hover{background:var(--line-strong)}
+.tcar.on{background:var(--ink);color:var(--ground)} .tcar.on small{color:var(--ground);opacity:.65}
+.tcar:active{transform:scale(.97)}
+/* palette */
+.pal{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pchip{display:flex;gap:8px;align-items:center;padding:7px 9px;border-radius:10px;background:var(--panel-2);border:1px solid transparent;font-size:12px;color:var(--ink-2);cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;transition:background .15s,transform .1s,box-shadow .15s}
+.pchip:hover{background:var(--panel-3);color:var(--ink)}
+.pchip:active{cursor:grabbing;transform:scale(.97)}
+.pchip .pi{width:22px;height:22px;border-radius:7px;flex:none;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;letter-spacing:.02em}
+.pghost{position:fixed;z-index:50;pointer-events:none;padding:7px 11px;border-radius:10px;background:var(--panel);box-shadow:0 10px 30px rgba(0,0,0,.18),0 0 0 .5px var(--line);font-size:12px;color:var(--ink);display:flex;gap:8px;align-items:center;transform:translate(-50%,-50%) scale(1.04)}
+/* inspector */
+.bins{font-size:12.5px;color:var(--ink-2)}
+.bins .kv{display:grid;grid-template-columns:1fr 150px;gap:8px;align-items:center;padding:3px 0}
+.bins .kv b{font-family:var(--f-mono);font-weight:500;color:var(--ink);text-align:right;font-size:12px}
+.bins .chk{display:flex;align-items:center;gap:8px;padding:4px 0;cursor:pointer}
+.bins .chk input{accent-color:var(--accent);width:15px;height:15px;margin:0}
+.bins .sub{font-size:12px;font-weight:600;color:var(--ink-3);margin:8px 0 2px}
+.bins .tog{display:inline-flex;background:var(--panel-3);border-radius:999px;padding:2px}
+.bins .tog button{border:0;background:transparent;border-radius:999px;padding:4px 10px;font-size:11.5px;color:var(--ink-2);cursor:pointer}
+.bins .tog button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.bins .del{margin-top:10px;background:var(--lte-soft);color:var(--pwr)}
+.bins .del:hover{background:var(--pwr);color:#fff}
+/* results */
+.bres{border-top:1px solid var(--line);background:var(--panel);padding:16px 20px 18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,.9fr);gap:24px}
+.bres>div{min-width:0}
+@media(max-width:1100px){.bres{grid-template-columns:1fr}}
+.bres h5{margin:0 0 8px;font-size:13px;font-weight:600;color:var(--ink)}
+.bres h5 span{font-weight:400;color:var(--ink-3);font-size:12px;margin-left:6px}
+.btile{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.btile div{background:var(--panel-2);border-radius:12px;padding:9px 12px}
+.btile b{display:block;font-family:var(--f-mono);font-size:19px;font-weight:500;letter-spacing:-.01em;color:var(--ink)}
+.btile span{font-size:11.5px;color:var(--ink-3)}
+.btile .ok b{color:var(--ok)} .btile .warn b{color:var(--warn)} .btile .bad b{color:var(--pwr)}
+.bbar{margin:6px 0 10px}
+.bbar .t{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2);margin-bottom:4px;gap:8px}
+.bbar .t b{font-family:var(--f-mono);font-weight:500;color:var(--ink);white-space:nowrap}
+.bbar .k{height:8px;border-radius:999px;background:var(--panel-3);overflow:hidden;position:relative}
+.bbar .k i{display:block;height:100%;border-radius:999px;background:var(--accent);transition:width .35s cubic-bezier(.2,.8,.2,1)}
+.bbar .k i.warn{background:var(--warn)} .bbar .k i.bad{background:var(--pwr)}
+.blist{font-size:12.5px}
+.blist .r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--line)}
+.blist .r:first-child{border-top:0}
+.blist .r .rt{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.blist .r .v{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-2);white-space:nowrap}
+.blist .r .ref{font-size:11px;color:var(--ink-3);display:block}
+.blist .pill{min-width:64px;text-align:center}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.bad{background:var(--lte-soft);color:var(--pwr)}
+.btab{width:100%;min-width:0;border-collapse:collapse;font-size:12px;margin-top:4px;table-layout:fixed;background:transparent}
+.btab th{text-align:left;font-weight:600;color:var(--ink-3);font-size:11.5px;padding:4px 6px;border-bottom:1px solid var(--line)}
+.btab th.n{text-align:right}
+.btab td{padding:5px 6px;border-bottom:1px solid var(--line);color:var(--ink-2)}
+.btab td.n{text-align:right;font-family:var(--f-mono);color:var(--ink);white-space:nowrap}
+.btab th.n,.btab td.n{width:60px}
+.btab td.n.bad{color:var(--pwr)} .btab td.n.warn{color:var(--warn)}
+.btab tr.tot td{font-weight:600;color:var(--ink);border-bottom:0}
+footer{margin-top:28px;padding:0 4px;border:0;font-size:12px;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:6px 22px;justify-content:space-between;font-family:var(--f-body)}
 footer b{color:var(--ink)}
 [hidden]{display:none!important}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media (max-width:700px){ .wrap{padding:24px 16px 48px} .toolbar{padding:12px 14px} }
 </style>
 
 <div class="wrap">
@@ -217,7 +367,7 @@ footer b{color:var(--ink)}
 <header class="mast">
   <h1><span>Dubai Al Maktoum International Airport APM</span>Onboard Telecom Equipment Layout</h1>
   <div class="stamp">
-    <div class="rev"><b>Revision</b>16</div>
+    <div class="rev"><b>Revision</b>25</div>
     <div><b>Consist</b>3-car</div>
     <div><b>Issue</b>Presentation copy</div>
   </div>
@@ -226,6 +376,8 @@ footer b{color:var(--ink)}
 <div class="nav">
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" aria-selected="true" data-tab="arch">Vehicle architecture</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="comms">Onboard Comms</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="build">Network Builder</button>
   </div>
   <div class="navr">
     <button class="themebtn" id="themebtn"><span id="themeicon">◐</span><span id="themetext">Theme</span></button>
@@ -300,6 +452,144 @@ footer b{color:var(--ink)}
   <div class="strip" id="strip"></div>
 </div>
 
+
+<!-- ================= TAB : ONBOARD COMMS ================= -->
+<div id="page-comms" hidden>
+  <div class="toolbar">
+    <div class="tgroup">
+      <span class="tlabel">Subsystem</span>
+      <button class="vbtn ss ss-cctv" data-sub="cctv" aria-pressed="true">CCTV</button>
+      <button class="vbtn ss ss-pa" data-sub="pa" aria-pressed="false">PA and intercom</button>
+      <button class="vbtn ss ss-pis" data-sub="pis" aria-pressed="false">Surround display</button>
+      <button class="vbtn ss ss-net" data-sub="net" aria-pressed="false">Onboard network</button>
+      <button class="vbtn ss" data-sub="all" aria-pressed="false">Everything</button>
+    </div>
+    <div class="tgroup">
+      <span class="tlabel">View</span>
+      <button class="vbtn" data-cview="train" aria-pressed="true">Whole train</button>
+      <button class="vbtn" data-cview="mc1" aria-pressed="false">MC1</button>
+      <button class="vbtn" data-cview="m2" aria-pressed="false">M2</button>
+      <button class="vbtn" data-cview="mc3" aria-pressed="false">MC3</button>
+      <button class="vbtn" data-cview="air" aria-pressed="false">Train to wayside</button>
+    </div>
+    <div class="tgroup">
+      <span class="tlabel">Show</span>
+      <button class="vbtn" id="cshell" aria-pressed="true">Car body</button>
+      <button class="vbtn" id="clabel" aria-pressed="true">Labels</button>
+      <button class="vbtn" id="crun" aria-pressed="true">Animate</button>
+      <button class="vbtn brkbtn" id="cbreak" aria-pressed="false">Break ring cable</button>
+      <button class="vbtn" id="cconsole" aria-pressed="false">Lower console</button>
+      <button class="vbtn vehbtn" id="cveh" aria-pressed="true">Vehicle power</button>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="col">
+      <div class="netbox">
+        <div class="hd"><span class="ttl">Signal path</span><span id="cstep" class="ttl"></span></div>
+        <div class="path" id="cpath"></div>
+      </div>
+
+      <div class="flowpick" id="cflows"></div>
+
+      <div class="colhead" style="border-top:1px solid var(--line)"><span>Equipment</span><span id="ctot"></span></div>
+      <div class="itemlist" id="citems"></div>
+
+      <div class="clg">
+        <div class="hdd">Links</div>
+        <div class="r"><span class="ln llan"></span>Car LAN, PoE from the com switch</div>
+        <div class="r"><span class="ln lring"></span>Cat5e trainline ring between the three com switches</div>
+        <div class="r"><span class="ln laud"></span>Audio, amplifier to loudspeakers</div>
+        <div class="r"><span class="ln lrf"></span>Wi-Fi 5.8 GHz air interface</div>
+        <div class="r"><span class="ln ltet"></span>TETRA air interface and audio feed</div>
+        <div class="r"><span class="ln lsig"></span>Interface to the signalling system, VASCI, VDTE and TCU</div>
+        <div class="r" id="lgveh"><span class="ln lveh"></span>Vehicle supply, breaker, DC-DC converter and DC terminal</div>
+      </div>
+    </div>
+
+    <div class="col view" id="cview">
+      <canvas id="cv2"></canvas>
+      <div class="chud" id="chud"></div>
+      <div class="hud" id="chud2">click any item to run its signal path · drag to orbit · scroll to zoom</div>
+      <div class="tip" id="ctip"></div>
+    </div>
+  </div>
+
+  <div class="strip" id="cstrip"></div>
+
+  <div class="cnote">
+    <p><b>Built from the revised schematic.</b> The VDSL extenders are deleted and the three com switches are joined on Cat5e, closed into a ring so a single broken cable leaves every car reachable the other way round. Use Break ring cable to watch the traffic reroute. The onboard equipment lives in one rack per car at the car end, with the vehicle supply items beside it in orange and the signalling interface items in M2 in magenta, the intercom panels sit beside the doors on opposite sides, and the driver console folds out of the front bulkhead with only the TETRA radio on it. The control centre never talks to a train directly, every path runs through the wayside network, the access point and the data transmission system. One NVR per vehicle is the stated fitment in the RAMS onboard equipment table. The figure of two appears in the spare parts list, Attachment A, and is a spares holding rather than a per train quantity.</p>
+  </div>
+</div>
+
+
+<!-- ================= TAB : NETWORK BUILDER ================= -->
+<div id="page-build" hidden>
+  <div class="toolbar">
+    <div class="tgroup">
+      <span class="tlabel">Train</span>
+      <button class="vbtn" id="bAddVeh">Add vehicle</button>
+      <button class="vbtn" id="bRemVeh">Remove vehicle</button>
+      <button class="vbtn" id="bAddCar">Add car</button>
+      <button class="vbtn" id="bRemCar">Remove car</button>
+    </div>
+    <div class="tgroup">
+      <span class="tlabel">Canvas</span>
+      <button class="vbtn acc" id="bProcess">Process</button>
+      <button class="vbtn" id="bFit">Fit</button>
+      <button class="vbtn" id="bAnim" aria-pressed="true">Traffic</button>
+      <button class="vbtn" id="bLbl" aria-pressed="true">Labels</button>
+    </div>
+    <div class="tgroup">
+      <span class="tlabel">Design</span>
+      <button class="vbtn" id="bPresetTP">Technical proposal fit</button>
+      <button class="vbtn" id="bPresetEmpty">Empty cars</button>
+      <button class="vbtn" id="bExport">Export</button>
+      <button class="vbtn" id="bImport">Import</button>
+      <input type="file" id="bFile" accept="application/json" hidden>
+      <button class="vbtn" id="bCopy">Copy results</button>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="col" id="bcol">
+      <div class="bsec">
+        <div class="bh">Devices <span>drag onto a car, or click to add to <b id="bCarNm"></b></span></div>
+        <div class="pal" id="bPal"></div>
+      </div>
+      <div class="bsec" id="bInsSec" hidden>
+        <div class="bh">Selected <span id="bInsName"></span></div>
+        <div id="bIns"></div>
+      </div>
+      <details class="bsec bdet" open>
+        <summary>Train to wayside radio</summary>
+        <div class="bsel"><label>5.8 GHz channels</label><select id="bChan"><option value="50">One 20 MHz channel, 50 Mbit/s</option><option value="100" selected>Two 20 MHz, dual NIC, 100 Mbit/s</option><option value="90">One 40 MHz channel, 90 Mbit/s</option><option value="180">Two 40 MHz, dual NIC, 180 Mbit/s</option></select></div>
+        <div class="bsel"><label>Protocol overhead</label><select id="bOvh"><option value="0.08">8 %</option><option value="0.12" selected>12 %</option><option value="0.20">20 %</option></select></div>
+        <div class="bsel"><label>Spare capacity</label><select id="bSpare"><option value="0">0 %</option><option value="0.20">20 %</option><option value="0.30" selected>30 %, clause 25</option><option value="0.50">50 %</option></select></div>
+        <div class="hint" style="padding:2px 0 4px;font-size:11.5px;color:var(--ink-3);line-height:1.45">One router per vehicle transmits. Right click a router and choose Transmit to move the air link to it, the others stay associated in standby.</div>
+      </details>
+      <details class="bsec bdet">
+        <summary>Cables and couplers</summary>
+        <div class="bsel"><label>Copper cable speed</label><select id="bCu"><option value="100">Fast Ethernet, 100 Mbit/s</option><option value="1000" selected>Gigabit, 1000 Mbit/s</option></select></div>
+        <div class="bsel"><label>PA analogue trainline</label><select id="bPaLine"><option value="1" selected>Yes, 2 contacts</option><option value="0">No</option></select></div>
+        <div class="bsel"><label>Emergency intercom line</label><select id="bIcLine"><option value="1" selected>Yes, 2 contacts</option><option value="0">No</option></select></div>
+        <div class="bsel"><label>Recording retention</label><select id="bDays"><option value="7">7 days</option><option value="14">14 days</option><option value="30" selected>30 days</option><option value="60">60 days</option></select></div>
+        <div class="hint" style="padding:2px 0 4px;font-size:11.5px;color:var(--ink-3);line-height:1.45">Click a port, then a port on another device, to run a cable. Copper runs between RJ45 ports, fibre between SFP ports, audio between audio ports. A cable that leaves a car passes through every coupler in between and takes its contacts there.</div>
+      </details>
+    </div>
+
+    <div class="col view" id="bview">
+      <canvas id="cv3"></canvas>
+      <div class="chud" id="bhud" style="max-width:460px"></div>
+      <div class="hud" id="bhint" style="left:auto;right:14px;top:16px;bottom:auto;text-align:right;max-width:46%"></div>
+      <div class="tip" id="btip"></div>
+    </div>
+  </div>
+  <div class="bmenu" id="bmenu" style="display:none"></div>
+
+  <div class="bres" id="bres"></div>
+  <div class="cnote"><p id="bnotep"></p></div>
+</div>
 
 <footer>
   <span>SJ + RINA JV · Detail Design of APM System and Depot Building</span>
@@ -396,6 +686,8 @@ function syncTheme(){
   document.getElementById("themeicon").textContent = d?"☾":"☀";
   document.getElementById("themetext").textContent = d?"Dark":"Light";
   if(window.applySceneTheme) window.applySceneTheme(d);
+  if(window.commsTheme) window.commsTheme(d);
+  if(window.buildTheme) window.buildTheme(d);
 }
 
 /* ================= tabs ================= */
@@ -403,7 +695,11 @@ var tabs=document.querySelectorAll(".tab");
 function showTab(t){
   for(var j=0;j<tabs.length;j++) tabs[j].setAttribute("aria-selected", String(tabs[j].dataset.tab===t));
   document.getElementById("page-arch").hidden=(t!=="arch");
+  document.getElementById("page-comms").hidden=(t!=="comms");
+  document.getElementById("page-build").hidden=(t!=="build");
   if(t==="arch"){ resize(); place(); }
+  if(t==="comms" && window.commsResize) window.commsResize();
+  if(t==="build" && window.buildResize) window.buildResize();
 }
 for(var ti=0;ti<tabs.length;ti++) tabs[ti].addEventListener("click", function(e){ showTab(e.currentTarget.dataset.tab); });
 
@@ -858,11 +1154,24 @@ function markerGeo(shape, sz){
 /* the surround display. Drawn to a canvas, scrolled round the band, and shown only
    on the inward face so it does not read through the bodyside from outside. */
 function pidsCanvas(){
-  var cv=document.createElement("canvas"); cv.width=2048; cv.height=96;
+  var cv=document.createElement("canvas"); cv.width=3072; cv.height=128;
   var x=cv.getContext("2d");
-  x.fillStyle="#06080A"; x.fillRect(0,0,2048,96);
-  function plane(cx,cy,sc){
-    x.save(); x.translate(cx,cy); x.scale(sc,sc); x.fillStyle="#FFD98A";
+  /* a soft warm panel rather than a black screen, so the band reads as lit glass */
+  var g=x.createLinearGradient(0,0,0,128);
+  g.addColorStop(0.00,"#FDFBF7");
+  g.addColorStop(0.42,"#F6F1E8");
+  g.addColorStop(0.86,"#EFE7DA");
+  g.addColorStop(1.00,"#E6DCCB");
+  x.fillStyle=g; x.fillRect(0,0,3072,128);
+  /* a hairline of warm light along the top edge and a gold rule along the bottom */
+  x.fillStyle="rgba(255,255,255,0.95)"; x.fillRect(0,0,3072,3);
+  x.fillStyle="#C8A05A"; x.fillRect(0,122,3072,3);
+  x.fillStyle="rgba(200,160,90,0.18)"; x.fillRect(0,116,3072,6);
+
+  var INK="#2B3138", GOLD="#A8762B", SOFT="#8C8375";
+
+  function plane(cx,cy,sc,col){
+    x.save(); x.translate(cx,cy); x.scale(sc,sc); x.fillStyle=col;
     x.beginPath();
     x.moveTo(30,0); x.lineTo(6,5); x.lineTo(-14,5); x.lineTo(-30,22); x.lineTo(-20,22);
     x.lineTo(-2,5.5); x.lineTo(-16,5.5); x.lineTo(-24,13); x.lineTo(-30,13); x.lineTo(-26,3);
@@ -870,29 +1179,70 @@ function pidsCanvas(){
     x.lineTo(-30,-17); x.lineTo(-14,0); x.closePath(); x.fill();
     x.restore();
   }
-  function tower(cx,cy,sc){
-    x.save(); x.translate(cx,cy); x.scale(sc,sc); x.fillStyle="#FFD98A";
-    x.fillRect(-3,-4,6,26);            /* mast     */
-    x.fillRect(-10,-14,20,10);         /* cab      */
-    x.fillRect(-13,-17,26,3);          /* roof     */
-    x.fillRect(-16,20,32,4);           /* podium   */
+  function tower(cx,cy,sc,col){
+    x.save(); x.translate(cx,cy); x.scale(sc,sc); x.fillStyle=col;
+    x.fillRect(-3,-4,6,26); x.fillRect(-10,-14,20,10);
+    x.fillRect(-13,-17,26,3); x.fillRect(-16,20,32,4);
     x.restore();
   }
-  var unit=[];
-  x.font="600 40px 'IBM Plex Sans',-apple-system,'Segoe UI',sans-serif";
+  function dot(cx,cy,r,col){ x.fillStyle=col; x.beginPath(); x.arc(cx,cy,r,0,6.2832); x.fill(); }
+  /* a small chevron run, the kind of forward motion marker these bands carry */
+  function chev(cx,cy,sc,col,a){
+    x.save(); x.translate(cx,cy); x.scale(sc,sc); x.globalAlpha=a;
+    x.strokeStyle=col; x.lineWidth=3.2; x.lineCap="round";
+    x.beginPath(); x.moveTo(-5,-8); x.lineTo(5,0); x.lineTo(-5,8); x.stroke();
+    x.restore();
+  }
+
+  var SANS="'IBM Plex Sans',-apple-system,'Segoe UI',sans-serif";
+  var MONO="'IBM Plex Mono',ui-monospace,monospace";
+
   x.textBaseline="middle";
-  var t1="Al Maktoum International Airport (DWC)";
-  var t2="Next station   West Terminal";
-  var w1=x.measureText(t1).width, w2=x.measureText(t2).width;
-  var step = 150 + w1 + 90 + w2 + 90;
+  var t1="Al Maktoum International Airport";
+  var t1b="DWC";
+  var t2="Next station";
+  var t3="West Terminal";
+  var t4="Doors open right";
+
+  x.font="600 50px "+SANS;  var w1=x.measureText(t1).width;
+  x.font="500 34px "+MONO;  var w1b=x.measureText(t1b).width;
+  x.font="500 30px "+MONO;  var w2=x.measureText(t2).width;
+  x.font="600 50px "+SANS;  var w3=x.measureText(t3).width;
+  x.font="500 32px "+SANS;  var w4=x.measureText(t4).width;
+
+  var pad=108;
+  var step = 150 + w1 + 26 + w1b + pad + w2 + 22 + w3 + pad + 64 + w4 + pad;
   var k=-step;
-  while(k < 2048+step){
-    plane(k+42, 48, 1.05);
-    tower(k+118, 44, 0.95);
-    x.fillStyle="#FFE6A8"; x.fillText(t1, k+150, 50);
-    x.fillStyle="#8FA8B8"; x.fillText("·", k+150+w1+42, 50);
-    x.fillStyle="#EBDCC0"; x.fillText(t2, k+150+w1+90, 50);
-    x.fillStyle="#8FA8B8"; x.fillText("·", k+150+w1+90+w2+42, 50);
+  while(k < 3072+step){
+    var cx=k;
+    plane(cx+46, 60, 1.18, GOLD);
+    tower(cx+124, 56, 1.00, "#B98F49");
+
+    x.font="600 50px "+SANS; x.fillStyle=INK;
+    x.fillText(t1, cx+156, 62);
+    /* the IATA code set in a soft pill, the way airport boards carry it */
+    var bx=cx+156+w1+18;
+    x.fillStyle="rgba(168,118,43,0.14)";
+    x.beginPath();
+    if(x.roundRect) { x.roundRect(bx-2, 34, w1b+28, 54, 8); x.fill(); }
+    else x.fillRect(bx-2, 34, w1b+28, 54);
+    x.font="500 34px "+MONO; x.fillStyle=GOLD;
+    x.fillText(t1b, bx+12, 62);
+
+    var nx = bx + w1b + 28 + pad - 40;
+    dot(nx-30, 62, 4, "rgba(140,131,117,0.55)");
+    x.font="500 30px "+MONO; x.fillStyle=SOFT;
+    x.fillText(t2, nx, 62);
+    x.font="600 50px "+SANS; x.fillStyle=INK;
+    x.fillText(t3, nx+w2+22, 62);
+
+    var ax = nx + w2 + 22 + w3 + pad - 46;
+    chev(ax,    62, 1.5, GOLD, 0.35);
+    chev(ax+18, 62, 1.5, GOLD, 0.65);
+    chev(ax+36, 62, 1.5, GOLD, 1.00);
+    x.font="500 32px "+SANS; x.fillStyle=SOFT;
+    x.fillText(t4, ax+64, 62);
+
     k += step;
   }
   return cv;
@@ -908,10 +1258,13 @@ var pidsLong=pidsTexture(4), pidsEnd=pidsTexture(1.1);
 /* the two long faces take opposite UV directions, so one needs a mirrored copy
    or the wording reads backwards down one side of the saloon */
 var pidsLongM=pidsTexture(-4), pidsEndM=pidsTexture(-1.1);
-var bandBackMat=new THREE.MeshStandardMaterial({color:0xB9BFC4, roughness:0.6, transparent:true, opacity:1});
+var bandBackMat=new THREE.MeshStandardMaterial({color:0xD8D2C7, roughness:0.55, metalness:0.05, transparent:true, opacity:1});
 function pidsFace(tex){
-  return new THREE.MeshStandardMaterial({map:tex, emissive:0xffffff, emissiveMap:tex,
-    emissiveIntensity:1.0, color:0x05070A, roughness:0.5, transparent:true, opacity:1});
+  /* light panel: the map carries the colour, the emissive map lifts it so it still
+     reads as lit glass without blowing out to white */
+  return new THREE.MeshStandardMaterial({map:tex, emissive:0xFFF6E6, emissiveMap:tex,
+    emissiveIntensity:0.62, color:0xF2EADC, roughness:0.22, metalness:0.04,
+    transparent:true, opacity:1});
 }
 /* BoxGeometry material order is +x, -x, +y, -y, +z, -z */
 function bandMats(idx){
@@ -1196,7 +1549,7 @@ function updateNsg(dt){
 }
 
 window.applySceneTheme=function(dark){
-  var bg=dark?0x0A0E12:0xEEEDE9;
+  var bg=dark?0x121214:0xF2F2F4;
   scene.background=new THREE.Color(bg);
   window.__fogNear = dark?46:52;
   window.__fogFar  = dark?112:124;
@@ -1458,6 +1811,9 @@ function resize(){
 var clock=new THREE.Clock();
 function loop(){
   var dt=Math.min(clock.getDelta(),0.05);
+  /* idle while another tab is in front, so two scenes never render at once */
+  var ap=document.getElementById("page-arch");
+  if(ap && ap.hidden){ requestAnimationFrame(loop); return; }
   if(running){
     scenery.position.x -= speed*dt;
     while(scenery.position.x <= -PITCH) scenery.position.x += PITCH;
@@ -1479,4 +1835,1249 @@ window.addEventListener("resize",function(){ resize(); place(); });
 if(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").addEventListener)
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncTheme);
 resize(); syncTheme(); syncBearer(); setView("ext"); place(); loop();
+/* ================= onboard comms, its own scene ================= */
+(function(){
+"use strict";
+var cv2=document.getElementById("cv2"), velm=document.getElementById("cview");
+var tipE=document.getElementById("ctip"), hudE=document.getElementById("chud");
+if(!cv2) return;
+
+var R=new THREE.WebGLRenderer({canvas:cv2, antialias:true, alpha:false});
+R.setPixelRatio(Math.min(devicePixelRatio,2));
+var scene=new THREE.Scene();
+var camera=new THREE.PerspectiveCamera(42,1,0.1,900);
+var dark=false;
+
+/* ---------- palette, one colour per subsystem and one per link kind ---------- */
+var COL={
+  cctv:{l:0xD9532B,d:0xF2724A}, pa:{l:0xC7900F,d:0xE8B33F}, pis:{l:0x17808F,d:0x43BACD},
+  net:{l:0x8A5BD6,d:0xB89BF0}, lan:{l:0x3F68BC,d:0x7FA0E8}, aud:{l:0x26855A,d:0x57C68B},
+  rf:{l:0x0B6E85,d:0x48BDD6}, tet:{l:0xA5501F,d:0xDD8B4B}, trg:{l:0xB23C56,d:0xE4788F},
+  box:{l:0x6A7078,d:0x9AA2AA}, way:{l:0x55606B,d:0x8C98A4},
+  sig:{l:0xC2399A,d:0xE87BCB},  /* interface to the signalling system */
+  veh:{l:0xE0801A,d:0xF5A95A}   /* vehicle supply */
+};
+function hx(k){ return dark?COL[k].d:COL[k].l; }
+function css(k){ return "#"+hx(k).toString(16).padStart(6,"0"); }
+
+/* ---------- car frame ---------- */
+var CX=[-12.55,0,12.55], CN=["MC1","M2","MC3"];   /* 0.35 between car ends, a coupler, no gangway */
+var CL=12.2, CW=2.92, CH=2.66, FL=1.05;
+function P(c,x,y,z){ return new THREE.Vector3(CX[c]+x, FL+y, z); }
+
+/* ---------- equipment ---------- */
+/* sub: which subsystem owns it. paint: colour key. k: icon shape. */
+var E=[], byId={};
+function add(c,base,name,x,y,z,k,sub,paint,note,lbl){
+  var e={c:c,id:base+"_"+c,base:base,name:name,p:P(c,x,y,z),k:k,sub:sub,paint:paint||sub,note:note,lbl:!!lbl};
+  E.push(e); byId[e.id]=e; return e;
+}
+/* rack position per car: at the inner end for the end cars, at one end for M2, on the right wall */
+function rackX(c){ return c===2 ? -4.55 : 4.55; }
+var RZ=1.02, RU=[0.30,0.62,0.94,1.26];            /* rack unit heights, bottom to top */
+var DOOR_X=[-2.5,2.5];
+function car(c){
+  var s = c===0?-1:(c===2?1:0), rx=rackX(c);
+  /* the rack, the hub of every car */
+  add(c,"rack","Equipment rack",              rx,0.00, RZ,"rack","net","box",
+      "Telecom cabinet at the car end. Com switch, PA amplifier, display controller and, in M2, the recorder. In the end cars the Wi-Fi mobile router sits here too.",0);
+  add(c,"sw","Com switch, 16 port PoE",       rx,RU[1],RZ,"switch","net","net",
+      "Every endpoint in the car lands here and is powered from here. The three switches are joined on Cat5e and closed into a ring.",1);
+  add(c,"amp","PA amplifier, IP",             rx,RU[0],RZ,"amp","pa","pa",
+      "IP amplifier. Plays stored announcements on a trigger from the vehicle, carries a live session from the control centre over the network, and has an audio input for the cab radio so the driver can speak to the train over TETRA.",1);
+  add(c,"dctl","Display controller",          rx,RU[2],RZ,"ctl","pis","pis",
+      "Holds the message library and drives the surround display. Content and overrides arrive from the control centre over the network.",1);
+  if(c===1) add(c,"nvr","Network video recorder", rx,RU[3],RZ,"nvr","cctv","cctv",
+      "Records every camera locally. One per vehicle in the RAMS equipment table. The wayside link carries live viewing and event clips, not the archive.",1);
+  if(c!==1) add(c,"rtr","Wi-Fi mobile router", rx,RU[3],RZ,"router","net","rf",
+      "The vehicle client on the 5.8 GHz link. One at each end of the train, so there are two paths off the vehicle.",1);
+  /* vehicle supply, a small panel beside the rack */
+  var px=rx-(c===2?-1.05:1.05);
+  add(c,"brk","Breaker",                      px,0.30,RZ,"small2","veh","veh","Vehicle supply protection on the 100 V DC feed to the telecom rack. Vehicle system.",0);
+  add(c,"dcdc","DC-DC converter",             px,0.58,RZ,"small2","veh","veh","Takes the 100 V DC vehicle supply down to 24 V for the telecom equipment. Vehicle system.",0);
+  add(c,"dcterm","DC terminal",               px,0.86,RZ,"small2","veh","veh","Distribution terminal for the 24 V loads in the rack. Vehicle system.",0);
+  if(c===1){
+    /* the interface cabinet on the other wall, the three items that talk to the signalling system */
+    add(c,"ifcab","Interface cabinet",        rx,0.00,-RZ,"rack","net","box","Cabinet for the equipment that interfaces with the signalling and vehicle systems.",0);
+    add(c,"vasci","VASCI",                    rx,RU[0],-RZ,"ctl","pa","sig",
+        "Vehicle Alarm and Status Communication Interface. Serial link, RS422, from the signalling system. Door, location and emergency indications arrive here and start the stored announcements.",1);
+    add(c,"vdte","VDTE",                      rx,RU[1],-RZ,"ctl","net","sig",
+        "Vehicle Data Termination Equipment. The gateway to the vehicle circuits, eight digital outputs and eight digital inputs.",1);
+    add(c,"tcu","TCU",                        rx,RU[2],-RZ,"ctl","net","sig",
+        "Train Compute Unit. Onboard processing for the telecom subsystems, between the signalling interface and the com switch.",1);
+  }
+  /* ceiling */
+  add(c,"cam1","CCTV camera 1",              -4.10,1.42, 0.00,"cam","cctv","cctv","Saloon dome camera looking down the car. Two per car, six per vehicle. Powered over Ethernet from the com switch.",0);
+  add(c,"cam2","CCTV camera 2",               4.10,1.42, 0.00,"cam","cctv","cctv","Saloon dome camera looking down the car. Two per car, six per vehicle. Powered over Ethernet from the com switch.",0);
+  add(c,"spk1","Loudspeaker 1",              -3.40,1.46, 0.00,"spk","pa","aud","Ceiling loudspeaker, three per car on the centreline.",0);
+  add(c,"spk2","Loudspeaker 2",               0.00,1.46, 0.00,"spk","pa","aud","Ceiling loudspeaker, three per car on the centreline.",0);
+  add(c,"spk3","Loudspeaker 3",               3.40,1.46, 0.00,"spk","pa","aud","Ceiling loudspeaker, three per car on the centreline.",0);
+  add(c,"noise","Ambient noise sensor",       1.70,1.50, 0.62,"small","pa","pa","Feeds the ambient level to the amplifier for automatic volume.",0);
+  /* beside each door, one on each side of the car */
+  add(c,"pint1","Passenger intercom 1",      DOOR_X[0]-0.80,1.00, 1.44,"intercom","pa","pa","Speaker and microphone panel beside the door, IP based. Press to open a live call with the control centre.",0);
+  add(c,"pint2","Passenger intercom 2",      DOOR_X[1]+0.80,1.00,-1.44,"intercom","pa","pa","Speaker and microphone panel beside the door, IP based. Press to open a live call with the control centre.",0);
+  /* surround display */
+  add(c,"band","Surround display",            0.00,1.74, 0.00,"band","pis","pis",
+      "The light panel that runs round the saloon. Fed by the display controller.",1);
+  if(c!==1){
+    /* roof antenna where it can see the wayside */
+    add(c,"ant","Roof antenna, Wi-Fi",         s*3.60,2.66, 0.00,"ant","net","rf","On the roof, in line of sight of the wayside access points. Shared with the cab radio.",1);
+    /* the driver console folds out of the front bulkhead, and only the radio lives on it */
+    add(c,"console","Driver console",          s*5.30,0.95, 0.00,"console","pa","box",
+        "Folds out of the front bulkhead and lowers away so passengers do not see it. Only the TETRA radio is mounted on it.",0);
+    add(c,"tet","Cab radio, TETRA",            s*5.30,1.08, 0.00,"radio","pa","tet",
+        "Operational voice with the control centre, mounted on the driver console. Its audio output is wired to the PA amplifier so a trainline announcement can be made from the cab.",1);
+    add(c,"dint","Driver intercom",            s*5.10,1.00, 1.30,"intercom","pa","pa","Cab end intercom station on the side wall.",0);
+  }
+}
+car(0); car(1); car(2);
+function pt(id){ var e=byId[id]; return e?e.p:null; }
+
+/* ---------- wayside ---------- */
+var AP =new THREE.Vector3(-27.0,5.2,-5.6);
+var DTS=new THREE.Vector3(-33.5,1.1,-10.6);
+var CCF=new THREE.Vector3(-45.0,2.0,-16.5);
+var TET=new THREE.Vector3(30.0,6.2,-9.0);
+
+/* ---------- icons ---------- */
+function mat(k,extra){
+  var m=new THREE.MeshStandardMaterial(Object.assign({roughness:0.42,metalness:0.18,transparent:true,opacity:1},extra||{}));
+  m.userData.k=k; return m;
+}
+var darkMat=new THREE.MeshStandardMaterial({color:0x2A2F35,roughness:0.5,metalness:0.3,transparent:true});
+var lensMat=new THREE.MeshStandardMaterial({color:0x101418,roughness:0.15,metalness:0.6,transparent:true});
+var portMat=new THREE.MeshBasicMaterial({color:0x7CF29A,transparent:true});
+var grilleMat=new THREE.MeshStandardMaterial({color:0xD8D4CC,roughness:0.8,transparent:true});
+var bandMat=new THREE.MeshStandardMaterial({color:0xF6F0E6,emissive:0xFFF2DC,emissiveIntensity:0.55,roughness:0.25,transparent:true,opacity:0.96});
+var bandEdgeMat=new THREE.MeshStandardMaterial({color:0xC8A05A,emissive:0xC8A05A,emissiveIntensity:0.35,roughness:0.4,transparent:true});
+
+function icon(e){
+  var g=new THREE.Group(), m=mat(e.paint), b;
+  switch(e.k){
+    case "switch":
+      b=new THREE.Mesh(new THREE.BoxGeometry(1.08,0.26,0.62), m); g.add(b);
+      for(var i=0;i<8;i++){
+        var p=new THREE.Mesh(new THREE.BoxGeometry(0.07,0.05,0.04), portMat);
+        p.position.set(-0.42+i*0.12, 0.02, 0.32); g.add(p);
+      }
+      break;
+    case "nvr":
+      b=new THREE.Mesh(new THREE.BoxGeometry(0.96,0.30,0.60), m); g.add(b);
+      var disc=new THREE.Mesh(new THREE.CylinderGeometry(0.11,0.11,0.03,18), darkMat);
+      disc.rotation.x=Math.PI/2; disc.position.set(0.22,0.0,0.31); g.add(disc);
+      break;
+    case "amp":
+      b=new THREE.Mesh(new THREE.BoxGeometry(0.98,0.30,0.58), m); g.add(b);
+      var dial=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.08,0.04,16), darkMat);
+      dial.rotation.x=Math.PI/2; dial.position.set(-0.28,0.02,-0.30); g.add(dial);
+      var vu=new THREE.Mesh(new THREE.BoxGeometry(0.32,0.10,0.02), portMat); vu.position.set(0.16,0.02,-0.30); g.add(vu);
+      break;
+    case "ctl":
+      b=new THREE.Mesh(new THREE.BoxGeometry(0.70,0.24,0.50), m); g.add(b);
+      var led=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.05,0.02), portMat); led.position.set(0.25,0.0,-0.26); g.add(led);
+      break;
+    case "cam":
+      var body=new THREE.Mesh(new THREE.CylinderGeometry(0.14,0.14,0.10,20), m); g.add(body);
+      var dome=new THREE.Mesh(new THREE.SphereGeometry(0.17,18,10,0,6.2832,1.5708,1.5708), lensMat);
+      dome.position.y=-0.05; g.add(dome);
+      var ring=new THREE.Mesh(new THREE.TorusGeometry(0.15,0.02,8,24), m); ring.rotation.x=Math.PI/2; ring.position.y=-0.05; g.add(ring);
+      break;
+    case "spk":
+      var can=new THREE.Mesh(new THREE.CylinderGeometry(0.24,0.26,0.10,22), m); g.add(can);
+      var gr=new THREE.Mesh(new THREE.CylinderGeometry(0.17,0.17,0.02,22), grilleMat); gr.position.y=-0.055; g.add(gr);
+      var cone=new THREE.Mesh(new THREE.ConeGeometry(0.11,0.05,18,1,true), darkMat); cone.rotation.x=Math.PI; cone.position.y=-0.07; g.add(cone);
+      break;
+    case "intercom":
+      b=new THREE.Mesh(new THREE.BoxGeometry(0.16,0.46,0.30), m); g.add(b);
+      var btn=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.03,14), darkMat); btn.rotation.z=Math.PI/2; btn.position.set(-0.09,-0.10,0); g.add(btn);
+      var mic=new THREE.Mesh(new THREE.BoxGeometry(0.02,0.14,0.14), grilleMat); mic.position.set(-0.09,0.10,0); g.add(mic);
+      break;
+    case "router":
+      b=new THREE.Mesh(new THREE.BoxGeometry(0.62,0.20,0.42), m); g.add(b);
+      [-0.18,0.18].forEach(function(ax){
+        var a=new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.34,8), darkMat); a.position.set(ax,0.27,-0.14); g.add(a);
+      });
+      break;
+    case "radio":
+      b=new THREE.Mesh(new THREE.BoxGeometry(0.22,0.24,0.44), m); g.add(b);
+      var hs=new THREE.Mesh(new THREE.TorusGeometry(0.11,0.035,8,20,Math.PI), darkMat); hs.position.set(0.0,0.18,-0.12); hs.rotation.z=Math.PI; g.add(hs);
+      var scr=new THREE.Mesh(new THREE.BoxGeometry(0.22,0.10,0.02), portMat); scr.position.set(-0.12,0.02,0.21); g.add(scr);
+      break;
+    case "ant":
+      /* a low profile roof unit with a short omni rod, the kind that sits in a shark fin housing */
+      var fin=new THREE.Mesh(new THREE.BoxGeometry(0.62,0.14,0.30), m); fin.position.y=0.07; g.add(fin);
+      var rod=new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.05,0.50,12), m); rod.position.y=0.38; g.add(rod);
+      var cap=new THREE.Mesh(new THREE.SphereGeometry(0.07,12,10), m); cap.position.y=0.65; g.add(cap);
+      break;
+    case "small2":
+      b=new THREE.Mesh(new THREE.BoxGeometry(0.34,0.22,0.30), m); g.add(b);
+      var tb=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.08,0.04), darkMat); tb.position.set(0.09,0.03,0.17); g.add(tb);
+      break;
+    case "small":
+      b=new THREE.Mesh(new THREE.CylinderGeometry(0.10,0.10,0.08,14), m); g.add(b); break;
+    case "trg":
+      b=new THREE.Mesh(new THREE.BoxGeometry(0.30,0.20,0.30), m); g.add(b);
+      var t2=new THREE.Mesh(new THREE.ConeGeometry(0.09,0.16,4), darkMat); t2.position.y=0.18; g.add(t2);
+      break;
+    case "rack":
+      /* an open front cabinet with four shelves, drawn thin so the units inside read */
+      var fr=new THREE.MeshStandardMaterial({color:0x8A8F95,roughness:0.5,metalness:0.3,transparent:true});
+      var back=new THREE.Mesh(new THREE.BoxGeometry(1.26,1.50,0.04),fr); back.position.set(0,0.78,0.30); g.add(back);
+      [-0.63,0.63].forEach(function(sx){ var side=new THREE.Mesh(new THREE.BoxGeometry(0.04,1.50,0.64),fr); side.position.set(sx,0.78,0); g.add(side); });
+      var top=new THREE.Mesh(new THREE.BoxGeometry(1.26,0.04,0.64),fr); top.position.set(0,1.55,0); g.add(top);
+      var base=new THREE.Mesh(new THREE.BoxGeometry(1.26,0.06,0.64),fr); base.position.set(0,0.03,0); g.add(base);
+      [0.46,0.78,1.10].forEach(function(sy){ var sh=new THREE.Mesh(new THREE.BoxGeometry(1.18,0.02,0.60),fr); sh.position.set(0,sy,0); g.add(sh); });
+      g.userData.noTint=true;
+      break;
+    case "console":
+      /* hinged at the bottom. The group pivots, the panel is offset upward from the hinge */
+      var cm=new THREE.MeshStandardMaterial({color:0xB8B2A6,roughness:0.55,metalness:0.1,transparent:true});
+      var panel=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.44,1.10),cm); panel.position.set(0,0.22,0); g.add(panel);
+      var lip=new THREE.Mesh(new THREE.BoxGeometry(0.22,0.03,1.10),cm); lip.position.set(-(e.c===0?-1:1)*0.08,0.44,0); g.add(lip);
+      var hinge=new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,1.12,10),darkMat); hinge.rotation.x=Math.PI/2; g.add(hinge);
+      g.userData.noTint=true;
+      break;
+    case "band":
+      /* the surround display, two light strips along the walls and a return across the inner ends */
+      var L=CL-2.6, s=(e.c===0?-1:(e.c===2?1:0));
+      [-1.40,1.40].forEach(function(z){
+        var strip=new THREE.Mesh(new THREE.BoxGeometry(L,0.22,0.05), bandMat); strip.position.set(0,0,z); g.add(strip);
+        var edge=new THREE.Mesh(new THREE.BoxGeometry(L,0.025,0.055), bandEdgeMat); edge.position.set(0,-0.12,z); g.add(edge);
+      });
+      [-1,1].forEach(function(end){
+        if(end===s) return;                         /* no strip across the raked nose */
+        var cap2=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.22,2.85), bandMat); cap2.position.set(end*L/2,0,0); g.add(cap2);
+      });
+      g.userData.noTint=true;
+      break;
+  }
+  g.position.copy(e.p);
+  g.userData=Object.assign(g.userData,{e:e});
+  g.traverse(function(o){ if(o.isMesh){ o.userData.e=e; } });
+  e.mesh=g; e.mats=[]; g.traverse(function(o){ if(o.isMesh && o.material===m) e.mats.push(o.material); });
+  e.allMats=[]; g.traverse(function(o){ if(o.isMesh) e.allMats.push(o.material); });
+  return g;
+}
+var items=new THREE.Group(); scene.add(items);
+var pickables=[];
+E.forEach(function(e){ var g=icon(e); items.add(g); g.traverse(function(o){ if(o.isMesh) pickables.push(o); }); });
+
+/* ---------- car shells ---------- */
+function carProfile(nose){
+  var hl=CL/2, h=CH, r=0.30, n=1.70, sh=new THREE.Shape();
+  sh.moveTo(-hl,0); sh.lineTo(hl,0);
+  if(nose>0){ sh.lineTo(hl,h*0.30); sh.quadraticCurveTo(hl,h*0.90,hl-n,h); }
+  else { sh.lineTo(hl,h-r); sh.quadraticCurveTo(hl,h,hl-r,h); }
+  if(nose<0){ sh.lineTo(-hl+n,h); sh.quadraticCurveTo(-hl,h*0.90,-hl,h*0.30); }
+  else { sh.lineTo(-hl+r,h); sh.quadraticCurveTo(-hl,h,-hl,h-r); }
+  sh.lineTo(-hl,0); return sh;
+}
+function carShell(c){
+  var g=new THREE.Group(), nose=c===0?-1:(c===2?1:0);
+  var geo=new THREE.ExtrudeGeometry(carProfile(nose),{depth:CW,bevelEnabled:false,curveSegments:16}); geo.translate(0,0,-CW/2);
+  var skin=new THREE.MeshStandardMaterial({transparent:true,opacity:0.16,roughness:0.34,metalness:0.06,side:THREE.DoubleSide,depthWrite:false});
+  var body=new THREE.Mesh(geo,skin); body.position.set(CX[c],FL-0.02,0);
+  var edges=new THREE.LineSegments(new THREE.EdgesGeometry(geo,24),new THREE.LineBasicMaterial({transparent:true,opacity:0.55})); edges.position.copy(body.position);
+  var floor=new THREE.Mesh(new THREE.BoxGeometry(CL-0.2,0.03,CW-0.14),new THREE.MeshStandardMaterial({roughness:0.85,transparent:true,opacity:0.9})); floor.position.set(CX[c],FL-0.015,0);
+  var dm=new THREE.LineBasicMaterial({transparent:true,opacity:0.5});
+  var doorG=new THREE.Group();
+  DOOR_X.forEach(function(dx){ [-CW/2,CW/2].forEach(function(dz){
+    var fr=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.35,2.0,0.02)),dm);
+    fr.position.set(CX[c]+dx,FL+1.0,dz); doorG.add(fr);
+  }); });
+  g.add(body,edges,floor,doorG);
+  g.userData={skin:skin,edges:edges.material,floor:floor.material,doors:dm};
+  return g;
+}
+var shells=[0,1,2].map(function(c){ var s=carShell(c); scene.add(s); return s; });
+var shadowMat=new THREE.MeshBasicMaterial({transparent:true,opacity:0.15,depthWrite:false});
+(function(){ var sh=new THREE.Mesh(new THREE.PlaneGeometry(CL*3+3.0,CW+1.4),shadowMat); sh.rotation.x=-Math.PI/2; sh.position.set(0,0.022,0); scene.add(sh); })();
+var bogieMat=new THREE.MeshStandardMaterial({roughness:0.7});
+[0,1,2].forEach(function(c){ [-3.8,3.8].forEach(function(bx){ [-1.05,1.05].forEach(function(bz){
+  var w=new THREE.Mesh(new THREE.CylinderGeometry(0.46,0.46,0.26,18),bogieMat); w.rotation.x=Math.PI/2; w.position.set(CX[c]+bx,0.46,bz); scene.add(w);
+});});});
+var gwMat=new THREE.MeshStandardMaterial({roughness:0.6,metalness:0.3});
+[(CX[0]+CX[1])/2,(CX[1]+CX[2])/2].forEach(function(gx){
+  var cp=new THREE.Mesh(new THREE.CylinderGeometry(0.10,0.10,0.5,10),gwMat); cp.rotation.z=Math.PI/2; cp.position.set(gx,0.62,0); scene.add(cp);
+  var cb=new THREE.Mesh(new THREE.BoxGeometry(0.42,0.30,0.30),gwMat); cb.position.set(gx,0.62,0); scene.add(cb);
+});
+var groundMat=new THREE.MeshStandardMaterial({roughness:0.92});
+var ground=new THREE.Mesh(new THREE.BoxGeometry(124,0.26,6.4),groundMat); ground.position.set(0,-0.13,0); scene.add(ground);
+var plinthMat=new THREE.MeshStandardMaterial({roughness:0.9});
+[-3.1,3.1].forEach(function(pz){ var k=new THREE.Mesh(new THREE.BoxGeometry(124,0.16,0.34),plinthMat); k.position.set(0,0.08,pz); scene.add(k); });
+var deckGrid=new THREE.GridHelper(132,44); deckGrid.position.y=-0.004; deckGrid.material.transparent=true; deckGrid.material.opacity=0.08; scene.add(deckGrid);
+
+/* ---------- wayside models ---------- */
+var wayG=new THREE.Group(); scene.add(wayG);
+var apMat=mat("rf",{emissiveIntensity:0.3}), tetMat=mat("tet",{emissiveIntensity:0.3}), dtsMat=mat("way"), ccfMat=mat("way");
+(function(){
+  var mast=new THREE.Mesh(new THREE.CylinderGeometry(0.10,0.14,5.2,12),apMat); mast.position.set(AP.x,2.6,AP.z); wayG.add(mast);
+  var head=new THREE.Mesh(new THREE.BoxGeometry(0.40,0.74,0.30),apMat); head.position.copy(AP); wayG.add(head);
+  var panel=new THREE.Mesh(new THREE.BoxGeometry(0.08,0.62,0.52),apMat); panel.position.set(AP.x+0.26,AP.y,AP.z); wayG.add(panel);
+  var ft=new THREE.Mesh(new THREE.BoxGeometry(0.7,0.22,0.7),apMat); ft.position.set(AP.x,0.11,AP.z); wayG.add(ft);
+  /* wayside switch cabinet, the data transmission system node */
+  var cab=new THREE.Mesh(new THREE.BoxGeometry(1.1,1.7,0.9),dtsMat); cab.position.copy(DTS); wayG.add(cab);
+  var door=new THREE.Mesh(new THREE.BoxGeometry(0.02,1.3,0.6),darkMat); door.position.set(DTS.x+0.56,DTS.y,DTS.z); wayG.add(door);
+  /* control centre */
+  var b=new THREE.Mesh(new THREE.BoxGeometry(5.4,3.0,3.6),ccfMat); b.position.copy(CCF); wayG.add(b);
+  var e=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(5.4,3.0,3.6)),new THREE.LineBasicMaterial({transparent:true,opacity:0.6})); e.position.copy(CCF); wayG.add(e); wayG.userData.ccfEdge=e.material;
+  for(var i=0;i<3;i++){ var scr=new THREE.Mesh(new THREE.BoxGeometry(0.02,0.52,0.80),portMat); scr.position.set(CCF.x+2.72,CCF.y+0.4,CCF.z-1.1+i*1.1); wayG.add(scr); }
+  /* TETRA base station */
+  var tm=new THREE.Mesh(new THREE.CylinderGeometry(0.09,0.15,6.0,12),tetMat); tm.position.set(TET.x,3.0,TET.z); wayG.add(tm);
+  for(var j=0;j<3;j++){ var a=j*2.0944, p=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.70,0.20),tetMat); p.position.set(TET.x+Math.cos(a)*0.34,TET.y,TET.z+Math.sin(a)*0.34); p.rotation.y=-a; wayG.add(p); }
+  var tf=new THREE.Mesh(new THREE.BoxGeometry(0.66,0.20,0.66),tetMat); tf.position.set(TET.x,0.10,TET.z); wayG.add(tf);
+})();
+
+/* ---------- static links ---------- */
+var linkG=new THREE.Group(); scene.add(linkG);
+var lineMats={};
+["lan","net","aud","rf","tet","trg","way","sig","veh"].forEach(function(k){
+  lineMats[k]=new THREE.LineBasicMaterial({transparent:true,opacity:(k==="lan")?0.40:0.62});
+});
+var dashMat=new THREE.LineDashedMaterial({transparent:true,opacity:0.7,dashSize:0.25,gapSize:0.16});
+function drawLine(pts,k,dashed){
+  var g=new THREE.BufferGeometry().setFromPoints(pts);
+  var l=new THREE.Line(g, dashed?dashMat:lineMats[k]);
+  if(dashed) l.computeLineDistances();
+  l.userData.k=k; linkG.add(l); return l;
+}
+function elbow(a,b,k){ if(a&&b) drawLine([a,new THREE.Vector3(a.x,b.y,a.z),b],k); }
+
+/* the ring: a forward run through the gangways and a return cable at floor level on the far wall */
+var RING_FWD=[[pt("sw_0"),pt("sw_1")],[pt("sw_1"),pt("sw_2")]];
+var RING_RET=[pt("sw_2"), P(2,-0.6,0.04,-1.34), P(2,-6.3,0.04,-1.34), P(1,6.3,0.04,-1.34), P(1,-6.3,0.04,-1.34), P(0,6.3,0.04,-1.34), P(0,0.6,0.04,-1.34), pt("sw_0")];
+RING_FWD.forEach(function(s){ drawLine(s,"net"); });
+drawLine(RING_RET,"net");
+
+[0,1,2].forEach(function(c){
+  var sw=pt("sw_"+c);
+  ["cam1","cam2","noise","pint1","pint2","dint"].forEach(function(b){ var p=pt(b+"_"+c); if(p) elbow(p,sw,"lan"); });
+  ["amp","dctl","nvr","rtr"].forEach(function(b){ var p=pt(b+"_"+c); if(p) drawLine([p,sw],"lan"); });
+  ["spk1","spk2","spk3"].forEach(function(b){ elbow(pt("amp_"+c),pt(b+"_"+c),"aud"); });
+  /* vehicle supply chain into the rack, and the rack units off the terminal */
+  drawLine([pt("brk_"+c),pt("dcdc_"+c)],"veh"); drawLine([pt("dcdc_"+c),pt("dcterm_"+c)],"veh");
+  drawLine([P(c,(c===2?1:-1)*5.6,0.10,RZ),pt("brk_"+c)],"veh");
+  ["amp","sw","dctl","nvr","rtr"].forEach(function(b){ var q=pt(b+"_"+c); if(q) drawLine([pt("dcterm_"+c),q],"veh"); });
+  if(c===1){
+    drawLine([P(1,5.9,0.30,-RZ),pt("vasci_1")],"sig",true);          /* RS422 in from the signalling system */
+    drawLine([pt("vasci_1"),pt("vdte_1")],"sig"); drawLine([pt("vdte_1"),pt("tcu_1")],"sig");
+    drawLine([pt("tcu_1"),pt("sw_1")],"lan");
+    drawLine([pt("vdte_1"),P(1,5.9,0.62,-RZ)],"sig",true);            /* digital in and out to the vehicle circuits */
+  }
+  drawLine([pt("dctl_"+c),new THREE.Vector3(CX[c]+rackX(c),FL+1.74,1.40)],"lan");
+  if(c!==1){
+    drawLine([pt("rtr_"+c),pt("ant_"+c)],"rf");
+    drawLine([pt("tet_"+c),pt("ant_"+c)],"tet");
+    drawLine([pt("tet_"+c),pt("amp_"+c)],"tet");       /* audio feed into the amplifier */
+  }
+});
+drawLine([pt("ant_0"),AP],"rf"); drawLine([pt("ant_2"),AP],"rf");
+drawLine([AP,DTS],"way"); drawLine([DTS,CCF],"way");
+drawLine([pt("ant_2"),TET],"tet"); drawLine([TET,new THREE.Vector3(TET.x,0.9,TET.z),new THREE.Vector3(DTS.x,0.9,DTS.z+1.0),DTS],"tet");
+
+/* ---------- ring routing ---------- */
+var ringBroken=false;             /* the leg between M2 and MC3 */
+var breakMark=new THREE.Group(); breakMark.visible=false; scene.add(breakMark);
+(function(){
+  var m=new THREE.MeshBasicMaterial({color:0xD93B2B});
+  var mid=pt("sw_1").clone().lerp(pt("sw_2"),0.5);
+  [0.785,-0.785].forEach(function(a){ var bar=new THREE.Mesh(new THREE.BoxGeometry(0.9,0.12,0.12),m); bar.position.copy(mid); bar.position.y+=0.35; bar.rotation.z=a; breakMark.add(bar); });
+  var halo=new THREE.Mesh(new THREE.RingGeometry(0.55,0.68,32),new THREE.MeshBasicMaterial({color:0xD93B2B,transparent:true,opacity:0.55,side:THREE.DoubleSide}));
+  halo.position.copy(mid); halo.position.y+=0.35; halo.rotation.x=-Math.PI/2; breakMark.add(halo);
+})();
+function legOk(a,b){
+  var key=[a,b].sort().join("");
+  if(key==="12" && ringBroken) return false;
+  return true;
+}
+function legPts(a,b){
+  if([a,b].sort().join("")==="02"){
+    var arr=RING_RET.slice(); if(a===0) arr.reverse(); return arr;
+  }
+  return [pt("sw_"+a),pt("sw_"+b)];
+}
+function ringRoute(a,b){
+  if(a===b) return [pt("sw_"+a)];
+  function walk(dir){
+    var cur=a, out=[pt("sw_"+a)], guard=0;
+    while(cur!==b && guard++<4){
+      var nxt=(cur+dir+3)%3;
+      if(!legOk(cur,nxt)) return null;
+      var seg=legPts(cur,nxt); out=out.concat(seg.slice(1)); cur=nxt;
+    }
+    return out;
+  }
+  var cw=walk(1), ccw=walk(-1);
+  if(cw&&ccw) return (cw.length<=ccw.length)?cw:ccw;
+  return cw||ccw||[pt("sw_"+a)];
+}
+function offTrain(){ return [pt("rtr_0"),pt("ant_0"),AP,DTS,CCF]; }
+function onTrain(){ return [CCF,DTS,AP,pt("ant_0"),pt("rtr_0")]; }
+function withAmp(c){ return [pt("amp_"+c),pt("spk1_"+c),pt("amp_"+c),pt("spk2_"+c),pt("amp_"+c),pt("spk3_"+c)]; }
+
+/* ---------- flows: each is a list of polylines, with narration ---------- */
+function flowFor(kind, c, from){
+  c = (c===undefined)?1:c;
+  var F={label:"",paint:"cctv",lines:[],steps:[]};
+  if(kind==="cctv"){
+    var cam=from||("cam1_"+c);
+    F.label="CCTV, camera to the control centre"; F.paint="cctv";
+    F.lines.push([pt(cam),pt("sw_"+c)].concat(ringRoute(c,1).slice(1)).concat([pt("nvr_1")]));
+    F.lines.push([pt(cam),pt("sw_"+c)].concat(ringRoute(c,0).slice(1)).concat(offTrain()));
+    F.steps=[["Camera","streams continuously, powered over Ethernet"],["Com switch","the car hub, on the ring"],
+             ["Ring to M2","to the recorder, which keeps the archive onboard"],["Ring to MC1","to the Wi-Fi router at the end of the train"],
+             ["Roof antenna","off the vehicle on 5.8 GHz"],["Wayside access point","the cell covering this stretch"],
+             ["Data transmission system","the wayside network. Nothing reaches the control centre except through it"],["PCCF and ACCF","live viewing and alarm triggered push on the video wall"]];
+  }
+  if(kind==="pa_auto"){
+    F.label="Automatic announcement from a signalling trigger"; F.paint="pa";
+    var head=[pt("vasci_1"),pt("vdte_1"),pt("tcu_1"),pt("sw_1")];
+    [0,1,2].forEach(function(k){ F.lines.push(head.concat(ringRoute(1,k).slice(1)).concat(withAmp(k))); });
+    F.steps=[["VASCI","a door, a location or an emergency indication arrives from the signalling system on the serial link"],
+             ["VDTE and TCU","the indication is turned into a trigger"],["Com switch and ring","to the amplifier in every car"],
+             ["PA amplifier","matches the trigger to a stored announcement and plays it, nobody presses anything"],["Loudspeakers","three per car"]];
+  }
+  if(kind==="pa_live"){
+    F.label="Live announcement from the control centre"; F.paint="pa";
+    var lead=onTrain().concat([pt("sw_0")]);
+    [0,1,2].forEach(function(k){ F.lines.push(lead.concat(ringRoute(0,k).slice(1)).concat(withAmp(k))); });
+    F.steps=[["Operator at PCCF or ACCF","opens a live session to this train"],["Data transmission system and access point","down the 5.8 GHz cell"],
+             ["Roof antenna and router","onto the vehicle"],["Com switch and ring","to the amplifier in every car"],["PA amplifier","the live session takes priority over the stored announcements"],["Loudspeakers","every car at once"]];
+  }
+  if(kind==="pa_tetra"){
+    F.label="Trainline announcement from the cab over TETRA"; F.paint="tet";
+    var src=c===1?2:c;
+    F.lines.push([pt("tet_"+src)].concat(withAmp(src)));
+    F.lines.push([pt("tet_"+src),pt("amp_"+src),pt("sw_"+src)].concat(ringRoute(src,1).slice(1)).concat(withAmp(1)));
+    F.lines.push([pt("tet_"+src),pt("amp_"+src),pt("sw_"+src)].concat(ringRoute(src,2-src).slice(1)).concat(withAmp(2-src)));
+    F.steps=[["Cab radio","the driver or the controller speaks on TETRA"],["Audio input on the amplifier","wired from the cab radio, so it does not depend on the Wi-Fi bearer"],
+             ["Com switch and ring","the audio is carried to the amplifiers in the other cars"],["Loudspeakers","the whole train"]];
+  }
+  if(kind==="intercom"){
+    var pi=from||("pint1_"+c);
+    F.label="Passenger intercom, press to call"; F.paint="pa";
+    F.lines.push([pt(pi),pt("sw_"+c)].concat(ringRoute(c,0).slice(1)).concat(offTrain()));
+    F.lines.push(onTrain().concat([pt("sw_0")]).concat(ringRoute(0,c).slice(1)).concat([pt(pi)]));
+    F.steps=[["Intercom","pressed by a passenger. Speaker and microphone in one assembly"],["Com switch and ring","to the router at the end of the train"],
+             ["5.8 GHz","off the vehicle, through the access point"],["Data transmission system","to the control centre"],["PCCF operator","answers, and the call runs both ways"]];
+  }
+  if(kind==="display"){
+    F.label="Surround display, content from the control centre"; F.paint="pis";
+    F.lines.push(onTrain().concat([pt("sw_0")]).concat(ringRoute(0,c).slice(1)).concat([pt("dctl_"+c),new THREE.Vector3(CX[c]+rackX(c),FL+1.74,1.40),new THREE.Vector3(CX[c]-rackX(c)*0.8,FL+1.74,1.40)]));
+    F.steps=[["PCCF content server","next station, overrides and campaigns"],["Data transmission system and access point","down the 5.8 GHz cell"],
+             ["Router, switch and ring","to the car"],["Display controller","holds the library, so routine content plays even if the link drops"],["Surround display","the light panel round the saloon"]];
+  }
+  if(kind==="ring"){
+    F.label=ringBroken?"Ring with the M2 to MC3 cable broken":"Ring, every switch reachable both ways"; F.paint="net";
+    if(ringBroken){
+      F.lines.push(ringRoute(0,2)); F.lines.push(ringRoute(2,0));
+    } else {
+      var loop=[pt("sw_0"),pt("sw_1"),pt("sw_2")].concat(RING_RET.slice(1));
+      F.lines.push(loop);
+    }
+    F.steps=ringBroken
+      ? [["Cable broken between M2 and MC3","the forward leg is lost"],["Return cable","MC3 is still reached from MC1 along the return run"],["Every car reachable","one failure does not isolate a car"]]
+      : [["Com switch MC1","forward run through the gangway"],["Com switch M2","forward run through the gangway"],["Com switch MC3","return cable at floor level back to MC1"],["Closed ring","a single broken cable leaves every car reachable the other way"]];
+  }
+  return F;
+}
+
+/* ---------- flow rendering ---------- */
+var flowG=new THREE.Group(); scene.add(flowG);
+var active=null, flowKey="cctv", flowCar=1, flowFrom=null;
+var cometGeo=new THREE.SphereGeometry(0.115,12,10), tailGeo=new THREE.SphereGeometry(0.075,8,6);
+var pulseGeo=new THREE.RingGeometry(0.18,0.27,32);
+function clearFlow(){
+  while(flowG.children.length){ var o=flowG.children.pop(); if(o.geometry) o.geometry.dispose(); }
+  active=null;
+}
+function buildFlow(kind,c,from){
+  clearFlow();
+  flowKey=kind; flowCar=c; flowFrom=from||null;
+  var F=flowFor(kind,c,from); if(!F.lines.length){ renderPath(F); return; }
+  var col=hx(F.paint);
+  active={F:F, runs:[], t:0};
+  F.lines.forEach(function(pts,li){
+    pts=pts.filter(Boolean);
+    if(pts.length<2) return;
+    var curve=new THREE.CatmullRomCurve3(pts,false,"catmullrom",0.02);
+    var len=curve.getLength();
+    var tube=new THREE.Mesh(new THREE.TubeGeometry(curve,Math.max(24,Math.round(len*3)),0.028,8,false),
+      new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.70}));
+    flowG.add(tube);
+    var glow=new THREE.Mesh(new THREE.TubeGeometry(curve,Math.max(24,Math.round(len*3)),0.075,8,false),
+      new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.09,depthWrite:false}));
+    flowG.add(glow);
+    var comets=[], n=Math.max(2,Math.min(7,Math.round(len/7)));
+    for(var i=0;i<n;i++){
+      var head=new THREE.Mesh(cometGeo,new THREE.MeshBasicMaterial({color:col})); flowG.add(head);
+      var tails=[];
+      for(var k=0;k<4;k++){ var t=new THREE.Mesh(tailGeo,new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.5-k*0.11})); t.scale.setScalar(1-k*0.18); flowG.add(t); tails.push(t); }
+      comets.push({head:head,tails:tails,u:i/n+li*0.13});
+    }
+    var p0=new THREE.Mesh(pulseGeo,new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.8,side:THREE.DoubleSide}));
+    p0.position.copy(pts[0]); p0.rotation.x=-Math.PI/2; flowG.add(p0);
+    var p1=new THREE.Mesh(pulseGeo,new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.8,side:THREE.DoubleSide}));
+    p1.position.copy(pts[pts.length-1]); p1.rotation.x=-Math.PI/2; flowG.add(p1);
+    active.runs.push({curve:curve,len:len,comets:comets,pulses:[p0,p1],speed:Math.min(0.20, 3.6/len)});
+  });
+  renderPath(F);
+  syncHud();
+}
+function stepFlow(dt){
+  if(!active) return;
+  active.t+=dt;
+  active.runs.forEach(function(r){
+    r.comets.forEach(function(cm){
+      cm.u=(cm.u+dt*r.speed)%1;
+      r.curve.getPointAt(cm.u, cm.head.position);
+      for(var k=0;k<cm.tails.length;k++){
+        var uu=cm.u-(k+1)*0.009; if(uu<0) uu+=1;
+        r.curve.getPointAt(uu, cm.tails[k].position);
+      }
+    });
+    var ph=(active.t*1.1)%1;
+    r.pulses.forEach(function(p,i){
+      var q=(ph+i*0.5)%1;
+      p.scale.setScalar(0.6+q*2.6); p.material.opacity=0.75*(1-q);
+    });
+  });
+  /* narration follows the lead comet on the first run */
+  var F=active.F, n=F.steps.length, r0=active.runs[0];
+  if(r0 && n){
+    var lead=r0.comets[0].u, si=Math.min(n-1,Math.floor(lead*n));
+    document.querySelectorAll("#cpath .pstep").forEach(function(el,i){ el.classList.toggle("on", i===si); });
+  }
+}
+
+/* ---------- subsystem focus ---------- */
+var SUBS={
+  cctv:{name:"CCTV",            kinds:[["cctv","Camera to control centre"]],                                   dflt:"cctv"},
+  pa:  {name:"PA and intercom", kinds:[["pa_auto","Automatic announcement"],["pa_live","Live PA from control"],["pa_tetra","Trainline PA over TETRA"],["intercom","Passenger intercom call"]], dflt:"pa_auto"},
+  pis: {name:"Surround display",kinds:[["display","Content to the display"]],                                   dflt:"display"},
+  net: {name:"Onboard network", kinds:[["ring","Ring between the com switches"]],                              dflt:"ring"},
+  all: {name:"Everything",      kinds:[["cctv","Camera to control centre"],["pa_live","Live PA from control"],["pa_tetra","Trainline PA over TETRA"],["intercom","Passenger intercom call"],["display","Content to the display"],["ring","Ring between the com switches"]], dflt:"cctv"}
+};
+var subKey="cctv";
+var vehOn=true;
+function inSub(e){
+  if(e.paint==="veh") return vehOn;
+  if(subKey==="all") return true;
+  if(subKey==="net") return e.sub==="net" || e.base==="ifcab";
+  if(e.sub===subKey) return true;
+  if(e.base==="sw"||e.base==="rack"||e.base==="console") return true;   /* furniture and the hub stay in every story */
+  if(e.base==="rtr"||e.base==="ant") return subKey!=="pa" || true;
+  return false;
+}
+function applySub(){
+  E.forEach(function(e){
+    var on=inSub(e);
+    e.allMats.forEach(function(m){ if(m.userData && m.userData.k==="band") return; m.opacity = on?1:0.16; });
+    if(e.mesh.userData.noTint) e.allMats.forEach(function(m){ m.opacity = on?(m===bandMat?0.96:1):0.14; });
+  });
+  linkG.children.forEach(function(l){
+    var k=l.userData.k, on;
+    if(k==="veh"){ l.visible=vehOn; return; }
+    if(subKey==="all") on=true;
+    else if(subKey==="cctv") on=(k==="lan"||k==="net"||k==="rf"||k==="way");
+    else if(subKey==="pa")   on=(k==="lan"||k==="net"||k==="aud"||k==="sig"||k==="tet"||k==="rf"||k==="way");
+    else if(subKey==="pis")  on=(k==="lan"||k==="net"||k==="rf"||k==="way");
+    else if(subKey==="net")  on=(k==="net"||k==="rf"||k==="way"||k==="sig"||k==="lan");
+    l.visible=on;
+  });
+  document.querySelectorAll("#citems .it").forEach(function(el){
+    var d=byId[el.dataset.id]; el.classList.toggle("dim", d && !inSub(d));
+  });
+  document.querySelectorAll("[data-sub]").forEach(function(b){ b.setAttribute("aria-pressed",String(b.dataset.sub===subKey)); });
+  renderFlowPicker();
+}
+function renderFlowPicker(){
+  var S=SUBS[subKey], h='<div class="hdd">Signal flows, '+S.name+'</div>';
+  S.kinds.forEach(function(k){
+    var paint = k[0]==="ring"?"net" : k[0]==="pa_tetra"?"tet" : k[0]==="display"?"pis" : k[0]==="cctv"?"cctv":"pa";
+    h+='<button class="fb" data-kind="'+k[0]+'" aria-pressed="'+String(k[0]===flowKey)+'"><span class="fdot" style="background:'+css(paint)+'"></span>'+k[1]+'</button>';
+  });
+  document.getElementById("cflows").innerHTML=h;
+  document.querySelectorAll("#cflows .fb").forEach(function(b){
+    b.addEventListener("click", function(){ buildFlow(b.dataset.kind, flowCar, null); renderFlowPicker(); });
+  });
+}
+function renderPath(F){
+  var el=document.getElementById("cpath"), h="";
+  F.steps.forEach(function(s,i){ h+='<div class="pstep"><span class="pn">'+(i+1)+'</span><div><b>'+s[0]+'</b> '+s[1]+'</div></div>'; });
+  el.innerHTML=h||'<div class="pstep"><span class="pn">·</span>No path.</div>';
+  document.getElementById("cstep").textContent=F.label?"":"";
+  document.querySelector(".netbox .hd .ttl").textContent=F.label||"Signal path";
+}
+function syncHud(){
+  var S=SUBS[subKey];
+  hudE.innerHTML='<div><span class="cdot" style="background:'+css(subKey==="all"?"box":subKey)+'"></span><b>'+S.name+'</b></div>'+
+    (active?'<div>'+active.F.label+'</div>':'')+
+    (ringBroken?'<div style="color:'+css("trg")+'">ring cable M2 to MC3 broken, traffic rerouted</div>':'');
+}
+
+/* ---------- lighting and theme ---------- */
+var hemi=new THREE.HemisphereLight(0xffffff,0x8a8f94,0.95); scene.add(hemi);
+var key=new THREE.DirectionalLight(0xffffff,0.85); key.position.set(-18,26,22); scene.add(key);
+var fill=new THREE.DirectionalLight(0xffffff,0.30); fill.position.set(22,14,-18); scene.add(fill);
+function applyTheme(d){
+  dark=d;
+  scene.background=new THREE.Color(d?0x121214:0xF2F2F4);
+  scene.fog=new THREE.Fog(d?0x12171B:0xF1EFEA,60,150);
+  hemi.intensity=d?0.72:0.95; key.intensity=d?0.70:0.85;
+  groundMat.color.setHex(d?0x1C232A:0xDCD7CD); plinthMat.color.setHex(d?0x2A323A:0xC6C0B5);
+  deckGrid.material.color.setHex(d?0x4A555E:0xB4AFA5); deckGrid.material.opacity=d?0.12:0.08;
+  bogieMat.color.setHex(d?0x2A3139:0x9A9A96); gwMat.color.setHex(d?0x2E353C:0xCBC5BA);
+  shells.forEach(function(s){
+    s.userData.skin.color.setHex(d?0xA9BECE:0xEDE6DA); s.userData.edges.color.setHex(d?0x7E8B96:0x8B8679);
+    s.userData.floor.color.setHex(d?0x2A3138:0xB9B3A8); s.userData.doors.color.setHex(d?0x7E8B96:0x8B8679);
+  });
+  shadowMat.color.setHex(d?0x000000:0x6B6256); shadowMat.opacity=d?0.30:0.15;
+  if(wayG.userData.ccfEdge) wayG.userData.ccfEdge.color.setHex(d?0x7E8A94:0x6B7278);
+  [apMat,tetMat,dtsMat,ccfMat].forEach(function(m){ var c=hx(m.userData.k); m.color.setHex(c); m.emissive=new THREE.Color(c); });
+  dtsMat.emissiveIntensity=0.08; ccfMat.emissiveIntensity=0.05;
+  grilleMat.color.setHex(d?0x8C9299:0xD8D4CC);
+  Object.keys(lineMats).forEach(function(k){ lineMats[k].color.setHex(hx(k)); });
+  dashMat.color.setHex(hx("sig"));
+  E.forEach(function(e){
+    var c=hx(e.paint);
+    e.mats.forEach(function(m){ m.color.setHex(c); m.emissive=new THREE.Color(c); m.emissiveIntensity=0.20; });
+  });
+  bandMat.color.setHex(d?0xE9E1D3:0xF6F0E6); bandMat.emissiveIntensity=d?0.75:0.55;
+  if(active) buildFlow(flowKey,flowCar,flowFrom);
+  paintList(); renderFlowPicker();
+}
+window.commsTheme=applyTheme;
+
+/* ---------- labels ---------- */
+var labelWrap=document.createElement("div");
+labelWrap.style.cssText="position:absolute;inset:0;pointer-events:none;overflow:hidden";
+velm.appendChild(labelWrap);
+var LBL_CSS="position:absolute;transform:translate(-50%,-100%);white-space:nowrap;font-family:var(--f-body);font-size:10.5px;font-weight:500;letter-spacing:0;padding:3px 8px;border-radius:7px;background:color-mix(in srgb, var(--panel) 82%, transparent);box-shadow:0 0 0 .5px var(--line),0 2px 8px rgba(0,0,0,.06);color:var(--ink-2);pointer-events:none";
+var labels=[];
+E.filter(function(e){ return e.lbl; }).forEach(function(e){
+  var d=document.createElement("div"); d.textContent=e.name; d.style.cssText=LBL_CSS; labelWrap.appendChild(d);
+  labels.push({e:e,el:d});
+});
+[["Wayside access point",AP,1.0],["Wayside switch, DTS",DTS,1.1],["PCCF and ACCF",CCF,1.8],["TETRA base station",TET,1.0]].forEach(function(w){
+  var d=document.createElement("div"); d.textContent=w[0]; d.style.cssText=LBL_CSS; labelWrap.appendChild(d);
+  labels.push({fixed:w[1].clone().add(new THREE.Vector3(0,w[2],0)),el:d});
+});
+var carTags=CN.map(function(n,c){
+  var d=document.createElement("div"); d.textContent=n;
+  d.style.cssText="position:absolute;transform:translate(-50%,-50%);font-family:var(--f-body);font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--ink-3);opacity:.8;pointer-events:none";
+  labelWrap.appendChild(d); return {el:d,p:new THREE.Vector3(CX[c],FL+CH+0.9,0)};
+});
+var labelsOn=true, pv=new THREE.Vector3(), placed=[];
+function placeLabels(){
+  var w=velm.clientWidth, h=velm.clientHeight; placed.length=0;
+  function screen(p){ pv.copy(p).project(camera); if(pv.z>=1||pv.x<-1.2||pv.x>1.2||pv.y<-1.2||pv.y>1.2) return null; return {x:(pv.x*0.5+0.5)*w,y:(-pv.y*0.5+0.5)*h,d:pv.z}; }
+  function clear(sc,wd){ for(var i=0;i<placed.length;i++){ var q=placed[i]; if(Math.abs(q.x-sc.x)<(q.w+wd)*0.5+6 && Math.abs(q.y-sc.y)<17) return false; } return true; }
+  var cand=labels.map(function(L){ var p=L.fixed?L.fixed:L.e.p.clone().add(new THREE.Vector3(0,0.46,0)); return {L:L,sc:screen(p),on:L.fixed?true:inSub(L.e)}; })
+    .filter(function(o){ return o.sc && o.on; }).sort(function(a,b){ return a.sc.d-b.sc.d; });
+  labels.forEach(function(L){ L.el.style.display="none"; });
+  cand.forEach(function(o){
+    if(!labelsOn) return; var wd=o.L.el.offsetWidth||90; if(!clear(o.sc,wd)) return;
+    placed.push({x:o.sc.x,y:o.sc.y,w:wd}); o.L.el.style.display="block"; o.L.el.style.left=o.sc.x+"px"; o.L.el.style.top=o.sc.y+"px";
+  });
+  carTags.forEach(function(t){ var sc=screen(t.p); t.el.style.display=sc?"block":"none"; if(sc){ t.el.style.left=sc.x+"px"; t.el.style.top=sc.y+"px"; } });
+}
+
+/* ---------- camera ---------- */
+var orb={phi:0.30,theta:1.26,dist:42,tgt:new THREE.Vector3(0,2.0,0)};
+var VIEWS={
+  train:{phi:0.30,theta:1.26,dist:42,tgt:[0,2.0,0]},
+  mc1:{phi:0.26,theta:1.22,dist:15,tgt:[CX[0],1.8,0]}, m2:{phi:0.26,theta:1.22,dist:15,tgt:[CX[1],1.8,0]}, mc3:{phi:0.26,theta:1.22,dist:15,tgt:[CX[2],1.8,0]},
+  air:{phi:0.36,theta:1.16,dist:86,tgt:[-11,3.4,-6]}
+};
+var goal=null;
+function setView(k){
+  var v=VIEWS[k]; if(!v) return;
+  goal={phi:v.phi,theta:v.theta,dist:v.dist,tgt:new THREE.Vector3(v.tgt[0],v.tgt[1],v.tgt[2])};
+  document.querySelectorAll("[data-cview]").forEach(function(b){ b.setAttribute("aria-pressed",String(b.dataset.cview===k)); });
+}
+function applyCam(){
+  var r=orb.dist;
+  camera.position.set(orb.tgt.x+r*Math.cos(orb.phi)*Math.cos(orb.theta), orb.tgt.y+r*Math.sin(orb.phi), orb.tgt.z+r*Math.cos(orb.phi)*Math.sin(orb.theta));
+  camera.lookAt(orb.tgt);
+}
+var drag=false,lx=0,ly=0,moved=0;
+velm.addEventListener("pointerdown",function(e){ drag=true; moved=0; lx=e.clientX; ly=e.clientY; goal=null; });
+velm.addEventListener("pointerup",function(){ drag=false; });
+velm.addEventListener("pointermove",function(e){
+  if(drag){ orb.theta-=(e.clientX-lx)*0.006; orb.phi=Math.max(-0.15,Math.min(1.25,orb.phi+(e.clientY-ly)*0.005)); moved+=Math.abs(e.clientX-lx)+Math.abs(e.clientY-ly); lx=e.clientX; ly=e.clientY; }
+  hover(e);
+});
+velm.addEventListener("wheel",function(e){ e.preventDefault(); goal=null; orb.dist=Math.max(7,Math.min(140,orb.dist*(1+Math.sign(e.deltaY)*0.09))); },{passive:false});
+
+/* ---------- picking, and click to run that item's path ---------- */
+var ray=new THREE.Raycaster(), ndc=new THREE.Vector2(), picked=null;
+function hover(e){
+  var r=velm.getBoundingClientRect();
+  ndc.x=((e.clientX-r.left)/r.width)*2-1; ndc.y=-((e.clientY-r.top)/r.height)*2+1;
+  ray.setFromCamera(ndc,camera);
+  var hits=ray.intersectObjects(pickables,false), d=null;
+  for(var i=0;i<hits.length;i++){ var ee=hits[i].object.userData.e; if(ee && inSub(ee)){ d=ee; break; } }
+  if(d){ tipE.textContent=d.name+"  ·  "+CN[d.c]; tipE.style.left=(e.clientX-r.left)+"px"; tipE.style.top=(e.clientY-r.top)+"px"; tipE.style.opacity=1; velm.style.cursor="pointer"; }
+  else { tipE.style.opacity=0; velm.style.cursor=drag?"grabbing":"grab"; }
+  picked=d;
+}
+velm.addEventListener("click",function(){ if(picked && moved<6) runFor(picked); });
+velm.addEventListener("pointerleave",function(){ tipE.style.opacity=0; });
+function runFor(d){
+  showItem(d);
+  var kind=null, from=null;
+  switch(d.base){
+    case "cam1": case "cam2": kind="cctv"; from=d.id; break;
+    case "nvr": kind="cctv"; break;
+    case "pint1": case "pint2": case "dint": kind="intercom"; from=d.id; break;
+    case "vasci": case "vdte": case "tcu": case "noise": kind="pa_auto"; break;
+    case "amp": case "spk1": case "spk2": case "spk3": kind=(subKey==="pa"&&flowKey!=="pa_auto")?flowKey:"pa_live"; break;
+    case "tet": kind="pa_tetra"; break;
+    case "dctl": case "band": kind="display"; break;
+    case "sw": kind="ring"; break;
+    case "rtr": case "ant": kind=(subKey==="pis")?"display":(subKey==="pa")?"pa_live":"cctv"; break;
+  }
+  if(!kind) return;
+  /* follow the item into its subsystem if the current one does not own it */
+  var owner = (kind==="ring")?"net":(kind==="display")?"pis":(kind==="cctv")?"cctv":"pa";
+  if(subKey!=="all" && subKey!==owner){ subKey=owner; applySub(); }
+  buildFlow(kind,d.c,from); renderFlowPicker();
+}
+
+/* ---------- panel ---------- */
+var stripE=document.getElementById("cstrip");
+function showItem(d){
+  stripE.innerHTML='<div><div class="nm">'+d.name+'</div><div class="ds">'+d.note+'</div></div>'+'<div class="qt"><b>'+CN[d.c]+'</b><span>'+(SUBS[d.sub]?SUBS[d.sub].name:(d.paint==="veh"?"Vehicle system":"Signalling interface"))+'</span></div>';
+  document.querySelectorAll("#citems .it").forEach(function(el){ el.classList.toggle("on",el.dataset.id===d.id); });
+}
+function paintList(){
+  document.querySelectorAll("#citems .it").forEach(function(el){ var d=byId[el.dataset.id]; if(d) el.querySelector(".sw").style.background=css(d.paint); });
+}
+(function(){
+  var h="";
+  [0,1,2].forEach(function(c){
+    h+='<div class="grp">'+CN[c]+'</div>';
+    E.filter(function(e){ return e.c===c; }).forEach(function(e){ h+='<div class="it" data-id="'+e.id+'"><span class="sw"></span>'+e.name+'</div>'; });
+  });
+  document.getElementById("citems").innerHTML=h;
+  document.getElementById("ctot").textContent=E.length+" items";
+  document.getElementById("citems").addEventListener("click",function(ev){ var el=ev.target.closest(".it"); if(!el) return; var d=byId[el.dataset.id]; if(d) runFor(d); });
+  stripE.innerHTML='<div class="ds">Click any item in the model or the list to run its signal path.</div><div></div>';
+  paintList();
+})();
+
+/* ---------- driver console, folds down out of sight ---------- */
+var consoleDown=false;
+function setConsole(down){
+  consoleDown=down;
+  [0,2].forEach(function(c){
+    var con=byId["console_"+c], rad=byId["tet_"+c]; if(!con||!rad) return;
+    var s=c===0?-1:1, a=down?s*1.45:0;
+    con.mesh.rotation.z=a;
+    /* the radio rides on the panel */
+    var up=new THREE.Vector3(0,0.13,0).applyAxisAngle(new THREE.Vector3(0,0,1),a);
+    rad.mesh.position.copy(con.p).add(up);
+    rad.mesh.rotation.z=a;
+    rad.p.copy(rad.mesh.position);
+  });
+  if(active) buildFlow(flowKey,flowCar,flowFrom);
+}
+/* ---------- controls ---------- */
+document.querySelectorAll("[data-sub]").forEach(function(b){
+  b.addEventListener("click",function(){ subKey=b.dataset.sub; applySub(); buildFlow(SUBS[subKey].dflt,1,null); renderFlowPicker(); });
+});
+document.querySelectorAll("[data-cview]").forEach(function(b){ b.addEventListener("click",function(){
+  setView(b.dataset.cview);
+  var cc={mc1:0,m2:1,mc3:2}[b.dataset.cview];
+  if(cc!==undefined && cc!==flowCar){ buildFlow(flowKey,cc,null); }
+}); });
+var shellOn=true;
+document.getElementById("cshell").addEventListener("click",function(e){ shellOn=!shellOn; e.currentTarget.setAttribute("aria-pressed",String(shellOn)); shells.forEach(function(s){ s.visible=shellOn; }); });
+document.getElementById("clabel").addEventListener("click",function(e){ labelsOn=!labelsOn; e.currentTarget.setAttribute("aria-pressed",String(labelsOn)); });
+var animOn=true;
+document.getElementById("crun").addEventListener("click",function(e){ animOn=!animOn; e.currentTarget.setAttribute("aria-pressed",String(animOn)); });
+var ccon=document.getElementById("cconsole");
+if(ccon) ccon.addEventListener("click",function(e){ setConsole(!consoleDown); e.currentTarget.setAttribute("aria-pressed",String(consoleDown)); e.currentTarget.textContent=consoleDown?"Console lowered":"Lower console"; });
+var cveh=document.getElementById("cveh");
+if(cveh) cveh.addEventListener("click",function(e){ vehOn=!vehOn; e.currentTarget.setAttribute("aria-pressed",String(vehOn)); applySub(); var lg=document.getElementById("lgveh"); if(lg) lg.hidden=!vehOn; });
+document.getElementById("cbreak").addEventListener("click",function(e){
+  ringBroken=!ringBroken; e.currentTarget.setAttribute("aria-pressed",String(ringBroken));
+  e.currentTarget.textContent=ringBroken?"Ring cable broken":"Break ring cable";
+  breakMark.visible=ringBroken;
+  /* fade the broken leg in the static drawing */
+  linkG.children.forEach(function(l){ if(l.userData.k==="net"){ var a=l.geometry.attributes.position; if(a.count===2){ var x0=a.getX(0), x1=a.getX(1); if(Math.min(x0,x1)>-1 && Math.max(x0,x1)>10) l.visible=!ringBroken; } } });
+  buildFlow(flowKey,flowCar,flowFrom);
+});
+
+/* ---------- resize and loop ---------- */
+function resize(){ var w=velm.clientWidth,h=velm.clientHeight; if(!w||!h) return; R.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+window.addEventListener("resize",resize); window.commsResize=resize;
+var t0=0;
+function loop(ts){
+  requestAnimationFrame(loop);
+  var page=document.getElementById("page-comms"); if(!page||page.hidden){ t0=ts; return; }
+  var dt=Math.min((ts-t0)/1000,0.08); t0=ts;
+  if(goal){ orb.phi+=(goal.phi-orb.phi)*0.10; orb.theta+=(goal.theta-orb.theta)*0.10; orb.dist+=(goal.dist-orb.dist)*0.10; orb.tgt.lerp(goal.tgt,0.10); if(Math.abs(goal.dist-orb.dist)<0.05) goal=null; }
+  applyCam();
+  if(animOn) stepFlow(dt);
+  placeLabels();
+  R.render(scene,camera);
+}
+applyTheme(currentDark());
+applySub();
+setView("train");
+buildFlow("cctv",1,null);
+renderFlowPicker();
+resize();
+requestAnimationFrame(loop);
+})();
+
+
+/* ================= network builder ================= */
+(function(){
+/* ---------- world geometry: car zones laid left to right ---------- */
+var ZW=470, ZH=380, ZGAP=34, VGAP=90, ZTOP=120, TRUNK=56;   /* world units */
+var DEV=34;
+var TYPES={
+  sw:  {name:"Com switch, PoE",  short:"SW",   c:"--net",   w:0, ports:function(d){ var p=[]; for(var i=1;i<=d.props.nports;i++) p.push({name:"Gi"+i,type:"rj45",edge:"bottom"}); p.push({name:"SFP1",type:"sfp",edge:"right"}); p.push({name:"SFP2",type:"sfp",edge:"right"}); return p; }},
+  rtr: {name:"Wi-Fi 5.8 GHz router", short:"RTR", c:"--b58", ports:function(){ return [{name:"LAN1",type:"rj45",edge:"top"},{name:"LAN2",type:"rj45",edge:"top"},{name:"WLAN",type:"wlan",edge:"bottom"}]; }},
+  cam: {name:"CCTV camera",      short:"CAM",  c:"--cctv",  ports:function(){ return [{name:"PoE",type:"rj45",edge:"top"}]; }},
+  nvr: {name:"Video recorder, NVR", short:"NVR", c:"--comp", ports:function(){ return [{name:"LAN1",type:"rj45",edge:"top"},{name:"LAN2",type:"rj45",edge:"top"}]; }},
+  amp: {name:"PA amplifier, IP", short:"AMP",  c:"--pa",    ports:function(){ return [{name:"LAN",type:"rj45",edge:"top"},{name:"Line in",type:"audio",edge:"right"},{name:"Sensor",type:"audio",edge:"right"},{name:"Out1",type:"audio",edge:"bottom"},{name:"Out2",type:"audio",edge:"bottom"},{name:"Out3",type:"audio",edge:"bottom"},{name:"Out4",type:"audio",edge:"bottom"}]; }},
+  spk: {name:"Loudspeaker",      short:"SPK",  c:"--pa",    ports:function(){ return [{name:"Audio",type:"audio",edge:"top"}]; }},
+  ans: {name:"Ambient noise sensor", short:"ANS", c:"--pa", ports:function(d){ return d.props.ip? [{name:"PoE",type:"rj45",edge:"top"}] : [{name:"Audio",type:"audio",edge:"top"}]; }},
+  pecu:{name:"PECU, passenger intercom", short:"PECU", c:"--radio", ports:function(){ return [{name:"PoE",type:"rj45",edge:"top"}]; }},
+  dic: {name:"Driver intercom",  short:"DIC",  c:"--radio", ports:function(){ return [{name:"PoE",type:"rj45",edge:"top"}]; }},
+  dctl:{name:"Display controller", short:"DCTL", c:"--pids", ports:function(){ return [{name:"LAN1",type:"rj45",edge:"top"},{name:"LAN2",type:"rj45",edge:"top"}]; }},
+  disp:{name:"Surround display", short:"DISP", c:"--pids",  ports:function(){ return [{name:"PoE",type:"rj45",edge:"top"}]; }},
+  tet: {name:"TETRA radio",      short:"TET",  c:"--tetra", ports:function(){ return [{name:"Audio out",type:"audio",edge:"bottom"}]; }},
+  tcu: {name:"Vehicle TCU",      short:"TCU",  c:"#C2399A", ports:function(){ return [{name:"ETH1",type:"rj45",edge:"top"},{name:"ETH2",type:"rj45",edge:"top"}]; }},
+  gen: {name:"Generic IP device", short:"DEV", c:"--ink-3", ports:function(){ return [{name:"ETH1",type:"rj45",edge:"top"},{name:"ETH2",type:"rj45",edge:"top"}]; }}
+};
+var ORDER=["sw","rtr","cam","nvr","amp","spk","ans","pecu","dic","dctl","disp","tet","tcu","gen"];
+var RACK={sw:1,rtr:1,nvr:1,amp:1,dctl:1,tet:1,tcu:1,gen:1};
+var CABLE={cu:{name:"Copper, Cat5e",pins:8,fibre:0},fibre:{name:"Fibre",pins:0,fibre:2},audio:{name:"Audio pair",pins:2,fibre:0}};
+var uid=1;
+function nid(p){ return p+(uid++); }
+function mkDev(k,v,c,x,y){ var d={id:nid("d"),k:k,label:TYPES[k].short,v:v,c:c,x:x,y:y,props:{},flows:[]};
+  if(k==="sw") d.props.nports=16; if(k==="rtr") d.props.tx=false; if(k==="ans") d.props.ip=false;
+  d.ports=TYPES[k].ports(d).map(function(p){ return {id:nid("p"),name:p.name,type:p.type,edge:p.edge,link:null}; });
+  defaultFlows(d); return d; }
+function rebuildPorts(d){ var old=d.ports; var np=TYPES[d.k].ports(d).map(function(p){ var o=old.find(function(q){return q.name===p.name&&q.type===p.type;}); return o || {id:nid("p"),name:p.name,type:p.type,edge:p.edge,link:null}; }); old.forEach(function(o){ if(np.indexOf(o)<0 && o.link) removeLink(o.link); }); d.ports=np; }
+function defaultFlows(d){ d.flows=[];
+  var f=function(label,to,out,inn){ d.flows.push({id:nid("f"),label:label,to:to,out:out,inn:inn}); };
+  if(d.k==="cam"){ f("Live video to the wayside","wayside",2.0,0); f("Recording to NVR","nvr",4.0,0); }
+  if(d.k==="pecu"||d.k==="dic"){ f("Voice call, G.711","wayside",0.087,0.087); }
+  if(d.k==="dctl"){ f("Content feed","wayside",0.02,0.192); }
+  if(d.k==="disp"){ f("Display feed","dctl",0.01,0.2); }
+  if(d.k==="amp"){ f("Live PA and status","wayside",0.01,0.1); }
+  if(d.k==="tcu"){ f("Telemetry and commands","wayside",0.2,0.05); }
+  if(d.k==="sw"){ f("Switch health","wayside",0.05,0); }
+  if(d.k==="nvr"){ f("Event clip upload","wayside",0,0); }
+  if(d.k==="ans"&&d.props.ip){ f("Level reports","wayside",0.01,0); }
+  if(d.k==="gen"){ f("My traffic","wayside",1.0,1.0); }
+}
+var B={veh:[], devs:[], links:[], sel:null, selCar:{v:0,c:0}, chan:100, ovh:0.12, spare:0.30, cu:"1000", paLine:1, icLine:1, days:30, anim:true, lbl:true, tidy:false};
+function dev(id){ for(var i=0;i<B.devs.length;i++) if(B.devs[i].id===id) return B.devs[i]; return null; }
+function port(pid){ for(var i=0;i<B.devs.length;i++){ var d=B.devs[i]; for(var j=0;j<d.ports.length;j++) if(d.ports[j].id===pid) return {d:d,p:d.ports[j]}; } return null; }
+function link(id){ return B.links.find(function(l){return l.id===id;})||null; }
+function carName(v,c){ var n=B.veh[v].cars; return (n[c]==="MC"?"MC":"M")+(c+1); }
+function gIndex(v,c){ var g=0; for(var i=0;i<v;i++) g+=B.veh[i].cars.length; return g+c; }
+function totalCars(){ return B.veh.reduce(function(a,v){return a+v.cars.length;},0); }
+function zoneOf(v,c){ var x=0; for(var i=0;i<v;i++) x+=B.veh[i].cars.length*(ZW+ZGAP)-ZGAP+VGAP; x+=c*(ZW+ZGAP); return {x:x,y:ZTOP,w:ZW,h:ZH}; }
+function worldW(){ var last=B.veh.length-1; var z=zoneOf(last,B.veh[last].cars.length-1); return z.x+z.w; }
+function devsIn(v,c){ return B.devs.filter(function(d){return d.v===v&&d.c===c;}); }
+/* ---------- cables ---------- */
+function compatible(pa,pb){ if(pa.type==="wlan"||pb.type==="wlan") return false; if(pa.type==="audio"||pb.type==="audio") return pa.type===pb.type; if(pa.type==="sfp"||pb.type==="sfp") return pa.type===pb.type; return true; }
+function addLink(pa,pb){ var A=port(pa), Bp=port(pb); if(!A||!Bp||A.d===Bp.d) return null; if(!compatible(A.p,Bp.p)) return null; if(A.p.link) removeLink(A.p.link); if(Bp.p.link) removeLink(Bp.p.link);
+  var kind = A.p.type==="audio"?"audio" : A.p.type==="sfp"?"fibre":"cu"; var l={id:nid("l"),a:pa,b:pb,kind:kind}; B.links.push(l); A.p.link=l.id; Bp.p.link=l.id; return l; }
+function removeLink(id){ var l=link(id); if(!l) return; var A=port(l.a), Bp=port(l.b); if(A) A.p.link=null; if(Bp) Bp.p.link=null; B.links=B.links.filter(function(x){return x.id!==id;}); }
+function removeDev(id){ var d=dev(id); if(!d) return; d.ports.forEach(function(p){ if(p.link) removeLink(p.link); }); B.devs=B.devs.filter(function(x){return x.id!==id;}); B.devs.forEach(function(o){ o.flows.forEach(function(f){ if(f.to===id) f.to="nvr"; }); }); if(B.sel===id) B.sel=null; }
+function capOf(l){ return l.kind==="fibre"?10000 : l.kind==="audio"?0 : parseInt(B.cu,10); }
+function freePort(d,type){ return d.ports.find(function(p){ return p.type===type && !p.link; })||null; }
+function connect(dA,dB,type){ var pa=freePort(dA,type), pb=freePort(dB,type); if(pa&&pb) return addLink(pa.id,pb.id); return null; }
+
+/* ---------- presets ---------- */
+function carPreset(v,c,type,empty){
+  if(empty) return;
+  var sw=mkDev("sw",v,c,0,0); B.devs.push(sw);
+  var rack=[]; if(type==="MC"){ rack=[mkDev("rtr",v,c,0,0),mkDev("amp",v,c,0,0),mkDev("tet",v,c,0,0)]; } else { rack=[mkDev("nvr",v,c,0,0),mkDev("dctl",v,c,0,0),mkDev("tcu",v,c,0,0)]; }
+  rack.forEach(function(d){ B.devs.push(d); });
+  var ends=[mkDev("cam",v,c,0,0),mkDev("cam",v,c,0,0),mkDev("pecu",v,c,0,0),mkDev("pecu",v,c,0,0)]; if(type==="MC"){ ends.push(mkDev("dic",v,c,0,0)); ends.push(mkDev("ans",v,c,0,0)); }
+  ends.forEach(function(d){ B.devs.push(d); });
+  var low=[]; for(var i=0;i<4;i++) low.push(mkDev("disp",v,c,0,0)); for(var j=0;j<4;j++) low.push(mkDev("spk",v,c,0,0)); low.forEach(function(d){ B.devs.push(d); });
+  /* cables */
+  rack.concat(ends).forEach(function(d){ if(d.k==="tet"||d.k==="ans") return; connect(sw,d,"rj45"); });
+  low.forEach(function(d){ if(d.k==="disp") connect(sw,d,"rj45"); });
+  var amp=rack.find(function(d){return d.k==="amp";});
+  if(amp){ low.filter(function(d){return d.k==="spk";}).forEach(function(s){ connect(amp,s,"audio"); }); var ans=ends.find(function(d){return d.k==="ans";}); if(ans){ var sp=amp.ports.find(function(p){return p.name==="Sensor";}); addLink(sp.id,ans.ports[0].id); } var tet=rack.find(function(d){return d.k==="tet";}); if(tet){ var li=amp.ports.find(function(p){return p.name==="Line in";}); addLink(li.id,tet.ports[0].id); } }
+  numberCar(v,c); arrangeCar(v,c);
+}
+function numberCar(v,c){ var cnt={}; devsIn(v,c).forEach(function(d){ cnt[d.k]=(cnt[d.k]||0)+1; d.label=TYPES[d.k].short+(cnt[d.k]); }); }
+function presetVehicle(v,empty){ var cars=B.veh[v].cars; cars.forEach(function(t,c){ carPreset(v,c,t,empty); }); if(empty) return;
+  /* ring: switch to switch on SFP */
+  var sws=cars.map(function(t,c){ return devsIn(v,c).find(function(d){return d.k==="sw";}); });
+  for(var i=0;i<sws.length-1;i++) connect(sws[i],sws[i+1],"sfp"); if(sws.length>2) connect(sws[sws.length-1],sws[0],"sfp");
+  var r=B.devs.find(function(d){return d.v===v&&d.k==="rtr";}); if(r) r.props.tx=true;
+  /* backup copper between neighbouring switches */
+  fixFlowTargets();
+}
+function fixFlowTargets(){ B.devs.forEach(function(d){ d.flows.forEach(function(f){ if(f.to==="nvr"||f.to==="dctl"){ var want=f.to; var same=B.devs.filter(function(o){return o.k===want&&o.v===d.v;}); if(same.length) f.to=same[0].id; } }); }); }
+function newTrain(nveh,empty){ B.devs=[]; B.links=[]; B.veh=[]; for(var i=0;i<nveh;i++) B.veh.push({cars:["MC","M","MC"]}); B.veh.forEach(function(v,vi){ presetVehicle(vi,empty); }); B.sel=null; B.selCar={v:0,c:0}; B.tidy=!empty; }
+
+/* ---------- layout ---------- */
+function devW(d){ return d.k==="sw"? Math.max(90, d.props.nports*9+16) : DEV; }
+function devH(d){ return d.k==="sw"? 30 : DEV; }
+function arrangeCar(v,c){ var z=zoneOf(v,c), ds=devsIn(v,c);
+  var sw=ds.filter(function(d){return d.k==="sw";}), rack=ds.filter(function(d){return RACK[d.k]&&d.k!=="sw";}), ends=ds.filter(function(d){return !RACK[d.k]&&d.k!=="spk"&&d.k!=="disp";}), low=ds.filter(function(d){return d.k==="spk"||d.k==="disp";});
+  function row(list,y){ var n=list.length; if(!n) return; var tot=list.reduce(function(a,d){return a+devW(d);},0), gap=Math.max(10,(z.w-24-tot)/Math.max(1,n-1)); gap=Math.min(gap,60); var w=tot+gap*(n-1), x=z.x+(z.w-w)/2; list.forEach(function(d){ d.x=x+devW(d)/2; d.y=y; x+=devW(d)+gap; }); }
+  row(sw,z.y+TRUNK+25); row(rack,z.y+TRUNK+120); row(ends,z.y+TRUNK+205); row(low,z.y+TRUNK+285);
+}
+function arrangeAll(){ B.veh.forEach(function(v,vi){ v.cars.forEach(function(t,c){ arrangeCar(vi,c); }); }); B.tidy=true; routeAll(); }
+/* port positions in world units */
+function portPos(d,p){ var w=devW(d), h=devH(d), edge=p.edge; var same=d.ports.filter(function(q){return q.edge===edge;}), i=same.indexOf(p), n=same.length;
+  if(edge==="top"){ return {x:d.x-w/2+ w*(i+1)/(n+1), y:d.y-h/2, nx:0, ny:-1}; }
+  if(edge==="bottom"){ var pitch=Math.min(9,(w-8)/n); var x0=d.x-pitch*(n-1)/2; return {x:x0+i*pitch, y:d.y+h/2, nx:0, ny:1}; }
+  return {x:d.x+w/2, y:d.y-h/2+h*(i+1)/(n+1), nx:1, ny:0}; }
+/* orthogonal routing with lanes and hop-overs */
+var routes={};
+function routeAll(){ routes={}; var lanes={};
+  B.links.forEach(function(l){ var A=port(l.a), Bp=port(l.b); if(!A||!Bp) return; var pa=portPos(A.d,A.p), pb=portPos(Bp.d,Bp.p);
+    var sameCar=(A.d.v===Bp.d.v&&A.d.c===Bp.d.c);
+    var pts=[];
+    if(sameCar){
+      var top=pa.y<pb.y?{p:pa,d:A.d}:{p:pb,d:Bp.d}, bot=pa.y<pb.y?{p:pb,d:Bp.d}:{p:pa,d:A.d};
+      /* lane between the two rows */
+      var dtop=bot.p.y-(bot.p.ny<0?0:devH(bot.d)); var key="b"+Math.round(dtop); var n=(lanes[key]=(lanes[key]||0)+1); var ly=dtop-12-((n-1)%10)*4;
+      var s1={x:top.p.x,y:top.p.y+(top.p.ny)*6}, e1={x:bot.p.x,y:bot.p.y+(bot.p.ny)*6};
+      if(top.p.nx){ s1={x:top.p.x+8,y:top.p.y}; } if(bot.p.nx){ e1={x:bot.p.x+8,y:bot.p.y}; }
+      pts=[top.p,s1,{x:s1.x,y:ly},{x:e1.x,y:ly},e1,bot.p];
+    } else {
+      /* across cars: up to the trunk band, along, down */
+      var ga=gIndex(A.d.v,A.d.c), gb=gIndex(Bp.d.v,Bp.d.c); var left=ga<=gb?{p:pa,d:A.d}:{p:pb,d:Bp.d}, right=ga<=gb?{p:pb,d:Bp.d}:{p:pa,d:A.d};
+      var key2="t"; var n2=(lanes[key2]=(lanes[key2]||0)+1); var ty=ZTOP+12+((n2-1)%8)*5;
+      var s2 = left.p.nx? {x:left.p.x+10,y:left.p.y} : {x:left.p.x,y:left.p.y+left.p.ny*6};
+      var e2 = right.p.nx? {x:right.p.x+10,y:right.p.y} : {x:right.p.x,y:right.p.y+right.p.ny*6};
+      var zl=zoneOf(left.d.v,left.d.c), zr=zoneOf(right.d.v,right.d.c);
+      var xl=zl.x+zl.w-8-((n2-1)%8)*4, xr=zr.x+8+((n2-1)%8)*4;
+      pts=[left.p,s2,{x:s2.x,y:ty},{x:e2.x,y:ty},e2,right.p];
+    }
+    routes[l.id]=pts;
+  });
+  /* hops: horizontal segment of one route crossing vertical segment of another */
+  var segs=[]; Object.keys(routes).forEach(function(id){ var p=routes[id]; for(var i=0;i<p.length-1;i++){ segs.push({id:id,i:i,a:p[i],b:p[i+1],h:Math.abs(p[i].y-p[i+1].y)<0.01,v:Math.abs(p[i].x-p[i+1].x)<0.01}); } });
+  hops={}; segs.forEach(function(s){ if(!s.h) return; var x0=Math.min(s.a.x,s.b.x), x1=Math.max(s.a.x,s.b.x), y=s.a.y; segs.forEach(function(t){ if(!t.v||t.id===s.id) return; var y0=Math.min(t.a.y,t.b.y), y1=Math.max(t.a.y,t.b.y), x=t.a.x; if(x>x0+3&&x<x1-3&&y>y0+3&&y<y1-3){ (hops[s.id+":"+s.i]=hops[s.id+":"+s.i]||[]).push(x); } }); });
+}
+var hops={};
+
+/* ---------- traffic model ---------- */
+var R=null;
+function compute(){
+  B.links.forEach(function(l){ l.fwd=0; l.rev=0; l.cap=capOf(l); });
+  var adj={}; B.links.forEach(function(l){ if(l.kind==="audio") return; var A=port(l.a), Bp=port(l.b); if(!A||!Bp) return; (adj[A.d.id]=adj[A.d.id]||[]).push({to:Bp.d.id,l:l,dir:1}); (adj[Bp.d.id]=adj[Bp.d.id]||[]).push({to:A.d.id,l:l,dir:-1}); });
+  var cache={};
+  function path(s,t){ if(s===t) return []; var key=s+">"+t; if(key in cache) return cache[key]; var prev={}, q=[s], seen={}; seen[s]=true; var found=false; while(q.length&&!found){ var u=q.shift(); (adj[u]||[]).forEach(function(e){ if(seen[e.to]) return; seen[e.to]=true; prev[e.to]={from:u,e:e}; if(e.to===t) found=true; q.push(e.to); }); } if(!found){ cache[key]=null; return null; } var out=[], cur=t; while(cur!==s){ var p=prev[cur]; out.unshift(p.e); cur=p.from; } cache[key]=out; return out; }
+  function load(s,t,mb){ if(mb<=0) return true; if(s===t) return true; var p=path(s,t); if(!p) return false; p.forEach(function(e){ if(e.dir>0) e.l.fwd+=mb; else e.l.rev+=mb; }); return true; }
+  var tx=B.devs.filter(function(d){return d.k==="rtr"&&d.props.tx;});
+  var air={}; tx.forEach(function(r){ air[r.id]={up:0,down:0,dev:r}; });
+  function nearestTx(d){ var best=null; tx.forEach(function(r){ var p=path(d.id,r.id); if(p===null) return; if(best===null||p.length<best.n) best={r:r,n:p.length}; }); return best?best.r:null; }
+  var problems=[], vehStat=B.veh.map(function(){ return {up:0,down:0,stranded:[],cams:0,live:0}; });
+  B.devs.forEach(function(d){ d.io={inn:0,out:0}; d.issues=[]; });
+  B.devs.forEach(function(d){
+    var vs=vehStat[d.v];
+    if(d.k==="cam") vs.cams++;
+    if(d.k==="rtr"&&!d.props.tx){ d.io.out+=0.02; var r0=nearestTx(d); if(r0){ load(d.id,r0.id,0.02); air[r0.id].up+=0.02; } }
+    d.flows.forEach(function(f){ f.ok=true;
+      if(f.out<=0&&f.inn<=0) return;
+      if(f.to==="wayside"){ var r=nearestTx(d); if(!r){ f.ok=false; d.issues.push(f.label+": no path to a transmitting router"); vs.stranded.push(d.label); return; } load(d.id,r.id,f.out); load(r.id,d.id,f.inn); air[r.id].up+=f.out; air[r.id].down+=f.inn; d.io.out+=f.out; d.io.inn+=f.inn; if(d.k==="cam"&&f.out>0) vs.live++; }
+      else { var t=dev(f.to); if(!t){ f.ok=false; d.issues.push(f.label+": destination missing"); return; } if(!load(d.id,t.id,f.out)||!load(t.id,d.id,f.inn)){ f.ok=false; d.issues.push(f.label+": no path to "+t.label+" in "+carName(t.v,t.c)); return; } d.io.out+=f.out; d.io.inn+=f.inn; t.io=t.io||{inn:0,out:0}; t.io.inn+=f.out; t.io.out+=f.inn; }
+    });
+  });
+  var airVeh=B.veh.map(function(v,vi){ var u=0,dn=0,rs=[]; Object.keys(air).forEach(function(id){ var a=air[id]; if(a.dev.v===vi){ u+=a.up; dn+=a.down; rs.push(a.dev); } }); var raw=u+dn, design=raw*(1+B.ovh)*(1+B.spare); return {up:u,down:dn,raw:raw,design:design,own:rs.length>0,util:design/B.chan,routers:rs}; });
+  B.links.forEach(function(l){ l.used=Math.max(l.fwd,l.rev); l.util=l.cap>0?l.used/l.cap:0; });
+  /* couplers */
+  var couplers=[]; var n=totalCars(); var gcars=[]; B.veh.forEach(function(v,vi){ v.cars.forEach(function(t,c){ gcars.push({v:vi,c:c}); }); });
+  for(var g=0;g<n-1;g++){ var a=gcars[g], b=gcars[g+1], inter=a.v!==b.v, rows=[], pins=0, fibre=0, cross=[], fwd=0, rev=0;
+    B.links.forEach(function(l){ var A=port(l.a), Bp=port(l.b); if(!A||!Bp) return; var ga=gIndex(A.d.v,A.d.c), gb=gIndex(Bp.d.v,Bp.d.c); var lo=Math.min(ga,gb), hi=Math.max(ga,gb); if(lo<=g&&hi>=g+1){ cross.push(l); var K=CABLE[l.kind]; pins+=K.pins; fibre+=K.fibre; rows.push([K.name+", "+A.d.label+" ("+carName(A.d.v,A.d.c)+") to "+Bp.d.label+" ("+carName(Bp.d.v,Bp.d.c)+")",K.pins,K.fibre]); var f=ga<gb?l.fwd:l.rev, r=ga<gb?l.rev:l.fwd; fwd+=f; rev+=r; } });
+    if(B.paLine){ rows.push(["PA analogue trainline",2,0]); pins+=2; } if(B.icLine){ rows.push(["Emergency intercom line",2,0]); pins+=2; }
+    couplers.push({g:g,inter:inter,pins:pins,fibre:fibre,rows:rows,cross:cross,fwd:fwd,rev:rev,name:carName(a.v,a.c)+" to "+carName(b.v,b.c)+(inter?" (vehicle "+(a.v+1)+" to "+(b.v+1)+")":"")});
+  }
+  /* switch ports */
+  B.devs.forEach(function(d){ if(d.k!=="sw") return; d.used=d.ports.filter(function(p){return p.link;}).length; });
+  /* storage per NVR */
+  B.devs.forEach(function(d){ if(d.k==="nvr"){ d.storage=d.io.inn*86400*B.days/8/1e6; } });
+  vehStat.forEach(function(vs,vi){ if(vs.stranded.length) problems.push("Vehicle "+(vi+1)+": "+vs.stranded.length+" device"+(vs.stranded.length>1?"s have":" has")+" no path to a transmitting router."); if(!airVeh[vi].own) problems.push("Vehicle "+(vi+1)+" has no transmitting router."); });
+  B.devs.forEach(function(d){ var ip=d.ports.some(function(p){return p.type==="rj45"||p.type==="sfp";}); if(ip && !d.ports.some(function(p){return (p.type==="rj45"||p.type==="sfp")&&p.link;})) d.issues.push("not cabled"); });
+  var trainDesign=airVeh.reduce(function(a,x){return a+x.design;},0), worstUtil=Math.max.apply(null,airVeh.map(function(x){return x.util;}));
+  R={air:air,airVeh:airVeh,vehStat:vehStat,problems:problems,couplers:couplers,trainDesign:trainDesign,worstUtil:worstUtil,path:path,tx:tx};
+  return R;
+}
+
+/* ---------- canvas ---------- */
+var cv=document.getElementById("cv3"), ctx=cv.getContext("2d"), view=document.getElementById("bview"), tip=document.getElementById("btip"), menu=document.getElementById("bmenu");
+var cam={s:1,ox:0,oy:0};
+function tok(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function col(k){ var c=TYPES[k].c; return c.charAt(0)==="-"?tok(c):c; }
+function isDark(){ return document.documentElement.getAttribute("data-theme")==="dark" || (!document.documentElement.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches); }
+function fit(){ var r=view.getBoundingClientRect(); cv.width=Math.round(r.width*devicePixelRatio); cv.height=Math.round(r.height*devicePixelRatio); cv.style.width=r.width+"px"; cv.style.height=r.height+"px"; }
+function fitAll(){ var w=cv.width/devicePixelRatio, h=cv.height/devicePixelRatio; var W=worldW()+40, H=ZTOP+ZH+40; cam.s=Math.min(w/W,h/H); cam.ox=(w-W*cam.s)/2+20*cam.s; cam.oy=(h-H*cam.s)/2+20*cam.s; }
+function fitCar(v,c){ var w=cv.width/devicePixelRatio, h=cv.height/devicePixelRatio; var z=zoneOf(v,c); cam.s=Math.min(w/(z.w+60),h/(z.h+ZTOP+40)); cam.ox=w/2-(z.x+z.w/2)*cam.s; cam.oy=h/2-(z.y+z.h/2-30)*cam.s; }
+function W2S(x,y){ return [x*cam.s+cam.ox,y*cam.s+cam.oy]; }
+function S2W(x,y){ return [(x-cam.ox)/cam.s,(y-cam.oy)/cam.s]; }
+function rr(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+var t0=performance.now(); function now(){ return (performance.now()-t0)/1000; }
+var hover=null, hits=[], wiring=null, drag=null, pan=null;
+function carAt(wx,wy){ for(var vi=0;vi<B.veh.length;vi++) for(var c=0;c<B.veh[vi].cars.length;c++){ var z=zoneOf(vi,c); if(wx>=z.x&&wx<=z.x+z.w&&wy>=z.y&&wy<=z.y+z.h) return {v:vi,c:c}; } return null; }
+function linkPts(l){ if(B.tidy&&routes[l.id]) return routes[l.id]; var A=port(l.a), Bp=port(l.b); if(!A||!Bp) return null; var pa=portPos(A.d,A.p), pb=portPos(Bp.d,Bp.p); return [pa,pb]; }
+function polyLen(p){ var L=0; for(var i=0;i<p.length-1;i++) L+=Math.hypot(p[i+1].x-p[i].x,p[i+1].y-p[i].y); return L; }
+function polyAt(p,t){ var L=polyLen(p), d=t*L; for(var i=0;i<p.length-1;i++){ var s=Math.hypot(p[i+1].x-p[i].x,p[i+1].y-p[i].y); if(d<=s||i===p.length-2){ var u=s?d/s:0; return [p[i].x+(p[i+1].x-p[i].x)*u,p[i].y+(p[i+1].y-p[i].y)*u]; } d-=s; } return [p[0].x,p[0].y]; }
+function draw(){
+  var dpr=devicePixelRatio, w=cv.width/dpr, h=cv.height/dpr; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
+  if(!R) compute();
+  var d=isDark(), ink=tok("--ink"), ink2=tok("--ink-2"), ink3=tok("--ink-3"), line=tok("--line-strong"), acc=tok("--accent"), s=cam.s, t=now();
+  hits=[];
+  ctx.save(); ctx.translate(cam.ox,cam.oy); ctx.scale(s,s); ctx.textBaseline="middle";
+  var fpx=function(px){ return (px/s)+"px "; };
+  /* wayside band */
+  var WW=worldW();
+  ctx.strokeStyle=line; ctx.lineWidth=1/s; ctx.setLineDash([3/s,4/s]); ctx.beginPath(); ctx.moveTo(0,40); ctx.lineTo(WW,40); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle=ink3; ctx.font=fpx(11.5)+tok("--f-body"); ctx.textAlign="right"; ctx.fillText("Wayside network · access points along the guideway · "+B.chan+" Mbit/s per transmitting router", WW, 40-10/s);
+  /* zones */
+  B.veh.forEach(function(v,vi){ v.cars.forEach(function(type,c){ var z=zoneOf(vi,c), selz=(B.selCar.v===vi&&B.selCar.c===c);
+    ctx.save(); rr(z.x,z.y,z.w,z.h,12); ctx.fillStyle=d?"#232326":"#FBFBFD"; ctx.shadowColor="rgba(0,0,0,"+(d?".45":".08")+")"; ctx.shadowBlur=18*s; ctx.shadowOffsetY=5*s; ctx.fill(); ctx.restore();
+    rr(z.x,z.y,z.w,z.h,12); ctx.strokeStyle=selz?acc:line; ctx.lineWidth=(selz?1.5:1)/s; ctx.stroke();
+    ctx.fillStyle=d?"rgba(255,255,255,.03)":"rgba(0,0,0,.025)"; ctx.fillRect(z.x,z.y,z.w,TRUNK);
+    ctx.fillStyle=selz?acc:ink2; ctx.font="600 "+fpx(12)+tok("--f-body"); ctx.textAlign="left"; ctx.fillText("Vehicle "+(vi+1)+" · "+carName(vi,c)+(type==="MC"?" · end car":" · middle car"), z.x+10, z.y-10/s);
+    ctx.fillStyle=ink3; ctx.font=fpx(10)+tok("--f-body"); ctx.fillText("trunk", z.x+8, z.y+9);
+    hits.push({kind:"zone",v:vi,c:c,x:z.x,y:z.y-24/s,w:z.w,h:z.h+24/s});
+  }); });
+  /* couplers */
+  R.couplers.forEach(function(cp,i){ var gl=null, idx=0; B.veh.forEach(function(v,vi){ v.cars.forEach(function(t2,c){ if(idx===cp.g) gl={v:vi,c:c}; idx++; }); }); var z=zoneOf(gl.v,gl.c); var gapW = cp.inter? VGAP : ZGAP; var cx=z.x+z.w+gapW/2, cy=z.y+z.h/2;
+    ctx.fillStyle=line; ctx.fillRect(z.x+z.w,cy-3,gapW,6); ctx.fillStyle=d?"#3A3A3E":"#D6D6DB"; rr(cx-7,cy-12,14,24,3); ctx.fill();
+    if(B.lbl){ ctx.fillStyle=ink2; ctx.font="500 "+fpx(10.5)+tok("--f-mono"); ctx.textAlign="center"; ctx.fillText(cp.pins+" pins"+(cp.fibre?" + "+cp.fibre+" f":""), cx, cy+26); ctx.fillStyle=ink3; ctx.font=fpx(10)+tok("--f-body"); ctx.fillText(cp.cross.length+" cable"+(cp.cross.length===1?"":"s"), cx, cy+38); }
+    hits.push({kind:"coupler",i:i,x:cx-16,y:cy-16,w:32,h:60});
+  });
+  /* air links */
+  Object.keys(R.air).forEach(function(id){ var a=R.air[id], r=a.dev, AV=R.airVeh[r.v]; var load=(a.up+a.down)*(1+B.ovh)*(1+B.spare); var c=AV.util>1?tok("--pwr"):AV.util>0.8?tok("--warn"):tok("--b58"); var px=r.x, py=r.y-devH(r)/2;
+    ctx.strokeStyle=c; ctx.lineWidth=Math.max(1.5,Math.min(6,load/16))/s; ctx.globalAlpha=.5; ctx.beginPath(); ctx.moveTo(px,py-10); ctx.lineTo(px,40); ctx.stroke(); ctx.globalAlpha=1;
+    if(B.anim){ var nu=Math.max(1,Math.min(12,Math.round(a.up/5))); for(var k=0;k<nu;k++){ var ph=((t*0.35)+k/nu)%1; ctx.fillStyle=c; ctx.beginPath(); ctx.arc(px-2.5/s,(py-10)-((py-10)-40)*ph,2/s,0,Math.PI*2); ctx.fill(); } var nd=Math.max(1,Math.min(4,Math.round(a.down*4))); for(var k2=0;k2<nd;k2++){ var ph2=((t*0.35)+k2/nd)%1; ctx.fillStyle=c; ctx.globalAlpha=.55; ctx.beginPath(); ctx.arc(px+2.5/s,40+((py-10)-40)*ph2,1.7/s,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1; } }
+    if(B.lbl){ ctx.fillStyle=c; ctx.font="500 "+fpx(11)+tok("--f-mono"); ctx.textAlign="center"; ctx.fillText(load.toFixed(1)+" Mbit/s", px, 40+12/s); ctx.fillStyle=ink3; ctx.font=fpx(10.5)+tok("--f-body"); ctx.fillText("up "+a.up.toFixed(2)+" · down "+a.down.toFixed(2)+" · "+Math.round(AV.util*100)+" %", px, 40+25/s); }
+  });
+  B.devs.forEach(function(r){ if(r.k==="rtr"&&!r.props.tx){ ctx.setLineDash([2/s,4/s]); ctx.strokeStyle=tok("--b58"); ctx.lineWidth=1/s; ctx.globalAlpha=.4; ctx.beginPath(); ctx.moveTo(r.x,r.y-devH(r)/2-10); ctx.lineTo(r.x,40); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha=1; if(B.lbl){ ctx.fillStyle=ink3; ctx.font=fpx(10)+tok("--f-body"); ctx.textAlign="center"; ctx.fillText("standby", r.x, 40+12/s); } } });
+  /* cables */
+  B.links.forEach(function(l){ var pts=linkPts(l); if(!pts) return; var c = l.kind==="audio"? tok("--pa") : l.util>1?tok("--pwr"):l.util>0.8?tok("--warn"):(l.kind==="fibre"?"#E0801A":"#8A5BD6"); var hov=hover&&hover.kind==="link"&&hover.id===l.id, selL=(B.sel===l.id);
+    ctx.strokeStyle=c; ctx.lineWidth=((hov||selL)?2.6:1.6)/s; ctx.globalAlpha=l.kind==="audio"?.6:.9; ctx.beginPath();
+    for(var i=0;i<pts.length-1;i++){ var a=pts[i], b=pts[i+1]; if(i===0) ctx.moveTo(a.x,a.y); var hp=B.tidy?(hops[l.id+":"+i]||[]):[]; if(hp.length&&Math.abs(a.y-b.y)<0.01){ var dir=b.x>a.x?1:-1; hp.slice().sort(function(p,q){return (p-q)*dir;}).forEach(function(hx){ ctx.lineTo(hx-dir*4,a.y); if(dir>0) ctx.arc(hx,a.y,4,Math.PI,0,false); else ctx.arc(hx,a.y,4,0,Math.PI,true); }); } ctx.lineTo(b.x,b.y); }
+    ctx.stroke(); ctx.globalAlpha=1;
+    if(B.anim&&l.kind!=="audio"&&l.used>0){ var n=Math.max(1,Math.min(6,Math.round(l.used/4))); var fwdDom=l.fwd>=l.rev; for(var k3=0;k3<n;k3++){ var ph3=((t*0.22)+k3/n)%1; var pp=polyAt(pts, fwdDom?ph3:1-ph3); ctx.fillStyle=c; ctx.beginPath(); ctx.arc(pp[0],pp[1],2/s,0,Math.PI*2); ctx.fill(); } }
+    /* hit areas per segment */
+    for(var j=0;j<pts.length-1;j++){ var a2=pts[j], b2=pts[j+1]; hits.push({kind:"link",id:l.id,x:Math.min(a2.x,b2.x)-4/s,y:Math.min(a2.y,b2.y)-4/s,w:Math.abs(b2.x-a2.x)+8/s,h:Math.abs(b2.y-a2.y)+8/s}); }
+    if(B.lbl&&l.kind!=="audio"&&s>1.15){ var mid=polyAt(pts,0.5); ctx.fillStyle=c; ctx.font="500 "+fpx(9)+tok("--f-mono"); ctx.textAlign="center"; ctx.fillText(l.used.toFixed(1)+"/"+l.cap, mid[0], mid[1]-6/s); }
+  });
+  /* rubber band */
+  if(wiring){ var P=port(wiring.pid); var pp0=portPos(P.d,P.p); ctx.strokeStyle=acc; ctx.setLineDash([4/s,3/s]); ctx.lineWidth=1.5/s; ctx.beginPath(); ctx.moveTo(pp0.x,pp0.y); ctx.lineTo(wiring.x,wiring.y); ctx.stroke(); ctx.setLineDash([]); }
+  /* devices */
+  B.devs.forEach(function(dv){ var w=devW(dv), hh=devH(dv), x=dv.x-w/2, y=dv.y-hh/2, c=col(dv.k), sel=(B.sel===dv.id), hov=hover&&hover.kind==="dev"&&hover.id===dv.id;
+    ctx.save(); rr(x,y,w,hh,6); ctx.fillStyle=d?"#2C2C2E":"#FFFFFF"; ctx.shadowColor="rgba(0,0,0,"+(d?".5":(sel||hov?".2":".12"))+")"; ctx.shadowBlur=(sel||hov?12:7)*s; ctx.shadowOffsetY=2*s; ctx.fill(); ctx.restore();
+    rr(x,y,w,hh,6); ctx.strokeStyle=sel?acc:(dv.issues&&dv.issues.length?tok("--pwr"):line); ctx.lineWidth=(sel?2:1)/s; ctx.stroke();
+    /* icon band */
+    ctx.fillStyle=c; ctx.globalAlpha=(dv.k==="rtr"&&!dv.props.tx)?.45:1; if(dv.k==="sw"){ rr(x+4,y+4,w-8,hh-14,3); ctx.fill(); } else { rr(x+5,y+5,w-10,hh-10,4); ctx.fill(); } ctx.globalAlpha=1;
+    ctx.fillStyle="#fff"; ctx.font="bold "+fpx(dv.k==="sw"?9:9.5)+tok("--f-body"); ctx.textAlign="center"; ctx.fillText(TYPES[dv.k].short, dv.x, dv.k==="sw"? y+4+(hh-14)/2 : dv.y);
+    if(dv.k==="rtr"&&dv.props.tx){ ctx.fillStyle=tok("--ok"); ctx.beginPath(); ctx.arc(x+w-5,y+5,3,0,Math.PI*2); ctx.fill(); }
+    /* ports */
+    dv.ports.forEach(function(p){ var pp=portPos(dv,p); if(p.type==="wlan") return; var on=!!p.link, hp=hover&&hover.kind==="port"&&hover.pid===p.id, wsrc=wiring&&wiring.pid===p.id; var pc = p.type==="audio"?tok("--pa") : p.type==="sfp"?"#E0801A" : "#8A5BD6";
+      ctx.fillStyle=on?pc:(d?"#1C1C1E":"#F5F5F7"); ctx.strokeStyle=hp||wsrc?acc:pc; ctx.lineWidth=(hp||wsrc?1.6:0.8)/s; var ps=hp||wsrc?4.2:3; rr(pp.x-ps,pp.y-ps,ps*2,ps*2,1); ctx.fill(); ctx.stroke();
+      hits.push({kind:"port",pid:p.id,did:dv.id,x:pp.x-5,y:pp.y-5,w:10,h:10}); });
+    if(B.lbl){ ctx.fillStyle=sel?acc:ink2; ctx.font=fpx(9.5)+tok("--f-body"); ctx.textAlign="center"; var lab=dv.label; if(dv.k==="sw") lab+=" · "+(dv.used||0)+"/"+dv.ports.length+" ports"; var o=dv.io||{inn:0,out:0}; ctx.fillText(lab, dv.x, y+hh+ (dv.ports.some(function(p){return p.edge==="bottom"&&p.type!=="wlan";})? 11:7)); if(s>0.8&&(o.out||o.inn)){ ctx.fillStyle=ink3; ctx.font=fpx(8.5)+tok("--f-mono"); ctx.fillText("↑"+o.out.toFixed(2)+" ↓"+o.inn.toFixed(2), dv.x, y+hh+(dv.ports.some(function(p){return p.edge==="bottom"&&p.type!=="wlan";})? 21:17)); } }
+    hits.push({kind:"dev",id:dv.id,x:x,y:y,w:w,h:hh});
+  });
+  ctx.restore();
+  /* key */
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.textBaseline="middle"; var ky=h-16, kx=14; ctx.font="11px "+tok("--f-body"); ctx.textAlign="left";
+  [["copper, RJ45","#8A5BD6"],["fibre, SFP","#E0801A"],["audio",tok("--pa")],["air link",tok("--b58")]].forEach(function(it){ ctx.fillStyle=it[1]; ctx.fillRect(kx,ky-1,14,2); ctx.fillStyle=ink3; ctx.fillText(it[0],kx+19,ky); kx+=19+ctx.measureText(it[0]).width+16; });
+  ctx.fillStyle=ink3; ctx.fillText("scroll to zoom · drag the background to pan · double click a car to focus · "+(B.tidy?"tidy routing on":"straight cables, press Process to tidy"), kx+6, ky);
+}
+function loop(){ if(!document.getElementById("page-build").hidden && (B.anim||drag||wiring||pan)) draw(); requestAnimationFrame(loop); }
+
+/* ---------- pointer ---------- */
+function pos(e){ var r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+function hitAt(sx,sy){ var wp=S2W(sx,sy), wx=wp[0], wy=wp[1]; var order={port:4,dev:3,link:2,coupler:2,zone:0}; var best=null; hits.forEach(function(h){ if(wx>=h.x&&wx<=h.x+h.w&&wy>=h.y&&wy<=h.y+h.h){ if(!best||order[h.kind]>=order[best.kind]) best=h; } }); return best; }
+cv.addEventListener("wheel",function(e){ e.preventDefault(); var p=pos(e), f=Math.exp(-e.deltaY*0.0012); var ns=Math.max(0.25,Math.min(4,cam.s*f)); var wp=S2W(p[0],p[1]); cam.s=ns; cam.ox=p[0]-wp[0]*ns; cam.oy=p[1]-wp[1]*ns; draw(); },{passive:false});
+cv.addEventListener("pointerdown",function(e){ if(e.button===2) return; hideMenu(); var p=pos(e), h=hitAt(p[0],p[1]);
+  if(wiring){ if(h&&h.kind==="port"&&h.pid!==wiring.pid){ var l=addLink(wiring.pid,h.pid); wiring=null; if(l){ B.sel=l.id; if(B.tidy) routeAll(); afterChange(); } else { flash("Those ports do not match. Copper to copper, fibre to fibre, audio to audio."); draw(); } } else { wiring=null; draw(); } return; }
+  if(h&&h.kind==="port"){ var P=port(h.pid); if(P.p.type==="wlan") return; wiring={pid:h.pid,x:S2W(p[0],p[1])[0],y:S2W(p[0],p[1])[1]}; B.sel=h.did; renderInspector(); draw(); return; }
+  if(h&&h.kind==="dev"){ var dv=dev(h.id); drag={d:dv,moved:false,ox:dv.x-S2W(p[0],p[1])[0],oy:dv.y-S2W(p[0],p[1])[1]}; B.sel=dv.id; B.selCar={v:dv.v,c:dv.c}; cv.setPointerCapture(e.pointerId); renderInspector(); draw(); return; }
+  if(h&&h.kind==="link"){ B.sel=h.id; renderInspector(); draw(); return; }
+  if(h&&h.kind==="coupler"){ showMenu(e.clientX,e.clientY,couplerMenu(h.i)); return; }
+  if(h&&h.kind==="zone"){ B.selCar={v:h.v,c:h.c}; renderPaletteHead(); }
+  pan={x:p[0],y:p[1],ox:cam.ox,oy:cam.oy,moved:false}; cv.setPointerCapture(e.pointerId);
+});
+cv.addEventListener("pointermove",function(e){ var p=pos(e), wp=S2W(p[0],p[1]);
+  if(drag){ drag.moved=true; drag.d.x=Math.round((wp[0]+drag.ox)/2)*2; drag.d.y=Math.round((wp[1]+drag.oy)/2)*2; var cz=carAt(drag.d.x,drag.d.y); if(cz){ drag.d.v=cz.v; drag.d.c=cz.c; } B.tidy=false; draw(); return; }
+  if(pan){ if(Math.hypot(p[0]-pan.x,p[1]-pan.y)>3) pan.moved=true; cam.ox=pan.ox+(p[0]-pan.x); cam.oy=pan.oy+(p[1]-pan.y); draw(); return; }
+  if(wiring){ wiring.x=wp[0]; wiring.y=wp[1]; var h0=hitAt(p[0],p[1]); hover=h0&&h0.kind==="port"?h0:null; draw(); return; }
+  var h=hitAt(p[0],p[1]); var changed=JSON.stringify(h)!==JSON.stringify(hover); hover=h;
+  if(h){ cv.style.cursor = h.kind==="port"?"crosshair" : h.kind==="dev"?"grab" : h.kind==="zone"?"default":"pointer"; var sp=W2S(h.x+h.w/2,h.y); tip.style.left=sp[0]+"px"; tip.style.top=sp[1]+"px";
+    if(h.kind==="dev"){ var dv=dev(h.id), o=dv.io||{inn:0,out:0}; tip.innerHTML=dv.label+" · "+TYPES[dv.k].name+"<i>out "+o.out.toFixed(2)+" · in "+o.inn.toFixed(2)+" Mbit/s · right click for settings</i>"; }
+    else if(h.kind==="port"){ var P=port(h.pid); tip.innerHTML=P.d.label+" · "+P.p.name+"<i>"+(P.p.type==="rj45"?"RJ45 copper":P.p.type==="sfp"?"SFP fibre":P.p.type==="audio"?"audio":"wireless")+(P.p.link?" · connected":" · free, click to start a cable")+"</i>"; }
+    else if(h.kind==="link"){ var l=link(h.id), A=port(l.a), Bq=port(l.b); tip.innerHTML=CABLE[l.kind].name+"<i>"+A.d.label+" "+A.p.name+" to "+Bq.d.label+" "+Bq.p.name+(l.kind==="audio"?"":" · "+l.fwd.toFixed(1)+" / "+l.rev.toFixed(1)+" of "+l.cap+" Mbit/s")+"</i>"; }
+    else if(h.kind==="coupler"){ var cp=R.couplers[h.i]; tip.innerHTML="Coupler, "+cp.name+"<i>"+cp.pins+" contacts"+(cp.fibre?" + "+cp.fibre+" fibres":"")+" · click for the breakdown</i>"; }
+    else if(h.kind==="zone"){ tip.innerHTML=carName(h.v,h.c)+"<i>double click to focus · drop devices here</i>"; }
+    tip.classList.add("on"); } else { cv.style.cursor="default"; tip.classList.remove("on"); }
+  if(changed&&!B.anim) draw();
+});
+cv.addEventListener("pointerup",function(e){ if(e.button===2) return; try{cv.releasePointerCapture(e.pointerId);}catch(_){ }
+  if(drag){ if(drag.moved) afterChange(); drag=null; return; }
+  if(pan){ var moved=pan.moved; pan=null; if(!moved){ var p=pos(e), h=hitAt(p[0],p[1]); if(!h||h.kind==="zone"){ B.sel=null; renderInspector(); draw(); } } }
+});
+cv.addEventListener("dblclick",function(e){ var p=pos(e), h=hitAt(p[0],p[1]); if(h&&(h.kind==="zone"||h.kind==="dev")){ var v=h.kind==="zone"?h.v:dev(h.id).v, c=h.kind==="zone"?h.c:dev(h.id).c; fitCar(v,c); B.selCar={v:v,c:c}; renderPaletteHead(); draw(); } });
+cv.addEventListener("contextmenu",function(e){ e.preventDefault(); var p=pos(e), h=hitAt(p[0],p[1]); if(!h){ hideMenu(); return; }
+  if(h.kind==="dev"||h.kind==="port"){ var id=h.kind==="dev"?h.id:h.did; B.sel=id; renderInspector(); draw(); showMenu(e.clientX,e.clientY,devMenu(dev(id))); }
+  else if(h.kind==="link"){ B.sel=h.id; renderInspector(); draw(); showMenu(e.clientX,e.clientY,linkMenu(h.id)); }
+  else if(h.kind==="coupler") showMenu(e.clientX,e.clientY,couplerMenu(h.i));
+});
+cv.addEventListener("pointerleave",function(){ hover=null; tip.classList.remove("on"); });
+document.addEventListener("keydown",function(e){ if(document.getElementById("page-build").hidden) return; var tag=document.activeElement.tagName; if(e.key==="Escape"){ if(wiring){ wiring=null; draw(); return; } if(menu.style.display==="block"){ hideMenu(); return; } } if((e.key==="Delete"||e.key==="Backspace")&&B.sel&&tag!=="INPUT"&&tag!=="SELECT"&&tag!=="TEXTAREA"){ if(dev(B.sel)) removeDev(B.sel); else removeLink(B.sel); B.sel=null; afterChange(); e.preventDefault(); } });
+function flash(msg){ var el=document.getElementById("bhint"); var old=el.textContent; el.textContent=msg; el.style.color="var(--pwr)"; setTimeout(function(){ el.style.color=""; renderHint(); },2200); }
+function afterChange(){ compute(); if(B.tidy) routeAll(); renderInspector(); renderResults(); renderPaletteHead(); draw(); }
+
+/* ---------- palette ---------- */
+(function(){ var pal=document.getElementById("bPal"), h=""; ORDER.forEach(function(k){ h+='<div class="pchip" data-k="'+k+'"><span class="pi" style="background:'+(TYPES[k].c.charAt(0)==="-"?"var("+TYPES[k].c+")":TYPES[k].c)+'">'+TYPES[k].short+'</span>'+TYPES[k].name+'</div>'; }); pal.innerHTML=h;
+  var ghost=null, gk=null, start=null;
+  pal.querySelectorAll(".pchip").forEach(function(ch){
+    ch.addEventListener("pointerdown",function(e){ gk=ch.dataset.k; start=[e.clientX,e.clientY]; ch.setPointerCapture(e.pointerId); });
+    ch.addEventListener("pointermove",function(e){ if(!gk) return; if(!ghost){ if(Math.hypot(e.clientX-start[0],e.clientY-start[1])<5) return; ghost=document.createElement("div"); ghost.className="pghost"; ghost.innerHTML=ch.innerHTML; document.body.appendChild(ghost); } ghost.style.left=e.clientX+"px"; ghost.style.top=e.clientY+"px"; var r=cv.getBoundingClientRect(); var over=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom; ghost.style.opacity=over?"1":".6"; });
+    ch.addEventListener("pointerup",function(e){ if(!gk) return; var k=gk; gk=null; try{ch.releasePointerCapture(e.pointerId);}catch(_){ }
+      if(ghost){ ghost.remove(); ghost=null; var r=cv.getBoundingClientRect(); if(e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom){ var wp=S2W(e.clientX-r.left,e.clientY-r.top); var cz=carAt(wp[0],wp[1]); if(!cz){ flash("Drop the device inside a car."); return; } placeDev(k,cz.v,cz.c,wp[0],wp[1]); } }
+      else { var z=zoneOf(B.selCar.v,B.selCar.c); placeDev(k,B.selCar.v,B.selCar.c,z.x+z.w/2+(Math.random()*80-40),z.y+TRUNK+150+(Math.random()*40-20)); }
+    });
+  });
+})();
+function placeDev(k,v,c,x,y){ var dv=mkDev(k,v,c,Math.round(x/2)*2,Math.round(y/2)*2); var same=devsIn(v,c).filter(function(o){return o.k===k;}).length; dv.label=TYPES[k].short+(same+1); B.devs.push(dv); fixFlowTargets(); B.sel=dv.id; B.selCar={v:v,c:c}; B.tidy=false; afterChange(); }
+function renderPaletteHead(){ document.getElementById("bCarNm").textContent="Vehicle "+(B.selCar.v+1)+" "+carName(B.selCar.v,B.selCar.c); }
+function renderHint(){ document.getElementById("bhint").textContent = wiring? "click a port on another device to finish the cable · Esc cancels" : "click a port to start a cable · right click a device for its traffic · press Process to tidy the layout"; }
+
+/* ---------- menus and inspector ---------- */
+function showMenu(cx,cy,html){ tip.classList.remove("on"); menu.innerHTML=html; menu.style.display="block"; var mw=menu.offsetWidth, mh=menu.offsetHeight; menu.style.left=Math.min(cx+6,window.innerWidth-mw-10)+"px"; menu.style.top=Math.min(cy+6,window.innerHeight-mh-10)+"px"; menu.classList.add("on"); bindControls(menu); }
+function hideMenu(){ menu.style.display="none"; menu.classList.remove("on"); }
+document.addEventListener("pointerdown",function(e){ if(menu.style.display==="block"&&!menu.contains(e.target)) hideMenu(); });
+function kv(l,v){ return '<div class="kv"><span>'+l+'</span><b>'+v+'</b></div>'; }
+function destOptions(d,cur){ var h='<option value="wayside" '+(cur==="wayside"?"selected":"")+'>Wayside (control centre)</option>'; B.devs.forEach(function(o){ if(o.id===d.id) return; if(o.k==="spk"||o.k==="tet"||(o.k==="ans"&&!o.props.ip)) return; h+='<option value="'+o.id+'" '+(cur===o.id?"selected":"")+'>'+o.label+' · '+carName(o.v,o.c)+'</option>'; }); return h; }
+function devControls(d){
+  var o=d.io||{inn:0,out:0}, h='<div class="bins">';
+  h+='<div class="kv"><span>Label</span><input type="text" data-label value="'+d.label.replace(/"/g,"&quot;")+'"></div>';
+  h+=kv("Car","Vehicle "+(d.v+1)+" "+carName(d.v,d.c));
+  if(d.k==="rtr"){ h+='<div class="sub">Air link</div><div class="opts"><button class="opt" data-set="tx" data-val="1" aria-pressed="'+(!!d.props.tx)+'">Transmits for the vehicle</button><button class="opt" data-set="tx" data-val="0" aria-pressed="'+(!d.props.tx)+'">Standby, associated</button></div>'; }
+  if(d.k==="sw"){ h+='<div class="sub">PoE ports</div><div class="opts">'; [8,16,24,48].forEach(function(n){ h+='<button class="opt" data-set="nports" data-val="'+n+'" aria-pressed="'+(d.props.nports===n)+'">'+n+'</button>'; }); h+='</div>'+kv("In use",(d.used||0)+" of "+d.ports.length+" including SFP"); }
+  if(d.k==="ans"){ h+='<div class="sub">Interface</div><div class="opts"><button class="opt" data-set="ip" data-val="0" aria-pressed="'+(!d.props.ip)+'">Analogue, into an amplifier</button><button class="opt" data-set="ip" data-val="1" aria-pressed="'+(!!d.props.ip)+'">IP, into the switch</button></div>'; }
+  if(d.k==="nvr"){ h+=kv("Incoming recordings",o.inn.toFixed(1)+" Mbit/s")+kv("Storage, "+B.days+" days",(d.storage||0).toFixed(1)+" TB"); }
+  /* ports */
+  h+='<div class="sub">Ports</div><div class="plist">'; d.ports.forEach(function(p){ if(p.type==="wlan") return; var txt="free"; if(p.link){ var l=link(p.link); var other=port(l.a===p.id?l.b:l.a); txt=other?other.d.label+" "+other.p.name:"?"; } h+='<div class="prow"><span class="pt '+p.type+'"></span><span class="pn">'+p.name+'</span><span class="pv">'+txt+'</span>'+(p.link?'<button class="x" data-unplug="'+p.id+'" title="unplug">×</button>':'<button class="x" data-wire="'+p.id+'" title="start a cable">+</button>')+'</div>'; }); h+='</div>';
+  /* flows */
+  h+='<div class="sub">Traffic, Mbit/s</div><div class="flows">';
+  d.flows.forEach(function(f){ h+='<div class="frow'+(f.ok===false?" bad":"")+'"><input type="text" data-flabel="'+f.id+'" value="'+f.label.replace(/"/g,"&quot;")+'"><select data-fto="'+f.id+'">'+destOptions(d,f.to)+'</select><input type="number" step="0.01" min="0" data-fout="'+f.id+'" value="'+f.out+'" title="out"><input type="number" step="0.01" min="0" data-finn="'+f.id+'" value="'+f.inn+'" title="in"><button class="x" data-fdel="'+f.id+'">×</button></div>'; });
+  h+='<div class="fhead"><span>label</span><span>to</span><span>out</span><span>in</span><span></span></div></div><button class="vbtn" data-fadd="'+d.id+'" style="margin-top:6px">Add traffic</button>';
+  h+=kv("Total out",o.out.toFixed(2)+" Mbit/s")+kv("Total in",o.inn.toFixed(2)+" Mbit/s");
+  if(d.issues&&d.issues.length) h+='<div style="color:var(--pwr);font-size:12px;margin-top:6px">'+d.issues.join("<br>")+'</div>';
+  h+='<button class="vbtn del" data-del="'+d.id+'">Remove device</button></div>'; return h;
+}
+function devMenu(d){ return '<div class="mh">'+TYPES[d.k].name+'</div>'+devControls(d); }
+function linkControls(id){ var l=link(id); if(!l) return ""; var A=port(l.a), Bq=port(l.b); var h='<div class="bins">'+kv("From",A.d.label+" "+A.p.name+" · "+carName(A.d.v,A.d.c))+kv("To",Bq.d.label+" "+Bq.p.name+" · "+carName(Bq.d.v,Bq.d.c))+kv("Cable",CABLE[l.kind].name); if(l.kind!=="audio") h+=kv("Capacity",l.cap+" Mbit/s")+kv("Forward",l.fwd.toFixed(2)+" Mbit/s")+kv("Reverse",l.rev.toFixed(2)+" Mbit/s")+kv("Free, busier direction",(l.cap-l.used).toFixed(1)+" Mbit/s"); h+=kv("Coupler contacts per coupler crossed",CABLE[l.kind].pins?CABLE[l.kind].pins+" pins":CABLE[l.kind].fibre+" fibres")+'<button class="vbtn del" data-ldel="'+l.id+'">Remove cable</button></div>'; return h; }
+function linkMenu(id){ return '<div class="mh">Cable</div>'+linkControls(id); }
+function couplerMenu(i){ var cp=R.couplers[i]; var h='<div class="mh">Coupler, '+cp.name+'</div><div class="bins">'+kv("Through, forward",cp.fwd.toFixed(1)+" Mbit/s")+kv("Through, reverse",cp.rev.toFixed(1)+" Mbit/s")+'<div class="sub">Telecom contacts in the coupler head</div>'; cp.rows.forEach(function(r){ h+=kv(r[0], r[1]? r[1]+" pins" : r[2]? r[2]+" fibres":"0"); }); h+=kv("Total electrical contacts",cp.pins)+(cp.fibre?kv("Fibres",cp.fibre):"")+'</div>'; return h; }
+function bindControls(root){
+  var d=dev(B.sel);
+  root.querySelectorAll("[data-label]").forEach(function(i){ i.addEventListener("change",function(){ if(d){ d.label=i.value.trim()||TYPES[d.k].short; afterChange(); } }); });
+  root.querySelectorAll("[data-set]").forEach(function(b){ b.addEventListener("click",function(){ if(!d) return; var k=b.dataset.set, v=b.dataset.val; if(k==="tx"){ if(v==="1"){ B.devs.forEach(function(o){ if(o.k==="rtr"&&o.v===d.v) o.props.tx=false; }); d.props.tx=true; } else d.props.tx=false; } if(k==="nports"){ d.props.nports=parseInt(v,10); rebuildPorts(d); } if(k==="ip"){ d.props.ip=(v==="1"); rebuildPorts(d); defaultFlows(d); fixFlowTargets(); } B.tidy=false; refresh(); }); });
+  root.querySelectorAll("[data-unplug]").forEach(function(b){ b.addEventListener("click",function(){ var P=port(b.dataset.unplug); if(P&&P.p.link){ removeLink(P.p.link); refresh(); } }); });
+  root.querySelectorAll("[data-wire]").forEach(function(b){ b.addEventListener("click",function(){ var P=port(b.dataset.wire); if(P){ var pp=portPos(P.d,P.p); wiring={pid:P.p.id,x:pp.x,y:pp.y+20}; hideMenu(); renderHint(); draw(); } }); });
+  root.querySelectorAll("[data-flabel]").forEach(function(i){ i.addEventListener("change",function(){ var f=d&&d.flows.find(function(x){return x.id===i.dataset.flabel;}); if(f){ f.label=i.value; refresh(); } }); });
+  root.querySelectorAll("[data-fto]").forEach(function(s){ s.addEventListener("change",function(){ var f=d&&d.flows.find(function(x){return x.id===s.dataset.fto;}); if(f){ f.to=s.value; refresh(); } }); });
+  root.querySelectorAll("[data-fout]").forEach(function(i){ i.addEventListener("change",function(){ var f=d&&d.flows.find(function(x){return x.id===i.dataset.fout;}); if(f){ f.out=Math.max(0,parseFloat(i.value)||0); refresh(); } }); });
+  root.querySelectorAll("[data-finn]").forEach(function(i){ i.addEventListener("change",function(){ var f=d&&d.flows.find(function(x){return x.id===i.dataset.finn;}); if(f){ f.inn=Math.max(0,parseFloat(i.value)||0); refresh(); } }); });
+  root.querySelectorAll("[data-fdel]").forEach(function(b){ b.addEventListener("click",function(){ if(d){ d.flows=d.flows.filter(function(x){return x.id!==b.dataset.fdel;}); refresh(); } }); });
+  root.querySelectorAll("[data-fadd]").forEach(function(b){ b.addEventListener("click",function(){ if(d){ d.flows.push({id:nid("f"),label:"New traffic",to:"wayside",out:0.5,inn:0.1}); refresh(); } }); });
+  root.querySelectorAll("[data-del]").forEach(function(b){ b.addEventListener("click",function(){ removeDev(b.dataset.del); hideMenu(); afterChange(); }); });
+  root.querySelectorAll("[data-ldel]").forEach(function(b){ b.addEventListener("click",function(){ removeLink(b.dataset.ldel); B.sel=null; hideMenu(); afterChange(); }); });
+}
+function refresh(){ afterChange(); if(menu.style.display==="block"){ var d=dev(B.sel); if(d){ menu.innerHTML=devMenu(d); bindControls(menu); } else if(link(B.sel)){ menu.innerHTML=linkMenu(B.sel); bindControls(menu); } } }
+function renderInspector(){ var sec=document.getElementById("bInsSec"), el=document.getElementById("bIns"); if(!B.sel){ sec.hidden=true; return; } var d=dev(B.sel); if(d){ sec.hidden=false; document.getElementById("bInsName").textContent=TYPES[d.k].name; el.innerHTML=devControls(d); bindControls(el); return; } var l=link(B.sel); if(l){ sec.hidden=false; document.getElementById("bInsName").textContent="Cable"; el.innerHTML=linkControls(l.id); bindControls(el); return; } sec.hidden=true; }
+
+/* ---------- results ---------- */
+function pct(v){ return Math.round(v*100)+" %"; }
+function cls(u){ return u>1?"bad":u>0.8?"warn":"ok"; }
+function bar(title,load,cap,unit){ var u=cap>0?load/cap:0; return '<div class="bbar"><div class="t"><span>'+title+'</span><b>'+load.toFixed(1)+' of '+cap+' '+unit+'</b></div><div class="k"><i class="'+cls(u)+'" style="width:'+Math.min(100,u*100)+'%"></i></div></div>'; }
+function renderResults(){
+  var el=document.getElementById("bres"), nv=B.veh.length, tc=totalCars(), v1=R.airVeh[0];
+  var h='<div><h5>Train to wayside<span>'+tc+' cars, '+nv+' vehicle'+(nv>1?'s':'')+'</span></h5><div class="btile">'+
+    '<div><b>'+v1.raw.toFixed(1)+'</b><span>Mbit/s raw, vehicle 1, up '+v1.up.toFixed(2)+' and down '+v1.down.toFixed(2)+'</span></div>'+
+    '<div><b>'+v1.design.toFixed(1)+'</b><span>Mbit/s design, vehicle 1, with '+Math.round(B.ovh*100)+' % overhead and '+Math.round(B.spare*100)+' % spare</span></div>'+
+    '<div class="'+cls(R.worstUtil)+'"><b>'+pct(R.worstUtil)+'</b><span>busiest air link, of '+B.chan+' Mbit/s</span></div>'+
+    '<div><b>'+R.trainDesign.toFixed(1)+'</b><span>Mbit/s whole train, design figure</span></div></div>';
+  R.airVeh.forEach(function(av,i){ if(av.own) h+=bar("Vehicle "+(i+1)+", "+av.routers.map(function(r){return r.label;}).join(", ")+" transmitting", av.design, B.chan, "Mbit/s"); else h+='<div class="bbar"><div class="t"><span style="color:var(--pwr)">Vehicle '+(i+1)+' has no transmitting router</span></div></div>'; });
+  /* per type air contributions for vehicle 1 */
+  var byType={}; B.devs.forEach(function(d){ if(d.v!==0) return; d.flows.forEach(function(f){ if(f.to!=="wayside"||f.ok===false) return; var k=TYPES[d.k].name; byType[k]=byType[k]||{up:0,down:0,n:0}; byType[k].up+=f.out; byType[k].down+=f.inn; byType[k].n++; }); });
+  h+='<table class="btab"><tr><th>Vehicle 1 air traffic by device type</th><th class="n">Up</th><th class="n">Down</th></tr>'; Object.keys(byType).forEach(function(k){ var b=byType[k]; h+='<tr><td>'+k+', '+b.n+' flow'+(b.n===1?'':'s')+'</td><td class="n">'+b.up.toFixed(2)+'</td><td class="n">'+b.down.toFixed(2)+'</td></tr>'; }); h+='<tr class="tot"><td>Raw total</td><td class="n">'+v1.up.toFixed(2)+'</td><td class="n">'+v1.down.toFixed(2)+'</td></tr></table></div>';
+  /* cables */
+  h+='<div><h5>Cables<span>busiest first, each direction against capacity</span></h5><table class="btab"><tr><th>Cable</th><th class="n">Cap</th><th class="n">Fwd</th><th class="n">Rev</th><th class="n">Free</th></tr>';
+  var ls=B.links.filter(function(l){return l.kind!=="audio";}).slice().sort(function(a,b){return b.used-a.used;}).slice(0,14);
+  ls.forEach(function(l){ var A=port(l.a), Bq=port(l.b); h+='<tr><td>'+A.d.label+' '+A.p.name+' → '+Bq.d.label+' '+Bq.p.name+'<br><span style="font-size:11px;color:var(--ink-3)">'+carName(A.d.v,A.d.c)+(A.d.v!==Bq.d.v||A.d.c!==Bq.d.c?' to '+carName(Bq.d.v,Bq.d.c):'')+' · '+CABLE[l.kind].name+'</span></td><td class="n">'+l.cap+'</td><td class="n '+cls(l.fwd/l.cap)+'">'+l.fwd.toFixed(1)+'</td><td class="n '+cls(l.rev/l.cap)+'">'+l.rev.toFixed(1)+'</td><td class="n">'+(l.cap-l.used).toFixed(0)+'</td></tr>'; });
+  if(B.links.length>ls.length+B.links.filter(function(l){return l.kind==="audio";}).length) h+='<tr><td colspan="5" style="color:var(--ink-3)">'+(B.links.filter(function(l){return l.kind!=="audio";}).length-ls.length)+' quieter cables not listed</td></tr>';
+  h+='</table><table class="btab" style="margin-top:12px"><tr><th>Coupler</th><th class="n">Cables</th><th class="n">Thru</th><th class="n">Pins</th></tr>';
+  R.couplers.forEach(function(cp){ h+='<tr><td>'+cp.name+'</td><td class="n">'+cp.cross.length+'</td><td class="n">'+Math.max(cp.fwd,cp.rev).toFixed(1)+'</td><td class="n">'+cp.pins+(cp.fibre?" + "+cp.fibre+" f":"")+'</td></tr>'; });
+  h+='</table><table class="btab" style="margin-top:12px"><tr><th>Switch</th><th class="n">Used</th><th class="n">Ports</th></tr>';
+  B.devs.filter(function(d){return d.k==="sw";}).forEach(function(d){ h+='<tr><td>'+d.label+' · '+carName(d.v,d.c)+'</td><td class="n">'+(d.used||0)+'</td><td class="n '+((d.used||0)>=d.ports.length?"bad":(d.used||0)>d.ports.length*0.85?"warn":"")+'">'+d.ports.length+'</td></tr>'; });
+  h+='</table><div class="btile" style="margin-top:12px">'; B.devs.filter(function(d){return d.k==="nvr";}).forEach(function(d){ h+='<div><b>'+(d.storage||0).toFixed(1)+' TB</b><span>'+d.label+' in '+carName(d.v,d.c)+', '+d.io.inn.toFixed(1)+' Mbit/s recorded for '+B.days+' days</span></div>'; }); h+='</div></div>';
+  /* compliance */
+  var rows=[];
+  rows.push(["Per vehicle client at least 30 Mbit/s available","Table 7 · p130", v1.raw.toFixed(1)+" raw, "+v1.design.toFixed(1)+" design", v1.design<=B.chan?(v1.design<=30?"ok":"warn"):"bad"]);
+  var allLive=R.vehStat.every(function(vs){return vs.live>=vs.cams;}); rows.push(["Live video from every camera of the longest train","19.7.2 · p188", allLive?"every camera streams":"some cameras not live", allLive?"ok":"warn"]);
+  rows.push(["Busiest air link within capacity","Capacity Check", pct(R.worstUtil)+" of "+B.chan, cls(R.worstUtil)]);
+  rows.push(["Spare capacity held on the link","25 · p207", Math.round(B.spare*100)+" %", B.spare>=0.30?"ok":"warn"]);
+  var lu=B.links.filter(function(l){return l.cap>0;}).reduce(function(a,l){return Math.max(a,l.util);},0); rows.push(["Every cable within capacity","18.5.1 · p179", pct(lu), cls(lu)]);
+  var oneTx=B.veh.every(function(v,vi){ return B.devs.filter(function(d){return d.k==="rtr"&&d.v===vi&&d.props.tx;}).length===1; }); rows.push(["One transmitting router per vehicle, the other in standby","12.5 · p128", oneTx?"yes":"none or more than one", oneTx?"ok":"bad"]);
+  var portsOK=!B.devs.some(function(d){return d.k==="sw"&&(d.used||0)>d.ports.length;}); rows.push(["Switch port count sufficient","Table 6 · p129", portsOK?"within ports":"over on a switch", portsOK?"ok":"bad"]);
+  var uncabled=B.devs.filter(function(d){return d.issues&&d.issues.indexOf("not cabled")>=0;}).length; rows.push(["Every IP device cabled to a switch","Table 6 · p129", uncabled?uncabled+" not cabled":"all cabled", uncabled?"bad":"ok"]);
+  var badFlows=B.devs.reduce(function(a,d){return a+d.flows.filter(function(f){return f.ok===false;}).length;},0); rows.push(["Every traffic flow has a path","12.5 · p128", badFlows?badFlows+" flows without a path":"all routed", badFlows?"bad":"ok"]);
+  var dual=B.veh.every(function(v,vi){ return B.devs.filter(function(d){return d.k==="rtr"&&d.v===vi;}).length>=2; }); rows.push(["Two WLAN routers per vehicle","RAMS 2.2.15-3", dual?"two or more":"single", dual?"ok":"warn"]);
+  h+='<div><h5>Against the technical proposal</h5><div class="blist">';
+  rows.forEach(function(r){ h+='<div class="r"><div>'+r[0]+'<span class="ref">'+r[1]+'</span></div><div class="rt"><span class="pill '+r[3]+'">'+(r[3]==="ok"?"meets":r[3]==="warn"?"check":"short")+'</span><span class="v">'+r[2]+'</span></div></div>'; });
+  if(R.problems.length){ h+='<div style="margin-top:8px;font-size:12px;color:var(--pwr)">'+R.problems.map(function(p){return "· "+p;}).join("<br>")+'</div>'; }
+  h+='</div></div>'; el.innerHTML=h;
+  var cams=B.devs.filter(function(d){return d.k==="cam";}).length, cables=B.links.filter(function(l){return l.kind!=="audio";}).length;
+  document.getElementById("bhud").innerHTML='<div><b>'+tc+'-car train</b> · '+nv+' vehicle'+(nv>1?'s':'')+' · '+B.devs.length+' devices · '+cams+' cameras · '+cables+' data cables · '+R.tx.length+' transmitting</div><div>Design load '+R.trainDesign.toFixed(1)+' Mbit/s on the air · busiest air link '+pct(R.worstUtil)+'</div>';
+  document.getElementById("bnotep").innerHTML='<b>How the figures are built.</b> Every device carries its own list of traffic flows, each with a label, a destination and an out and in figure in Mbit/s, and you can edit those or add your own. A flow to the wayside is routed over the cables, port to port, to the router that transmits for that vehicle, and a flow to another device is routed to that device. Each cable then shows what it carries in each direction against its capacity, copper at the chosen speed and fibre at 10 Gbit/s, and audio pairs carry no data. One router per vehicle transmits, the others stay associated and send only a keepalive. Air traffic is the sum at the transmitting router, lifted by the protocol overhead and the spare capacity to give the design figure. A cable that leaves a car passes through every coupler in between, taking four pairs for copper, two fibres for fibre and one pair for audio, with the analogue PA trainline and the emergency intercom line added when they are kept. Process arranges each car in rows, routes the cables in lanes and marks a hop where one crosses another.';
+}
+
+/* ---------- controls ---------- */
+document.getElementById("bProcess").addEventListener("click",function(){ arrangeAll(); afterChange(); });
+document.getElementById("bFit").addEventListener("click",function(){ fitAll(); draw(); });
+document.getElementById("bAddVeh").addEventListener("click",function(){ if(B.veh.length<4){ B.veh.push({cars:["MC","M","MC"]}); var vi=B.veh.length-1; presetVehicle(vi,false); B.selCar={v:vi,c:0}; if(B.tidy) routeAll(); fitAll(); afterChange(); } });
+document.getElementById("bRemVeh").addEventListener("click",function(){ if(B.veh.length>1){ var vi=B.selCar.v; B.devs.filter(function(d){return d.v===vi;}).forEach(function(d){ removeDev(d.id); }); B.veh.splice(vi,1); B.devs.forEach(function(d){ if(d.v>vi) d.v--; }); B.selCar={v:0,c:0}; B.sel=null; B.veh.forEach(function(v,i){ v.cars.forEach(function(t,c){ arrangeCar(i,c); }); }); if(B.tidy) routeAll(); fitAll(); afterChange(); } });
+document.getElementById("bAddCar").addEventListener("click",function(){ var vi=B.selCar.v, cars=B.veh[vi].cars; if(cars.length<6){ var idx=cars.length-1; cars.splice(idx,0,"M"); B.devs.forEach(function(d){ if(d.v===vi&&d.c>=idx) d.c++; });
+  /* new middle car with its own switch, spliced into the ring on SFP */
+  carPreset(vi,idx,"M",false); B.devs.filter(function(d){return d.v===vi&&d.c===idx&&(d.k==="nvr"||d.k==="dctl"||d.k==="tcu");}).forEach(function(d){ removeDev(d.id); });
+  var swPrev=devsIn(vi,idx-1).find(function(d){return d.k==="sw";}), swNew=devsIn(vi,idx).find(function(d){return d.k==="sw";}), swNext=devsIn(vi,idx+1).find(function(d){return d.k==="sw";});
+  if(swPrev&&swNew&&swNext){ var old=B.links.find(function(l){ var A=port(l.a), Bq=port(l.b); return A&&Bq&&((A.d===swPrev&&Bq.d===swNext)||(A.d===swNext&&Bq.d===swPrev)); }); if(old) removeLink(old.id); connect(swPrev,swNew,"sfp"); connect(swNew,swNext,"sfp"); }
+  fixFlowTargets(); B.veh[vi].cars.forEach(function(t,c){ arrangeCar(vi,c); }); B.veh.forEach(function(v,i){ if(i>vi) v.cars.forEach(function(t,c){ arrangeCar(i,c); }); }); if(B.tidy) routeAll(); fitAll(); afterChange(); } });
+document.getElementById("bRemCar").addEventListener("click",function(){ var vi=B.selCar.v, cars=B.veh[vi].cars; if(cars.length>2){ var idx=Math.max(1,cars.length-2); var swGone=devsIn(vi,idx).find(function(d){return d.k==="sw";}); var nb=[]; if(swGone){ B.links.forEach(function(l){ var A=port(l.a), Bq=port(l.b); if(!A||!Bq||l.kind==="audio") return; if(A.d===swGone&&Bq.d.k==="sw") nb.push({d:Bq.d,t:Bq.p.type}); if(Bq.d===swGone&&A.d.k==="sw") nb.push({d:A.d,t:A.p.type}); }); }
+  devsIn(vi,idx).forEach(function(d){ removeDev(d.id); }); cars.splice(idx,1); B.devs.forEach(function(d){ if(d.v===vi&&d.c>idx) d.c--; }); if(nb.length===2&&nb[0].d!==nb[1].d) connect(nb[0].d,nb[1].d,nb[0].t);
+  fixFlowTargets(); B.selCar={v:vi,c:0}; B.veh.forEach(function(v,i){ v.cars.forEach(function(t,c){ arrangeCar(i,c); }); }); if(B.tidy) routeAll(); fitAll(); afterChange(); } });
+[["bChan","chan",parseInt],["bOvh","ovh",parseFloat],["bSpare","spare",parseFloat],["bCu","cu",String],["bPaLine","paLine",parseInt],["bIcLine","icLine",parseInt],["bDays","days",parseInt]].forEach(function(it){ var el=document.getElementById(it[0]); el.addEventListener("change",function(){ B[it[1]]=it[2](el.value); afterChange(); }); });
+function syncSelects(){ document.getElementById("bChan").value=String(B.chan); document.getElementById("bOvh").value=B.ovh.toFixed(2); document.getElementById("bSpare").value=B.spare===0?"0":B.spare.toFixed(2); document.getElementById("bCu").value=B.cu; document.getElementById("bPaLine").value=String(B.paLine); document.getElementById("bIcLine").value=String(B.icLine); document.getElementById("bDays").value=String(B.days); }
+document.getElementById("bPresetTP").addEventListener("click",function(){ newTrain(1,false); arrangeAll(); fitAll(); afterChange(); });
+document.getElementById("bPresetEmpty").addEventListener("click",function(){ newTrain(1,true); fitAll(); afterChange(); });
+document.getElementById("bAnim").addEventListener("click",function(){ B.anim=!B.anim; this.setAttribute("aria-pressed",String(B.anim)); draw(); });
+document.getElementById("bLbl").addEventListener("click",function(){ B.lbl=!B.lbl; this.setAttribute("aria-pressed",String(B.lbl)); draw(); });
+document.getElementById("bExport").addEventListener("click",function(){ var data={veh:B.veh,devs:B.devs.map(function(d){ return {id:d.id,k:d.k,label:d.label,v:d.v,c:d.c,x:d.x,y:d.y,props:d.props,flows:d.flows.map(function(f){return {id:f.id,label:f.label,to:f.to,out:f.out,inn:f.inn};}),ports:d.ports.map(function(p){return {id:p.id,name:p.name,type:p.type,edge:p.edge,link:p.link};})}; }),links:B.links.map(function(l){return {id:l.id,a:l.a,b:l.b,kind:l.kind};}),settings:{chan:B.chan,ovh:B.ovh,spare:B.spare,cu:B.cu,paLine:B.paLine,icLine:B.icLine,days:B.days},uid:uid}; var blob=new Blob([JSON.stringify(data,null,1)],{type:"application/json"}); var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="onboard_network_design.json"; a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); },1000); });
+document.getElementById("bImport").addEventListener("click",function(){ document.getElementById("bFile").click(); });
+document.getElementById("bFile").addEventListener("change",function(e){ var f=e.target.files[0]; if(!f) return; var rd=new FileReader(); rd.onload=function(){ try{ var data=JSON.parse(rd.result); if(!data.veh||!data.devs) throw new Error("not a design"); B.veh=data.veh; B.devs=data.devs; B.links=data.links||[]; var st=data.settings||{}; ["chan","ovh","spare","cu","paLine","icLine","days"].forEach(function(k){ if(st[k]!==undefined) B[k]=st[k]; }); uid=Math.max(uid,data.uid||1); B.sel=null; B.selCar={v:0,c:0}; B.tidy=true; syncSelects(); routeAll(); fitAll(); afterChange(); }catch(err){ flash("That file is not a design export."); } }; rd.readAsText(f); e.target.value=""; });
+document.getElementById("bCopy").addEventListener("click",function(){ var t=["Network builder, results"]; B.veh.forEach(function(v,vi){ var av=R.airVeh[vi]; t.push("Vehicle "+(vi+1)+": "+v.cars.map(function(c,ci){ return carName(vi,ci)+" ["+devsIn(vi,ci).map(function(d){return d.label;}).join(", ")+"]"; }).join(" | ")); t.push("  air up "+av.up.toFixed(2)+" down "+av.down.toFixed(2)+" raw "+av.raw.toFixed(2)+" design "+av.design.toFixed(2)+" Mbit/s ("+pct(av.util)+" of "+B.chan+"), transmitting: "+av.routers.map(function(r){return r.label;}).join(", ")); }); B.links.forEach(function(l){ var A=port(l.a), Bq=port(l.b); t.push("Cable "+A.d.label+" "+A.p.name+" to "+Bq.d.label+" "+Bq.p.name+" ("+CABLE[l.kind].name+")"+(l.cap?": fwd "+l.fwd.toFixed(2)+" rev "+l.rev.toFixed(2)+" of "+l.cap:"")); }); R.couplers.forEach(function(cp){ t.push("Coupler "+cp.name+": "+cp.cross.length+" cables, "+cp.pins+" pins"+(cp.fibre?" + "+cp.fibre+" fibres":"")); }); B.devs.forEach(function(d){ d.flows.forEach(function(f){ t.push("Flow "+d.label+" ("+carName(d.v,d.c)+") "+f.label+" to "+(f.to==="wayside"?"wayside":(dev(f.to)?dev(f.to).label:"?"))+": out "+f.out+" in "+f.inn+(f.ok===false?" NO PATH":"")); }); }); var s=t.join("\n"); if(navigator.clipboard) navigator.clipboard.writeText(s); var b=this; b.textContent="Copied"; setTimeout(function(){ b.textContent="Copy results"; },1200); });
+window.buildResize=function(){ fit(); fitAll(); compute(); if(B.tidy) routeAll(); renderInspector(); renderResults(); renderPaletteHead(); renderHint(); draw(); };
+window.addEventListener("resize",function(){ if(!document.getElementById("page-build").hidden){ fit(); draw(); } });
+window.buildTheme=function(){ if(!document.getElementById("page-build").hidden) draw(); };
+newTrain(1,false); syncSelects(); fit(); fitAll(); compute(); routeAll(); renderInspector(); renderResults(); renderPaletteHead(); renderHint(); draw(); requestAnimationFrame(loop);
+})();
+
 </script>
