@@ -52,7 +52,7 @@
   function setMode(m) {
     S.mode = m; save();
     $$(".mode").forEach(b => b.setAttribute("aria-selected", b.dataset.mode === m));
-    ["ft", "rbd", "eta", "mk", "wb", "sum"].forEach(k => { const w = $("#ws-" + k); if (w) w.hidden = m !== k; });
+    ["ft", "rbd", "eta", "mk", "wb", "sum", "cmp"].forEach(k => { const w = $("#ws-" + k); if (w) w.hidden = m !== k; });
     $$(".ftrbd-only").forEach(x => (x.hidden = !["ft", "rbd"].includes(m)));
     fillHeader(); recompute(); fitView();
   }
@@ -870,7 +870,7 @@
     }
     initCollapse();
     verify();
-    const h = location.hash.slice(1), hm = { rbd: "rbd", fta: "ft", eta: "eta", markov: "mk", weibull: "wb", summary: "sum" }[h];
+    const h = location.hash.slice(1), hm = { rbd: "rbd", fta: "ft", eta: "eta", markov: "mk", weibull: "wb", summary: "sum", isograph: "cmp" }[h];
     setMode(hm || S.mode || "sum");
   }
   // shared helpers for the extra workspaces (event tree, Markov, Weibull, project summary)

@@ -267,6 +267,7 @@ tr.nonsaf td{color:var(--ink-3)}
       <button class="mode" role="tab" data-mode="rbd" aria-selected="false">Block diagram <small>RBD</small></button>
       <button class="mode" role="tab" data-mode="mk" aria-selected="false">Markov</button>
       <button class="mode" role="tab" data-mode="wb" aria-selected="false">Weibull</button>
+      <button class="mode" role="tab" data-mode="cmp" aria-selected="false">Isograph check</button>
     </div>
   </div>
   <div class="actions">
@@ -342,6 +343,25 @@ tr.nonsaf td{color:var(--ink-3)}
     <section class="panel"><header><h2>Availability models</h2><span class="note">RBD results against the system targets and subsystem budgets</span></header><div class="body tw" id="sum-rbd"></div></section>
     <section class="panel"><header><h2>Event trees</h2><span class="note">Risk per consequence category against the tolerable frequency</span></header><div class="body tw" id="sum-eta"></div></section>
     <section class="panel"><header><h2>Markov models and Weibull data</h2></header><div class="body"><div class="two"><div class="tw" id="sum-mk"></div><div class="tw" id="sum-wb"></div></div></div></section>
+  </div>
+
+  <!-- ================= COMPARE WITH ISOGRAPH ================= -->
+  <div id="ws-cmp" hidden>
+    <section class="panel"><header><h2>Compare with Isograph</h2><span class="note">Enter the results of the same model from FaultTree+ or Reliability Workbench · saved comparisons are kept with the model as tool-verification evidence</span></header><div class="body">
+      <div class="toolrow"><label class="small">Model <select id="cmp-pick" style="min-width:360px"></select></label></div>
+      <div class="formgrid" id="cmp-in"></div>
+    </div></section>
+    <section class="panel" id="cmp-csbox"><header><h2>Cut sets from Isograph</h2><span class="note">Paste the cut-set report: one cut set per line, event IDs separated by spaces, dots or commas, value last</span></header><div class="body">
+      <div class="toolrow"><label class="small">Values in the pasted list are <select id="cmp-csval"><option value="W">frequency W</option><option value="Q">unavailability Q</option></select></label><span class="muted small">Rail-IQ common-cause events are named CCF_&lt;group&gt;; rename them in Isograph or here to match.</span></div>
+      <textarea id="cmp-cs-in" rows="7" class="mono" style="width:100%;border:1px solid var(--line-2);border-radius:6px;background:var(--input);padding:8px" placeholder="1  IO_SHAFT            4.99E-06&#10;2  DMP1                3.99E-06&#10;3  FAN1 . FAN2         6.62E-08"></textarea>
+    </div></section>
+    <section class="panel"><header><h2>Comparison</h2><span class="note">Rail-IQ uses the quantification method selected above</span></header><div class="body">
+      <div id="cmp-verdict"></div>
+      <div class="tw" id="cmp-out"></div>
+      <div class="tw" id="cmp-csout"></div>
+      <div class="toolrow" style="margin-top:14px"><button class="btn primary" id="cmp-save">Save this comparison as evidence</button><span class="muted small">Records date, Isograph version and file, method, tolerance and every difference.</span></div>
+    </div></section>
+    <section class="panel"><header><h2>Saved comparisons for this model</h2></header><div class="body tw" id="cmp-saved"></div></section>
   </div>
 
   <!-- ================= EVENT TREE ================= -->

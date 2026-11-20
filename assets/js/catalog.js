@@ -278,6 +278,7 @@ window.RAILIQ_CATALOG = [
       "Event trees linked to fault-tree results, risk per consequence category",
       "Markov models (shared repair, standby), uncertainty analysis with error factors, Weibull fitting of life data",
       "Project file with many models and a SIL register across all safety functions",
+      "Isograph check: compare FaultTree+ / RBD results and cut sets, save each comparison as tool-verification evidence",
       "Excel export / import for re-entry in Isograph; 36 verification checks built in"
     ],
     outputs: ["Fault tree diagram", "Cut sets", "Importance", "SIL check", "Block diagram", "Allocation check", "SPF list", "Monte Carlo results", "Excel workbook", "PDF report"],

@@ -221,12 +221,13 @@
   }
 
   /* ================= PROJECT SUMMARY (SIL register) ================= */
+  function isoCell(m) { const c = (m.isoChecks || []).slice(-1)[0]; return c ? H.pill(c.verdict, "agrees", "differs") + " <span class=\"muted small\">" + esc(c.date.slice(0, 10)) + "</span>" : "<span class=\"muted small\">not checked</span>"; }
   function renderSum() {
     const S = H.S;
     const fts = S.fts.map((m, i) => { const r = H.analyseFTModel(m); return { m, i, r }; });
     const nFail = fts.filter(x => x.r.ok && x.r.top.pass === false).length;
-    $("#sum-ft").innerHTML = "<table><thead><tr><th>Safety function / fault tree</th><th class=num>Target THR (/h)</th><th class=num>W achieved (/h)</th><th>SIL band of W</th><th class=num>Q</th><th class=num>Cut sets</th><th>Main contributor</th><th>Result</th><th></th></tr></thead><tbody>" +
-      fts.map(({ m, i, r }) => { if (!r.ok) return "<tr><td>" + esc(m.name) + '</td><td colspan="7" class="bad">' + esc(r.errors[0] || "Model error") + '</td><td><button class="btn sm" data-open="ft:' + i + '">Open</button></td></tr>'; const c = r.cutsets[0]; return "<tr><td>" + esc(m.name) + "</td><td class=num>" + (m.thr ? fE(m.thr) : "—") + "</td><td class=num>" + fE(r.top.W) + "</td><td>" + esc(r.top.sil) + "</td><td class=num>" + fE(r.top.Q) + "</td><td class=num>" + r.cutsets.length + "</td><td>" + (c ? '<span class="mono">' + esc(c.ids.join(" · ")) + "</span> " + fN(c.shareW * 100, 0) + " %" : "—") + "</td><td>" + H.pill(r.top.pass, "meets THR", "THR exceeded") + '</td><td><button class="btn sm" data-open="ft:' + i + '">Open</button></td></tr>'; }).join("") + "</tbody></table>";
+    $("#sum-ft").innerHTML = "<table><thead><tr><th>Safety function / fault tree</th><th class=num>Target THR (/h)</th><th class=num>W achieved (/h)</th><th>SIL band of W</th><th class=num>Q</th><th class=num>Cut sets</th><th>Main contributor</th><th>Result</th><th>Isograph check</th><th></th></tr></thead><tbody>" +
+      fts.map(({ m, i, r }) => { if (!r.ok) return "<tr><td>" + esc(m.name) + '</td><td colspan="7" class="bad">' + esc(r.errors[0] || "Model error") + '</td><td><button class="btn sm" data-open="ft:' + i + '">Open</button></td></tr>'; const c = r.cutsets[0]; return "<tr><td>" + esc(m.name) + "</td><td class=num>" + (m.thr ? fE(m.thr) : "—") + "</td><td class=num>" + fE(r.top.W) + "</td><td>" + esc(r.top.sil) + "</td><td class=num>" + fE(r.top.Q) + "</td><td class=num>" + r.cutsets.length + "</td><td>" + (c ? '<span class="mono">' + esc(c.ids.join(" · ")) + "</span> " + fN(c.shareW * 100, 0) + " %" : "—") + "</td><td>" + H.pill(r.top.pass, "meets THR", "THR exceeded") + "</td><td>" + isoCell(m) + '</td><td><button class="btn sm" data-open="ft:' + i + '">Open</button></td></tr>'; }).join("") + "</tbody></table>";
     $("#sum-rbd").innerHTML = "<table><thead><tr><th>Block diagram</th><th class=num>Availability</th><th class=num>Target</th><th class=num>MTBSAF (h)</th><th class=num>Target</th><th class=num>Single points</th><th class=num>Subsystems over budget</th><th></th></tr></thead><tbody>" +
       S.rbds.map((m, i) => { const r = H.analyseRBDModel(m); if (!r.ok) return "<tr><td>" + esc(m.name) + '</td><td colspan="6" class="bad">' + esc(r.errors[0]) + '</td><td><button class="btn sm" data-open="rbd:' + i + '">Open</button></td></tr>'; const s = r.system, over = r.subs.filter(x => x.passBudget === false).length; return "<tr><td>" + esc(m.name) + "</td><td class=num>" + fP(s.A, 5) + "</td><td class=num>" + (s.targetA ? fN(s.targetA, 4) + " % " + H.pill(s.passA) : "—") + "</td><td class=num>" + fN(s.mtbsaf) + "</td><td class=num>" + (s.targetM ? fN(s.targetM) + " " + H.pill(s.passM) : "—") + "</td><td class=num>" + r.spf.length + "</td><td class=num>" + over + '</td><td><button class="btn sm" data-open="rbd:' + i + '">Open</button></td></tr>'; }).join("") + "</tbody></table>";
     $("#sum-eta").innerHTML = S.etas.length ? "<table><thead><tr><th>Event tree</th><th class=num>Initiating frequency (/h)</th><th>Worst category against its tolerable frequency</th><th>Result</th><th></th></tr></thead><tbody>" +
@@ -235,6 +236,117 @@
     $("#sum-wb").innerHTML = S.wbs.length ? "<table><thead><tr><th>Weibull data set</th><th class=num>Failures</th><th class=num>β (RR)</th><th class=num>η (RR, h)</th><th class=num>β (MLE)</th><th class=num>η (MLE, h)</th><th></th></tr></thead><tbody>" + S.wbs.map((m, i) => { const r = RW.fitWeibull(m.data); return "<tr><td>" + esc(m.name) + "</td><td class=num>" + (r.ok ? r.r : "—") + "</td><td class=num>" + (r.ok ? fN(r.rr.beta, 3) : "—") + "</td><td class=num>" + (r.ok ? fN(r.rr.eta) : "—") + "</td><td class=num>" + (r.ok ? fN(r.mle.beta, 3) : "—") + "</td><td class=num>" + (r.ok ? fN(r.mle.eta) : "—") + '</td><td><button class="btn sm" data-open="wb:' + i + '">Open</button></td></tr>'; }).join("") + "</tbody></table>" : '<p class="muted">No Weibull data sets.</p>';
     $("#sum-note").textContent = S.fts.length + " fault trees · " + S.etas.length + " event trees · " + S.rbds.length + " block diagrams · " + S.mks.length + " Markov · " + S.wbs.length + " Weibull";
     return { bad: nFail > 0, good: nFail === 0, text: "Project of " + (S.fts.length + S.rbds.length + S.etas.length + S.mks.length + S.wbs.length) + " models", result: nFail ? nFail + " THR not met" : "All THR met" };
+  }
+
+  /* ================= COMPARE WITH ISOGRAPH ================= */
+  // Results entered from FaultTree+ / Reliability Workbench are compared with Rail-IQ, using the same
+  // quantification method, and each comparison can be saved with the model as tool-verification evidence.
+  const cmpState = { pick: "ft:0" };
+  function cmpTarget() { const [k, i] = cmpState.pick.split(":"); const L = k === "ft" ? H.S.fts : H.S.rbds; const m = L[+i] || L[0]; return { k, m, i: L.indexOf(m) }; }
+  function epFreq(cs) { // Esary-Proschan style: Σ W_i · Π_{j≠i} (1 − Q_j)
+    let prod = 1; cs.forEach(c => (prod *= 1 - c.Q));
+    return cs.reduce((s, c) => s + c.W * (c.Q < 1 ? prod / (1 - c.Q) : 0), 0);
+  }
+  function railFigures(t) {
+    if (t.k === "ft") {
+      const r = H.analyseFTModel(t.m); if (!r.ok) return { ok: false, errors: r.errors };
+      return { ok: true, r, rows: [
+        { key: "Q", label: "Top-event unavailability Q", exact: r.top.Q, rare: r.top.Qrare, mcub: r.top.Qmcub, fmt: v => fE(v, 4) },
+        { key: "W", label: "Top-event frequency W (/h)", exact: r.top.W, rare: r.top.Wcs, mcub: epFreq(r.cutsets), fmt: v => fE(v, 4) },
+        { key: "N", label: "Number of minimal cut sets", exact: r.cutsets.length, rare: r.cutsets.length, mcub: r.cutsets.length, fmt: v => fN(v) }
+      ] };
+    }
+    const r = H.analyseRBDModel(t.m); if (!r.ok) return { ok: false, errors: r.errors };
+    const s = r.system;
+    return { ok: true, r, rows: [
+      { key: "A", label: "System availability (difference on 1 − A)", exact: s.A, rare: s.A, mcub: s.A, fmt: v => fP(v, 6) },
+      { key: "U", label: "System unavailability", exact: s.Q, rare: s.Q, mcub: s.Q, fmt: v => fE(v, 4) },
+      { key: "W", label: "Failure frequency (/h)", exact: s.W, rare: s.W, mcub: s.W, fmt: v => fE(v, 4) },
+      { key: "MTBF", label: "MTBF / MTBSAF (h)", exact: s.mtbsaf, rare: s.mtbsaf, mcub: s.mtbsaf, fmt: v => fN(v) },
+      { key: "MDT", label: "Mean down time (h)", exact: s.mdt, rare: s.mdt, mcub: s.mdt, fmt: v => fN(v, 3) }
+    ] };
+  }
+  function parseCutSets(text, ids) {
+    const known = new Set(ids), out = [];
+    text.split(/\r?\n/).forEach(line => {
+      if (!line.trim()) return;
+      const toks = line.split(/[\s,;|·.\t]+(?=[A-Za-z_])|[\s,;|\t]+/).map(x => x.trim()).filter(Boolean);
+      const ev = [], other = []; let val = null;
+      toks.forEach(tk => { if (known.has(tk)) ev.push(tk); else if (/^[-+]?\d*\.?\d+(e[-+]?\d+)?$/i.test(tk)) val = parseFloat(tk); else if (/^[A-Za-z_][\w#-]*$/.test(tk) && !/^(order|rank|cut|set|no|q|w|freq|frequency|unavailability)$/i.test(tk)) other.push(tk); });
+      if (ev.length || other.length) out.push({ ev: ev.sort(), other, val, line: line.trim() });
+    });
+    return out;
+  }
+  function cmpForms() {
+    const opts = H.S.fts.map((m, i) => '<option value="ft:' + i + '"' + (cmpState.pick === "ft:" + i ? " selected" : "") + ">Fault tree – " + esc(m.name) + "</option>").join("") +
+      H.S.rbds.map((m, i) => '<option value="rbd:' + i + '"' + (cmpState.pick === "rbd:" + i ? " selected" : "") + ">RBD – " + esc(m.name) + "</option>").join("");
+    $("#cmp-pick").innerHTML = opts;
+    const t = cmpTarget(), iso = t.m.iso = t.m.iso || {};
+    const ft = t.k === "ft";
+    if (iso.tool == null) iso.tool = ft ? "FaultTree+ (Reliability Workbench) v" : "Reliability Workbench – RBD v";
+    $("#cmp-in").innerHTML =
+      '<div class="fld"><label>Isograph product and version</label><input data-ci="tool" value="' + esc(iso.tool || (ft ? "FaultTree+ (Reliability Workbench) v" : "Reliability Workbench – RBD v")) + '"></div>' +
+      '<div class="fld"><label>Isograph file / project reference</label><input data-ci="file" value="' + esc(iso.file || "") + '" placeholder="e.g. P2427_SF_MEP_015.rwb"></div>' +
+      '<div class="fld"><label>Quantification method used in Isograph</label><select data-ci="method"><option value="exact"' + (iso.method === "exact" ? " selected" : "") + ">Exact (BDD)</option><option value=\"rare\"" + (iso.method === "rare" ? " selected" : "") + ">Rare event (sum of cut sets)</option><option value=\"mcub\"" + (iso.method === "mcub" || !iso.method ? " selected" : "") + ">Esary-Proschan / min cut upper bound</option></select><small>Rail-IQ uses the same method for the comparison</small></div>" +
+      '<div class="fld"><label>Acceptance tolerance</label><div class="unit"><input type="number" step="any" data-ci="tol" value="' + esc(iso.tol == null ? 1 : iso.tol) + '"><span>%</span></div></div>' +
+      (ft ? '<div class="fld"><label>Isograph top-event unavailability Q</label><input type="number" step="any" data-ci="Q" value="' + esc(iso.Q == null ? "" : iso.Q) + '"></div>' +
+            '<div class="fld"><label>Isograph top-event frequency W</label><div class="unit"><input type="number" step="any" data-ci="W" value="' + esc(iso.W == null ? "" : iso.W) + '"><span>/h</span></div></div>' +
+            '<div class="fld"><label>Isograph number of cut sets</label><input type="number" data-ci="N" value="' + esc(iso.N == null ? "" : iso.N) + '"></div>'
+         : '<div class="fld"><label>Isograph availability (0–1 or %)</label><input type="number" step="any" data-ci="A" value="' + esc(iso.A == null ? "" : iso.A) + '"></div>' +
+            '<div class="fld"><label>Isograph unavailability</label><input type="number" step="any" data-ci="U" value="' + esc(iso.U == null ? "" : iso.U) + '"></div>' +
+            '<div class="fld"><label>Isograph failure frequency</label><div class="unit"><input type="number" step="any" data-ci="W" value="' + esc(iso.W == null ? "" : iso.W) + '"><span>/h</span></div></div>' +
+            '<div class="fld"><label>Isograph MTBF</label><div class="unit"><input type="number" step="any" data-ci="MTBF" value="' + esc(iso.MTBF == null ? "" : iso.MTBF) + '"><span>h</span></div></div>' +
+            '<div class="fld"><label>Isograph MTTR / MDT</label><div class="unit"><input type="number" step="any" data-ci="MDT" value="' + esc(iso.MDT == null ? "" : iso.MDT) + '"><span>h</span></div></div>');
+    $("#cmp-csbox").hidden = !ft;
+    $("#cmp-cs-in").value = iso.cs || "";
+    $("#cmp-csval").value = iso.csval || "W";
+  }
+  function cmpResults() {
+    const t = cmpTarget(), iso = t.m.iso = t.m.iso || {}, F = railFigures(t), tol = num(iso.tol, 1) / 100;
+    if (!F.ok) { $("#cmp-out").innerHTML = '<p class="bad">Model error: ' + esc(F.errors.join(" ")) + "</p>"; return { bad: true, text: "Model error", result: "Model error" }; }
+    const col = iso.method === "exact" ? "exact" : iso.method === "rare" ? "rare" : "mcub";
+    let n = 0, ok = 0;
+    const rows = F.rows.map(r => {
+      let v = iso[r.key]; if (v === "" || v == null || !isFinite(+v)) return { r, v: null };
+      v = +v; if (r.key === "A" && v > 1) v = v / 100;
+      const rv = r[col], a = r.key === "A" ? 1 - v : v, b = r.key === "A" ? 1 - rv : rv, d = b !== 0 ? (a - b) / b : a === 0 ? 0 : Infinity, pass = r.key === "N" ? v === rv : Math.abs(d) <= tol;
+      n++; if (pass) ok++;
+      return { r, v, rv, d, pass };
+    });
+    const methodName = { exact: "exact (BDD)", rare: "rare event", mcub: "Esary-Proschan / MCUB" }[col];
+    $("#cmp-out").innerHTML = "<table><thead><tr><th>Quantity</th><th class=num>Rail-IQ exact</th><th class=num>Rail-IQ, " + esc(methodName) + "</th><th class=num>Isograph</th><th class=num>Difference</th><th>Within " + fN(tol * 100, 2) + " %</th></tr></thead><tbody>" +
+      rows.map(x => "<tr><td>" + esc(x.r.label) + "</td><td class=num>" + x.r.fmt(x.r.exact) + "</td><td class=num>" + x.r.fmt(x.r[col]) + "</td><td class=num>" + (x.v == null ? '<span class="muted">enter</span>' : x.r.fmt(x.v)) + "</td><td class=num>" + (x.v == null ? "—" : isFinite(x.d) ? (x.d >= 0 ? "+" : "") + fN(x.d * 100, 3) + " %" : "∞") + "</td><td>" + (x.v == null ? "" : H.pill(x.pass, "agrees", "differs")) + "</td></tr>").join("") + "</tbody></table>" +
+      (F.r.top && col !== "exact" ? '<p class="muted small">Exact and approximate values differ by ' + fN(Math.abs(F.r.top.Q - F.r.top[col === "rare" ? "Qrare" : "Qmcub"]) / F.r.top.Q * 100, 3) + " % on Q for this tree. If Isograph agrees with the exact column instead, change the method above.</p>" : "");
+    // cut sets
+    let csHtml = "", csMatch = null;
+    if (t.k === "ft" && (iso.cs || "").trim()) {
+      const ids = Object.keys(F.r.events), parsed = parseCutSets(iso.cs, ids);
+      const rmap = new Map(F.r.cutsets.map(c => [c.ids.slice().sort().join("+"), c]));
+      const seen = new Set(); let m = 0;
+      const lines = parsed.map(p => { const key = p.ev.join("+"), c = rmap.get(key); if (c && !p.other.length) { seen.add(key); m++; const rv = iso.csval === "Q" ? c.Q : c.W, d = p.val != null && rv ? (p.val - rv) / rv : null; return { p, c, d, ok: d == null || Math.abs(d) <= tol }; } return { p, c: null }; });
+      const missing = F.r.cutsets.filter(c => !seen.has(c.ids.slice().sort().join("+")));
+      csMatch = { matched: m, isoOnly: lines.filter(l => !l.c).length, railOnly: missing.length, valuesOk: lines.every(l => !l.c || l.ok) };
+      csHtml = '<div class="kpis" style="margin:10px 0">' + H.kpi("Matched cut sets", fN(m), "same events in both tools", m > 0 && !csMatch.isoOnly && !csMatch.railOnly ? true : null) + H.kpi("Only in Isograph", fN(csMatch.isoOnly), "check event names / CCF modelling", csMatch.isoOnly ? false : null) + H.kpi("Only in Rail-IQ", fN(csMatch.railOnly), "not in the pasted list (fine for a top-N extract or Isograph truncation)", null) + "</div>" +
+        "<table><thead><tr><th>Isograph line</th><th>Rail-IQ cut set</th><th class=num>Isograph value</th><th class=num>Rail-IQ " + (iso.csval === "Q" ? "Q" : "W") + "</th><th class=num>Difference</th><th></th></tr></thead><tbody>" +
+        lines.map(l => '<tr><td class="mono small">' + esc(l.p.line.slice(0, 90)) + "</td><td class=mono>" + (l.c ? esc(l.c.ids.join(" · ")) : '<span class="bad">no match' + (l.p.other.length ? " (" + esc(l.p.other.join(", ")) + ")" : "") + "</span>") + "</td><td class=num>" + (l.p.val != null ? fE(l.p.val, 3) : "—") + "</td><td class=num>" + (l.c ? fE(iso.csval === "Q" ? l.c.Q : l.c.W, 3) : "—") + "</td><td class=num>" + (l.d != null ? (l.d >= 0 ? "+" : "") + fN(l.d * 100, 2) + " %" : "—") + "</td><td>" + (l.c ? H.pill(l.ok, "agrees", "differs") : H.pill(false, "", "missing")) + "</td></tr>").join("") +
+        missing.slice(0, 30).map(c => "<tr><td class=muted>—</td><td class=mono>" + esc(c.ids.join(" · ")) + '</td><td class=num>—</td><td class=num>' + fE(iso.csval === "Q" ? c.Q : c.W, 3) + '</td><td></td><td><span class="pill warn">only in Rail-IQ</span></td></tr>').join("") + "</tbody></table>";
+    }
+    $("#cmp-csout").innerHTML = csHtml;
+    const verdict = n === 0 ? null : ok === n && (!csMatch || (!csMatch.isoOnly && csMatch.valuesOk));
+    $("#cmp-verdict").innerHTML = n === 0 ? '<p class="muted">Enter at least one Isograph result to compare.</p>' : '<div class="kpis">' + H.kpi("Verdict", verdict ? "Tools agree" : "Differences found", ok + " of " + n + " quantities within " + fN(tol * 100, 2) + " %" + (csMatch ? " · cut sets " + csMatch.matched + " matched" : ""), verdict) + "</div>";
+    cmpLast = { date: new Date().toISOString().slice(0, 16).replace("T", " "), tool: iso.tool || "", file: iso.file || "", method: methodName, tol: tol * 100, rows: rows.filter(x => x.v != null).map(x => ({ q: x.r.label, rail: x.r[col], iso: x.v, d: x.d, pass: x.pass })), cs: csMatch, verdict };
+    // saved evidence
+    const saved = t.m.isoChecks || [];
+    $("#cmp-saved").innerHTML = saved.length ? "<table><thead><tr><th>Date</th><th>Isograph</th><th>File</th><th>Method</th><th>Quantities</th><th>Verdict</th><th></th></tr></thead><tbody>" + saved.map((s, i) => "<tr><td class=mono>" + esc(s.date) + "</td><td>" + esc(s.tool) + "</td><td>" + esc(s.file) + "</td><td>" + esc(s.method) + "</td><td class=small>" + s.rows.map(x => esc(x.q) + ": " + (x.d != null && isFinite(x.d) ? (x.d >= 0 ? "+" : "") + fN(x.d * 100, 2) + " %" : "—")).join("<br>") + (s.cs ? "<br>cut sets " + s.cs.matched + " matched, " + s.cs.isoOnly + " / " + s.cs.railOnly + " unmatched" : "") + "</td><td>" + H.pill(s.verdict, "agree", "differ") + '</td><td><button class="btn icon" data-cmpdel="' + i + '">✕</button></td></tr>').join("") + "</tbody></table>" : '<p class="muted">No comparison saved for this model yet. Saved comparisons are stored in the project file and exported to Excel as tool-verification evidence.</p>';
+    return { bad: verdict === false, good: verdict === true, text: n ? ok + " of " + n + " agree" : "Enter Isograph results", result: verdict == null ? "—" : verdict ? "Agrees with Isograph" : "Differs from Isograph" };
+  }
+  let cmpLast = null;
+  function cmpInput(t) {
+    const tg = cmpTarget(), iso = tg.m.iso = tg.m.iso || {}, k = t.dataset.ci;
+    if (k) { iso[k] = ["tool", "file", "method"].includes(k) ? t.value : t.value === "" ? null : num(t.value, null); }
+    else if (t.id === "cmp-cs-in") iso.cs = t.value;
+    else if (t.id === "cmp-csval") iso.csval = t.value;
+    H.save(); later(() => { const st = cmpResults(); $("#status span").textContent = st.text; $("#tb-result").textContent = st.result; $("#tb-result").className = "res " + (st.bad ? "bad" : st.good ? "good" : ""); });
   }
 
   /* ================= Excel export of the extra workspaces ================= */
@@ -248,6 +360,10 @@
     else if (mode === "mk") { const m = mk(), r = RW.analyseMarkov(m); file = "RailIQ_Markov"; add("Summary", head.concat([[], ["Markov model", m.name], ["Availability", r.ok ? r.A : ""], ["Failure frequency (/h)", r.ok ? r.W : ""], ["MUT (h)", r.ok ? r.mut : ""], ["MDT (h)", r.ok ? r.mdt : ""], ["MTTFF (h)", r.ok ? r.mttff : ""]]));
       add("States", [["ID", "Name", "Up", "Initial", "Probability"]].concat(m.states.map((s, i) => [s.id, s.name || "", s.up ? "Y" : "N", s.init ? "Y" : "", r.ok ? r.pi[i].p : ""]))); add("Transitions", [["From", "To", "Rate (/h)", "Note"]].concat(m.trans.map(t => [t.from, t.to, t.rate, t.note || ""]))); }
     else if (mode === "wb") { const m = wb(), r = RW.fitWeibull(m.data); file = "RailIQ_Weibull"; add("Summary", head.concat([[], ["Data set", m.name], ["Beta (RR)", r.ok ? r.rr.beta : ""], ["Eta (RR, h)", r.ok ? r.rr.eta : ""], ["R2", r.ok ? r.rr.r2 : ""], ["Beta (MLE)", r.ok ? r.mle.beta : ""], ["Eta (MLE, h)", r.ok ? r.mle.eta : ""]])); add("Data", [["Time (h)", "Failure (F) / suspension (S)"]].concat(m.data.map(d => [d.t, d.failed === false ? "S" : "F"]))); }
+    else if (mode === "cmp") { const tg = cmpTarget(); file = "RailIQ_Isograph_Comparison"; cmpResults();
+      add("Summary", head.concat([[], ["Model", tg.m.name], ["Isograph product", (tg.m.iso || {}).tool || ""], ["Isograph file", (tg.m.iso || {}).file || ""]]));
+      if (cmpLast) add("Current comparison", [["Quantity", "Rail-IQ (" + cmpLast.method + ")", "Isograph", "Difference", "Within " + cmpLast.tol + " %"]].concat(cmpLast.rows.map(r => [r.q, r.rail, r.iso, r.d, r.pass ? "yes" : "no"])));
+      add("Saved comparisons", [["Date", "Isograph", "File", "Method", "Tolerance %", "Quantity", "Rail-IQ", "Isograph", "Difference", "Agrees", "Verdict"]].concat([].concat.apply([], (tg.m.isoChecks || []).map(s => s.rows.map(r => [s.date, s.tool, s.file, s.method, s.tol, r.q, r.rail, r.iso, r.d, r.pass ? "yes" : "no", s.verdict ? "agree" : "differ"]))))); }
     else { file = "RailIQ_Project_Summary"; add("Summary", head);
       add("SIL register", [["Fault tree", "Target THR (/h)", "W (/h)", "SIL band", "Q", "Meets THR"]].concat(S.fts.map(m => { const r = H.analyseFTModel(m); return r.ok ? [m.name, m.thr || "", r.top.W, r.top.sil, r.top.Q, r.top.pass == null ? "" : r.top.pass ? "yes" : "no"] : [m.name, m.thr || "", "error"]; })));
       add("Block diagrams", [["RBD", "Availability", "Target (%)", "MTBSAF (h)", "Target (h)", "Single points of failure"]].concat(S.rbds.map(m => { const r = H.analyseRBDModel(m); return r.ok ? [m.name, r.system.A, m.targetA || "", r.system.mtbsaf, m.targetMTBSAF || "", r.spf.join(", ")] : [m.name, "error"]; }))); }
@@ -263,6 +379,7 @@
     if (mode === "mk") { if (forms) mkForms(); return mkResults(); }
     if (mode === "wb") { if (forms) wbForms(); return wbResults(); }
     if (mode === "sum") return renderSum();
+    if (mode === "cmp") { cmpForms(); return cmpResults(); }
     return null;
   }
   function init(host) {
@@ -297,6 +414,16 @@
       const f = $("#wb-method").value === "mle" ? wbFit.mle : wbFit.rr;
       b.dist = "weibull"; b.beta = +f.beta.toFixed(4); b.eta = Math.round(f.eta); b.ref = "Weibull fit of " + wb().name + " (" + ($("#wb-method").value === "mle" ? "MLE" : "rank regression") + ")";
       H.save(); H.toast("Block " + id + " now uses Weibull β " + fN(f.beta, 3) + ", η " + fN(f.eta) + " h.");
+    });
+    // compare with Isograph
+    const wc = $("#ws-cmp");
+    $("#cmp-pick").addEventListener("change", e => { cmpState.pick = e.target.value; H.setMode("cmp"); });
+    wc.addEventListener("input", e => { const t = e.target; if (t.tagName === "SELECT" || t.id === "cmp-pick") return; if (t.dataset.ci || t.id === "cmp-cs-in") cmpInput(t); });
+    wc.addEventListener("change", e => { const t = e.target; if (t.tagName === "SELECT" && t.id !== "cmp-pick") cmpInput(t); });
+    wc.addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return; const tg = cmpTarget();
+      if (b.id === "cmp-save") { cmpResults(); if (!cmpLast || !cmpLast.rows.length) { H.toast("Enter Isograph results first."); return; } tg.m.isoChecks = tg.m.isoChecks || []; tg.m.isoChecks.push(cmpLast); H.save(); cmpResults(); H.toast("Comparison saved with the model."); }
+      else if (b.dataset.cmpdel != null) { if (!confirm("Delete this saved comparison?")) return; tg.m.isoChecks.splice(+b.dataset.cmpdel, 1); H.save(); cmpResults(); }
     });
     // summary
     $("#ws-sum").addEventListener("click", e => { const b = e.target.closest("[data-open]"); if (!b) return; const [k, i] = b.dataset.open.split(":"); H.openModel(k, +i); });
