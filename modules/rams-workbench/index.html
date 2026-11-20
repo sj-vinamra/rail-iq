@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAMS Workbench · FTA & RBD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#ECEEE9; --panel:#FAFAF7; --panel-2:#E3E6DF; --input:#FFFFFF; --canvas:#F4F5F1;
+  --ink:#121820; --ink-2:#44505A; --ink-3:#77828B; --line:#D2D6CD; --line-2:#B5BAB0;
+  --accent:#D2480F; --accent-soft:#F8E1D4;
+  --pass:#1E7A4A; --pass-soft:#DAF0E2; --fail:#B3261E; --fail-soft:#F8DEDB; --warn:#9A6200; --warn-soft:#F6EAD1;
+  --bar:#1F6FB2; --grid:#E2E5DD; --gate:#1F6FB2; --event:#121820; --ccf:#7B3FA0;
+  --f-disp:"Saira Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B0F13; --panel:#12181E; --panel-2:#18212A; --input:#0E1419; --canvas:#0F151B;
+  --ink:#E8EDF1; --ink-2:#A6B1BB; --ink-3:#717D88; --line:#222C35; --line-2:#33404C;
+  --accent:#FF7A33; --accent-soft:#3A1F10;
+  --pass:#4FCB86; --pass-soft:#11291C; --fail:#F2756C; --fail-soft:#3B1C1A; --warn:#E5AE4A; --warn-soft:#30240F;
+  --bar:#4FA3EC; --grid:#1D252D; --gate:#4FA3EC; --event:#E8EDF1; --ccf:#B98AE0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B0F13; --panel:#12181E; --panel-2:#18212A; --input:#0E1419; --canvas:#0F151B;
+  --ink:#E8EDF1; --ink-2:#A6B1BB; --ink-3:#717D88; --line:#222C35; --line-2:#33404C;
+  --accent:#FF7A33; --accent-soft:#3A1F10;
+  --pass:#4FCB86; --pass-soft:#11291C; --fail:#F2756C; --fail-soft:#3B1C1A; --warn:#E5AE4A; --warn-soft:#30240F;
+  --bar:#4FA3EC; --grid:#1D252D; --gate:#4FA3EC; --event:#E8EDF1; --ccf:#B98AE0; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--f-body);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+.sheet{max-width:1600px;margin:0 auto;padding:16px 16px 60px;display:flex;flex-direction:column;gap:16px}
+h1,h2,h3,h4{font-family:var(--f-disp);margin:0;letter-spacing:.01em}
+.mono{font-family:var(--f-mono)} .muted{color:var(--ink-3)} .small{font-size:12px} .bad{color:var(--fail)}
+
+.tb{display:grid;grid-template-columns:2fr 1.4fr 1fr 1fr 1.1fr;border:1.5px solid var(--ink);background:var(--panel)}
+.tb>div{padding:10px 12px;border-left:1px solid var(--line-2);min-width:0}
+.tb>div:first-child{border-left:0}
+.tb label{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.tb input{width:100%;border:0;border-bottom:1px dashed var(--line-2);background:transparent;padding:2px 0;font-weight:600}
+.tb input.big{font-family:var(--f-disp);font-size:24px;font-weight:600}
+.tb .res{font-family:var(--f-disp);font-size:22px;font-weight:600}
+.tb .res.good{color:var(--pass)} .tb .res.bad{color:var(--fail)}
+@media (max-width:900px){.tb{grid-template-columns:1fr 1fr}.tb>div{border-left:0;border-top:1px solid var(--line-2)}.tb>div:first-child{grid-column:1/-1;border-top:0}}
+
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border:1px solid var(--line-2);border-radius:7px;background:var(--panel);cursor:pointer;font-size:13.5px;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.btn.sm{height:28px;padding:0 9px;font-size:12.5px}
+.btn.xs{height:22px;padding:0 6px;font-size:11.5px}
+.btn.icon{width:28px;height:28px;padding:0;justify-content:center;color:var(--ink-3)}
+.btn.icon:hover,.btn.danger:hover{color:var(--fail);border-color:var(--fail)}
+.actions .sp{flex:1}
+.actions select{height:34px;border:1px solid var(--line-2);border-radius:7px;background:var(--panel);padding:0 8px;max-width:340px}
+.status{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2)}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--pass)}
+.status.bad i{background:var(--fail)}
+
+.modes{display:flex;gap:0;border:1.5px solid var(--ink);border-radius:8px;overflow:hidden;width:max-content;max-width:100%}
+.mode{border:0;background:var(--panel);padding:9px 18px;cursor:pointer;font-family:var(--f-disp);font-size:18px;font-weight:600;color:var(--ink-2)}
+.mode+.mode{border-left:1.5px solid var(--ink)}
+.mode[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.mode small{font-family:var(--f-body);font-size:12px;font-weight:400;margin-left:6px;opacity:.75}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px}
+.panel>header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.panel>header h2{font-size:22px;font-weight:600}
+.panel>header .note{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);margin-left:auto}
+.panel .body{padding:14px 16px}
+
+/* editor */
+.editor{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:560px}
+@media (max-width:1000px){.editor{grid-template-columns:1fr}}
+.canvas{position:relative;background:var(--canvas);border-right:1px solid var(--line);height:640px;overflow:hidden}
+.canvas svg{width:100%;height:100%;display:block;cursor:grab;touch-action:none;user-select:none}
+@media (max-width:1000px){.canvas{height:480px;border-right:0;border-bottom:1px solid var(--line)}}
+.canvas svg:active{cursor:grabbing}
+.ctools{position:absolute;right:10px;top:10px;display:flex;gap:4px;z-index:2}
+.ctools .btn{height:28px;width:30px;padding:0;justify-content:center;background:var(--panel)}
+.legend{position:absolute;left:10px;bottom:8px;display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:var(--ink-2);background:color-mix(in srgb,var(--panel) 85%,transparent);padding:4px 8px;border-radius:6px}
+.legend svg{width:18px;height:16px;vertical-align:-3px;min-height:0;cursor:default}
+.props{padding:14px 16px;max-height:720px;overflow-y:auto}
+.props h3{font-size:20px;margin-bottom:8px}
+.props h4{font-size:15px;margin:12px 0 4px;color:var(--ink-2)}
+.props .fld{margin-bottom:10px}
+.props .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fld label{display:block;font-size:12.5px;color:var(--ink-2);margin-bottom:3px}
+.fld input,.fld select,.fld textarea{width:100%;min-height:32px;border:1px solid var(--line-2);border-radius:6px;background:var(--input);padding:5px 9px}
+.fld textarea{resize:vertical}
+.fld input[readonly]{background:var(--panel-2)}
+.fld small{display:block;color:var(--ink-3);font-size:11.5px;margin-top:3px}
+.fld .unit{position:relative}
+.fld .unit input{padding-right:38px}
+.fld .unit span{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);pointer-events:none}
+.chk{display:flex;gap:8px;align-items:center;font-size:13px;margin:6px 0}
+.btnrow{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.inl{list-style:none;padding:0;margin:0 0 8px;border:1px solid var(--line);border-radius:6px}
+.inl li{display:flex;align-items:center;gap:4px;padding:4px 6px;border-top:1px solid var(--line);font-size:13px}
+.inl li:first-child{border-top:0}
+.inl .sp{flex:1}
+.mini{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink-2);padding:8px 10px;background:var(--panel-2);border-radius:6px;margin-bottom:10px}
+.mini b{font-family:var(--f-mono);color:var(--ink);font-weight:600}
+input.bad{border-color:var(--fail)!important;background:var(--fail-soft)!important}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+
+/* diagram */
+.nd .box{fill:var(--panel);stroke:var(--line-2);stroke-width:1.2}
+.nd .idbar{fill:var(--panel-2)}
+.nd .idt{font-family:var(--f-mono);font-size:10px;fill:var(--ink-2);font-weight:600}
+.nd .dt{font-family:var(--f-body);font-size:10.5px;fill:var(--ink)}
+.nd .dt.b{font-weight:600;font-size:11.5px}
+.nd .val{font-family:var(--f-mono);font-size:9.5px;fill:var(--ink-2)}
+.nd .stem{stroke:var(--ink-3);stroke-width:1.2}
+.nd .sym{fill:var(--panel);stroke:var(--gate);stroke-width:1.8}
+.nd.event .sym{stroke:var(--event)}
+.nd .sym.dorm{stroke-dasharray:4 2}
+.nd .sym.missing{stroke:var(--fail)}
+.nd .sym.xf{stroke:var(--accent)}
+.nd .symt{font-family:var(--f-mono);font-size:9px;fill:var(--ink);font-weight:600}
+.nd.gate .idbar{fill:color-mix(in srgb,var(--gate) 16%,var(--panel))}
+.nd.sel .box{stroke:var(--accent);stroke-width:2.5}
+.nd.okb .box{stroke:var(--pass);stroke-width:2.5}
+.nd.badb .box{stroke:var(--fail);stroke-width:2.5}
+.nd{cursor:pointer}
+.nd:hover .box{stroke:var(--ink-3)}
+.lnk{fill:none;stroke:var(--ink-3);stroke-width:1.3}
+.lnk.rail{stroke-width:1.6}
+.term{fill:var(--ink)}
+.blk .heat{fill:var(--accent)}
+.blk.spf .box{stroke:var(--fail);stroke-width:2.2}
+.blk .spft{font-family:var(--f-mono);font-size:9px;fill:var(--fail);font-weight:600;letter-spacing:.06em}
+.blk.nonsaf .box{stroke-dasharray:5 3;opacity:.7}
+.blk .kbox{fill:var(--ink)} .blk .kt{font-family:var(--f-mono);font-size:10px;fill:var(--bg);font-weight:600}
+.blk .badge{font-family:var(--f-mono);font-size:9.5px;fill:var(--ink-3)}
+.grp .gbox{fill:color-mix(in srgb,var(--panel-2) 45%,transparent);stroke:var(--line-2);stroke-dasharray:4 3}
+.grp.badg .gbox{stroke:var(--fail)}
+.grp.sel .gbox{stroke:var(--accent);stroke-width:2}
+.grp .gt{font-family:var(--f-disp);font-size:14px;font-weight:600;fill:var(--ink)}
+.grp .gk{font-family:var(--f-mono);font-size:10px;fill:var(--ink-2);font-weight:600}
+.grp{cursor:pointer}
+
+/* tables */
+.tabs{display:flex;gap:2px;padding:0 8px;border-bottom:1px solid var(--line);overflow-x:auto;align-items:center}
+.tab{border:0;background:none;padding:10px 12px;cursor:pointer;color:var(--ink-2);border-bottom:2.5px solid transparent;font-weight:500;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab .cnt{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);margin-left:4px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);font-weight:500;text-align:left;padding:7px 8px;border-bottom:1px solid var(--line-2);white-space:nowrap;background:var(--panel)}
+td{padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.num{font-family:var(--f-mono);font-size:12.5px}
+table.edit td{padding:2px 3px}
+table.edit input[type=text],table.edit input[type=number],table.edit select{width:100%;min-width:56px;height:28px;border:1px solid transparent;border-radius:5px;background:transparent;padding:0 6px}
+table.edit input[type=number]{text-align:right;font-family:var(--f-mono);font-size:12px;min-width:84px}
+table.edit input:hover,table.edit select:hover{border-color:var(--line-2)}
+table.edit input:focus{background:var(--input)}
+tr.rowsel td{background:var(--accent-soft)}
+tr.nonsaf td{color:var(--ink-3)}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.pill.pass{background:var(--pass-soft);color:var(--pass)} .pill.fail{background:var(--fail-soft);color:var(--fail)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.na{background:var(--panel-2);color:var(--ink-3)}
+.inbar{min-width:140px;display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.inbar i{display:block;height:8px;max-width:90px;background:var(--bar);border-radius:2px;opacity:.85}
+.inbar span{min-width:52px;text-align:right}
+.cse{font-family:var(--f-mono);font-size:12px;padding:1px 6px;border-radius:4px;background:var(--panel-2);white-space:nowrap}
+.cse.ccf{background:color-mix(in srgb,var(--ccf) 20%,var(--panel));color:var(--ccf)}
+.cse.spf{background:var(--fail-soft);color:var(--fail)}
+.issues{margin:0 0 12px;padding:10px 14px;border:1px solid var(--fail);background:var(--fail-soft);color:var(--fail);border-radius:6px;font-size:13px}
+.issues.warnonly{border-color:var(--warn);background:var(--warn-soft);color:var(--warn)}
+.issues ul{margin:4px 0 0;padding-left:18px}
+.toolrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.toolrow select{height:30px;border:1px solid var(--line-2);border-radius:6px;background:var(--input)}
+
+.jump{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;padding:8px 2px;background:var(--bg);font-size:13px}
+.jump b{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;color:var(--ink-3);font-weight:500}
+.jump a{color:var(--ink-2);text-decoration:none;border-bottom:1px dotted var(--line-2)}
+.jump a:hover{color:var(--accent)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:10px}
+.kpi{border:1px solid var(--line);border-radius:6px;padding:12px 14px;background:var(--panel)}
+.kpi .l{font-size:12px;color:var(--ink-3)}
+.kpi .v{font-family:var(--f-disp);font-size:30px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:12px;color:var(--ink-2);margin-top:4px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.kpi.pass{border-color:var(--pass)} .kpi.fail{border-color:var(--fail)}
+.chart{width:100%;display:block}
+.chart text{font-family:var(--f-mono);font-size:11px;fill:var(--ink-2)}
+.chart .lbl{font-family:var(--f-body);font-size:12px;fill:var(--ink)}
+.chart .gr{stroke:var(--grid)}
+.chart .bar{fill:var(--bar)}
+.chart .ln{fill:none;stroke:var(--accent);stroke-width:2}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:1000px){.two{grid-template-columns:1fr}}
+.mcform{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;align-items:end;margin-bottom:12px}
+.mcprog{height:4px;background:var(--panel-2);border-radius:2px;overflow:hidden;margin-bottom:12px}
+.mcprog i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.method p,.method li{color:var(--ink-2);max-width:100ch}
+.method h3{font-size:17px;margin:16px 0 4px}
+.method code{font-family:var(--f-mono);font-size:12.5px;background:var(--panel-2);padding:1px 5px;border-radius:3px}
+.note-box{padding:10px 14px;border-left:3px solid var(--warn);background:var(--warn-soft);color:var(--ink);border-radius:0 6px 6px 0;font-size:13px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:13.5px;z-index:50;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+
+@media print{
+  @page{size:A4 landscape;margin:12mm}
+  body{background:#fff;color:#000;font-size:11px}
+  .actions,.jump,.props,.ctools,.tabs,.noprint,.btn,#syslink,.modes{display:none!important}
+  .editor{grid-template-columns:1fr}
+  .canvas{border:0;min-height:0;height:auto}
+  .canvas svg{min-height:420px;height:420px}
+  .panel{border:0;break-inside:avoid-page}
+  .panel>header{padding:6px 0;border-bottom:1.5px solid #000}
+  .panel .body{padding:8px 0}
+  .sheet{padding:0;gap:10px}
+  .tw{overflow:visible}
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="tb">
+    <div><label for="p-name">Project</label><input class="big" id="p-name"></div>
+    <div><label for="p-model">Model</label><input id="p-model"></div>
+    <div><label for="p-doc">Document ref.</label><input id="p-doc"></div>
+    <div><label>Tool</label><div style="font-weight:600;padding-top:3px">RAMS Workbench <span class="pill warn">beta</span></div></div>
+    <div><label>Result</label><div class="res" id="tb-result">—</div></div>
+  </header>
+
+  <div class="actions">
+    <div class="modes" role="tablist" aria-label="Analysis type">
+      <button class="mode" role="tab" data-mode="ft" aria-selected="true">Fault tree <small>FTA</small></button>
+      <button class="mode" role="tab" data-mode="rbd" aria-selected="false">Block diagram <small>RBD</small></button>
+    </div>
+    <select id="sample" aria-label="Open a sample model"></select>
+    <button class="btn" id="b-import" title="Gates / Events / CCF, or Blocks sheets">Import Excel</button>
+    <button class="btn primary" id="b-export">Export Excel</button>
+    <button class="btn" id="b-json">Save model</button>
+    <button class="btn" id="b-jsonin">Open model</button>
+    <button class="btn" id="b-print">Print / PDF</button>
+    <span class="sp"></span>
+    <span class="status" id="status"><i></i><span>Ready</span></span>
+    <input type="file" id="f-xlsx" accept=".xlsx,.xls" hidden>
+    <input type="file" id="f-json" accept=".json" hidden>
+  </div>
+
+  <div id="syslink"></div>
+
+  <!-- ================= FAULT TREE ================= -->
+  <div id="ws-ft">
+    <section class="panel">
+      <header><h2>Fault tree</h2><span class="note">Click a gate or event to edit · drag to pan · wheel to zoom · values under each symbol: Q unavailability, W frequency /h</span></header>
+      <div class="editor">
+        <div class="canvas">
+          <div class="ctools"><button class="btn" data-zoom="in" title="Zoom in">+</button><button class="btn" data-zoom="out" title="Zoom out">−</button><button class="btn" data-zoom="fit" title="Fit to view">⤢</button></div>
+          <svg id="ft-svg" aria-label="Fault tree diagram"><g id="ft-view"></g></svg>
+          <div class="legend">
+            <span><svg viewBox="0 0 30 30"><path d="M2 28 Q15 22 28 28 Q28 8 15 2 Q2 8 2 28Z" fill="none" stroke="var(--gate)" stroke-width="2"/></svg>OR</span>
+            <span><svg viewBox="0 0 30 30"><path d="M2 28 V14 A13 12 0 0 1 28 14 V28Z" fill="none" stroke="var(--gate)" stroke-width="2"/></svg>AND</span>
+            <span><svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="11" fill="none" stroke="var(--event)" stroke-width="2"/></svg>basic event</span>
+            <span><svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="11" fill="none" stroke="var(--event)" stroke-width="2" stroke-dasharray="4 2"/></svg>proof-tested</span>
+            <span><svg viewBox="0 0 30 30"><path d="M15 3 L27 15 L15 27 L3 15Z" fill="none" stroke="var(--event)" stroke-width="2"/></svg>probability</span>
+            <span><svg viewBox="0 0 30 30"><path d="M4 27 V12 L15 3 L26 12 V27Z" fill="none" stroke="var(--event)" stroke-width="2"/></svg>frequency</span>
+            <span><svg viewBox="0 0 30 30"><path d="M3 27 L15 3 L27 27Z" fill="none" stroke="var(--accent)" stroke-width="2"/></svg>transfer</span>
+          </div>
+        </div>
+        <aside class="props" id="ft-props"></aside>
+      </div>
+    </section>
+
+    <section class="panel" id="ft-tables">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" data-tab="tp-ev" aria-selected="true">Events <span class="cnt" id="cnt-ev"></span></button>
+        <button class="tab" role="tab" data-tab="tp-g" aria-selected="false">Gates <span class="cnt" id="cnt-g"></span></button>
+        <button class="tab" role="tab" data-tab="tp-ccf" aria-selected="false">Common cause (β) <span class="cnt" id="cnt-ccf"></span></button>
+      </div>
+      <div class="body" id="tp-ev" role="tabpanel"><div class="toolrow"><button class="btn sm" id="b-addev">+ Add event</button><span class="muted small">Edit in the table like a spreadsheet. Fields that do not apply to the model show –. Rates per hour, times in hours.</span></div><div class="tw"><table class="edit" id="tbl-ev"></table></div></div>
+      <div class="body" id="tp-g" role="tabpanel" hidden><div class="tw"><table class="edit" id="tbl-g"></table></div></div>
+      <div class="body" id="tp-ccf" role="tabpanel" hidden><div class="toolrow"><button class="btn sm" id="b-addccf">+ Add CCF group</button><span class="muted small">Each member keeps (1−β)·λ; one common event with β·λ is added to every member (IEC 61508-6 Annex D, Annex 2 CCFA).</span></div><div class="tw"><table class="edit" id="tbl-ccf"></table></div></div>
+    </section>
+
+    <nav class="jump" aria-label="Fault tree results"><b>RESULTS</b><a href="#ft-r-sum">Summary</a><a href="#ft-r-par">Main contributors</a><a href="#ft-r-cs">Cut sets</a><a href="#ft-r-imp">Importance</a><a href="#ft-r-ccf">Common cause</a><a href="#ft-r-qt">Q(t)</a><a href="#r-verify">Verification</a><a href="#r-method">Method</a></nav>
+    <section class="panel" id="ft-r-sum"><header><h2>Summary</h2><span class="note" id="ft-sumnote"></span></header><div class="body"><div class="issues" id="ft-issues" hidden></div><div class="kpis" id="ft-kpis"></div></div></section>
+    <section class="panel" id="ft-r-par"><header><h2>Main contributors to the top event</h2><span class="note">Largest minimal cut sets by frequency</span></header><div class="body"><svg class="chart" id="ft-pareto" role="img" aria-label="Share of top-event frequency by cut set"></svg></div></section>
+    <section class="panel" id="ft-r-cs"><header><h2>Minimal cut sets</h2><span class="note">Ranked by frequency W · CCF events in purple</span></header><div class="body tw" id="ft-cs"></div></section>
+    <section class="panel" id="ft-r-imp"><header><h2>Importance measures</h2><span class="note">FV Fussell-Vesely · RAW risk achievement worth · RRW risk reduction worth</span></header><div class="body"><div class="toolrow"><label class="small">Sort by <select id="imp-sort"><option value="fvW">FV on frequency</option><option value="fvQ">FV on unavailability</option><option value="IB">Birnbaum</option><option value="crit">Criticality</option><option value="raw">RAW</option><option value="rrw">RRW</option></select></label></div><div class="tw" id="ft-imp"></div></div></section>
+    <section class="panel" id="ft-r-ccf"><header><h2>Common cause failures</h2><span class="note">β-factor model</span></header><div class="body tw" id="ft-ccfres"></div></section>
+    <section class="panel" id="ft-r-qt"><header><h2>Top-event unavailability against time</h2><span class="note">Proof-tested events give the saw-tooth; repairable events reach steady state</span></header><div class="body"><svg class="chart" id="ft-curve" role="img" aria-label="Top event unavailability against time"></svg></div></section>
+  </div>
+
+  <!-- ================= RBD ================= -->
+  <div id="ws-rbd" hidden>
+    <section class="panel">
+      <header><h2>Reliability block diagram</h2><span class="note">Service-affecting failure (SAF) model · click a group twice to open it · red outline: single point of failure · orange bar: share of downtime</span></header>
+      <div class="editor">
+        <div class="canvas">
+          <div class="ctools"><button class="btn" data-zoom="in" title="Zoom in">+</button><button class="btn" data-zoom="out" title="Zoom out">−</button><button class="btn" data-zoom="fit" title="Fit to view">⤢</button></div>
+          <svg id="rbd-svg" aria-label="Reliability block diagram"><g id="rbd-view"></g></svg>
+        </div>
+        <aside class="props" id="rbd-props"></aside>
+      </div>
+    </section>
+    <section class="panel"><header><h2>Block data</h2><span class="note"><span id="cnt-blk"></span> blocks · edit like a spreadsheet · test interval &gt; 0 marks an unrevealed (dormant) failure</span></header><div class="body tw"><table class="edit" id="tbl-blk"></table></div></section>
+
+    <nav class="jump" aria-label="RBD results"><b>RESULTS</b><a href="#rbd-r-sum">Summary</a><a href="#rbd-r-alloc">Allocation</a><a href="#rbd-r-par">Contributors</a><a href="#rbd-r-cs">Cut sets</a><a href="#rbd-r-rel">Reliability</a><a href="#rbd-r-mc">Monte Carlo</a><a href="#r-verify">Verification</a><a href="#r-method">Method</a></nav>
+    <section class="panel" id="rbd-r-sum"><header><h2>Summary</h2><span class="note" id="rbd-sumnote"></span></header><div class="body"><div class="issues" id="rbd-issues" hidden></div><div class="kpis" id="rbd-kpis"></div></div></section>
+    <section class="panel" id="rbd-r-alloc"><header><h2>Allocation check</h2><span class="note">Predicted λ(SAF) of each subsystem against its budget</span></header><div class="body tw" id="rbd-alloc"></div></section>
+    <section class="panel" id="rbd-r-par"><header><h2>Largest contributors to downtime</h2><span class="note">Fussell-Vesely importance by block</span></header><div class="body"><svg class="chart" id="rbd-pareto" role="img" aria-label="Share of system unavailability by block"></svg></div></section>
+    <section class="panel" id="rbd-r-cs"><header><h2>Minimal cut sets</h2><span class="note">Combinations of failed blocks that stop the service · order 1 = single point of failure</span></header><div class="body tw" id="rbd-cs"></div></section>
+    <section class="panel" id="rbd-r-rel"><header><h2>Reliability without repair</h2><span class="note">Probability of no service-affecting failure, exponential or Weibull blocks</span></header><div class="body"><svg class="chart" id="rbd-curve" role="img" aria-label="System reliability against time"></svg></div></section>
+    <section class="panel" id="rbd-r-mc"><header><h2>Monte Carlo life simulation</h2><span class="note">Independent cross-check of the analytic result, with cold standby and proof tests</span></header><div class="body">
+      <div class="mcform">
+        <div class="fld"><label for="mc-runs">Number of lives</label><input id="mc-runs" type="number" value="1000" min="10" step="100"></div>
+        <div class="fld"><label for="mc-years">Life per run</label><div class="unit"><input id="mc-years" type="number" value="20" min="1"><span>yr</span></div></div>
+        <div class="fld"><label for="mc-rep">Repair time</label><select id="mc-rep"><option value="fixed">Fixed = MDT</option><option value="exp">Exponential, mean MDT</option></select></div>
+        <div class="fld"><label for="mc-sw">Standby fails to start</label><input id="mc-sw" type="number" value="0" min="0" max="1" step="0.001"></div>
+        <div class="fld"><label for="mc-seed">Random seed</label><input id="mc-seed" type="number" value="1"></div>
+        <div class="fld"><button class="btn primary" id="b-mc" style="width:100%">Run simulation</button></div>
+      </div>
+      <div class="mcprog"><i id="mc-bar"></i></div>
+      <div id="mc-out"><p class="muted">Simulates the life of the system again and again: random failures, repairs after the down time, unrevealed failures found at the next proof test, and standby units brought in when a duty unit fails. Use it to check the analytic numbers or to model standby behaviour.</p></div>
+    </div></section>
+  </div>
+
+  <section class="panel" id="r-verify"><header><h2>Verification</h2><span class="note" id="ver-note"></span></header><div class="body tw" id="verify"></div></section>
+
+  <section class="panel method" id="r-method"><header><h2>Method & assumptions</h2></header><div class="body">
+    <div class="note-box"><b>Use on P2427.</b> Appendix 5 §2.11.1 and Annex 2 §3.3.8 / §4.8 name the Isograph tools (FaultTree+, AVSim, Reliability Workbench) for the contract analyses. Rail-IQ is a design-stage tool: build and test the logic quickly here, then reproduce the model in Isograph for the deliverable and compare the two results. The Excel export uses one row per gate, event or block to make that re-entry straightforward. Sample failure data is illustrative, not project data.</div>
+    <h3>Fault tree</h3>
+    <ul>
+      <li>Gates: OR, AND and VOTE (k of n inputs failed). Coherent logic; NOT gates are not supported.</li>
+      <li>Events: <b>repairable</b> <code>q = λτ/(1+λτ)</code>, <code>w = λ(1−q)</code>; <b>proof-tested</b> <code>q = 1 − (1 − e^(−λT))/(λT) + λτ ≈ λT/2 + λτ</code>, <code>w = λ(1−q)</code>; <b>non-repairable</b> <code>q = 1 − e^(−λt)</code> at the mission time; <b>probability</b> <code>q = p</code>; <b>initiating event</b> <code>w = f</code>, <code>q = 0</code>.</li>
+      <li>Top event Q and W are solved exactly with a binary decision diagram: <code>P = q·P(hi) + (1−q)·P(lo)</code>, <code>W = w·(P(hi) − P(lo)) + q·W(hi) + (1−q)·W(lo)</code>, which equals <code>Σ wᵢ·∂Q/∂qᵢ</code>. The rare-event and min-cut upper-bound values are shown for comparison with tools that use them.</li>
+      <li>Minimal cut sets come from Boolean expansion with absorption; repeated events are handled exactly. Cut-set frequency <code>W = Σᵢ wᵢ Π_{j≠i} qⱼ</code>.</li>
+      <li>Common cause: β-factor. Members keep (1−β)λ; a common event with βλ (mean of the members) is OR-ed into each member.</li>
+      <li>SIL band of W from EN 50126-2:2017 §10.2.7 Table 2. The target THR comes from the SIL determination; the samples assume SIL 2.</li>
+      <li>Importance: Birnbaum <code>∂Q/∂qᵢ</code>; criticality <code>Iᴮ·qᵢ/Q</code>; Fussell-Vesely on Q and on W from the cut sets; RAW <code>Q(qᵢ=1)/Q</code>; RRW <code>Q/Q(qᵢ=0)</code>.</li>
+    </ul>
+    <h3>Reliability block diagram</h3>
+    <ul>
+      <li>Blocks: n identical units with k required, MTBF (exponential) or Weibull (β, η, mean life <code>η·Γ(1+1/β)</code>), MDT = MALDT + MTTR (Annex 2 §4.10.9), optional proof test with <code>MUFT = T/2</code> added to the down time (Annex 2 §3.3.1).</li>
+      <li>Groups: series, parallel, k of n, standby. The diagram is turned into failure logic and solved with the same BDD. Availability <code>A = 1 − Q</code>, <code>MTBSAF = MUT = A/W</code>, <code>MDT = Q/W</code>, which matches Annex 2 <code>A = MUT/(MUT + MDT)</code>.</li>
+      <li>Steady-state availability uses the mean life of each block, which holds for any failure distribution with renewal at repair. Reliability without repair uses the full Weibull or exponential curve.</li>
+      <li>Single points of failure are the order-1 minimal cut sets of the SAF model (Annex 2 §4.8). Blocks marked non-SAF are left out of the SAF model and counted only in the all-failures MTBF.</li>
+      <li>Subsystems are the top-level groups. Their predicted λ(SAF) is compared with the λ(SAF) budget entered on the group.</li>
+      <li>The analytic model treats standby as active redundancy with independent repair (one repair team per unit). Use the Monte Carlo simulation for cold standby, switching failure and non-exponential repair.</li>
+    </ul>
+    <h3>Not covered</h3>
+    <p>Event trees, Markov models with shared repair crews, phased missions, spares and logistic simulation, NOT logic, uncertainty analysis, and failure-data libraries (NPRD, FMD, EN 61709). These are reasons to keep Isograph for the contract deliverables.</p>
+  </div></section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="../../assets/js/system-link.js"></script>
+<script src="rw_engine.js"></script>
+<script src="rw_tests.js"></script>
+<script src="rw_samples.js"></script>
+<script src="rw_app.js"></script>
+</body>
+</html>

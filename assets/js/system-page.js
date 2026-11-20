@@ -3,7 +3,7 @@
   "use strict";
   const R = window.RailIQ, S = window.RailIQSystem, CAT = window.RAILIQ_CATALOG || [], DIS = window.RAILIQ_DISCIPLINES || {};
   const $ = s => document.querySelector(s), esc = R.esc;
-  const SHORT = { "dc-traction-power": "DC traction power", "apm-onboard-telecom": "APM telecom", "rams": "RAMS", "tunnel-ventilation": "Tunnel ventilation", "noise-vibration": "Noise & vibration" };
+  const SHORT = { "dc-traction-power": "DC traction power", "apm-onboard-telecom": "APM telecom", "rams": "RAMS", "rams-workbench": "FTA / RBD", "tunnel-ventilation": "Tunnel ventilation", "noise-vibration": "Noise & vibration" };
   const STATUS = { pass: ["pass", "Pass"], fail: ["fail", "Fail"], info: ["live", "Run"], stale: ["stale", "Out of date"], none: ["none", "Not run yet"] };
   const short = id => SHORT[id] || (R.byId(id) || {}).title || id;
 
