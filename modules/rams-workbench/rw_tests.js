@@ -84,6 +84,34 @@
     { const sim = RW.simulator({ root: { type: "series", id: "S", children: [{ type: "block", id: "A", mtbf: 100, mdt: 10, dist: "exp" }] } }, { life: 20000, runs: 200, seed: 7, repairDist: "exp" });
       const s = sim.step(200); const exact = 100 / 110;
       out.push({ name: "Monte Carlo single block: analytic A = 0.90909 inside the 95 % interval", got: s.A, exp: exact, pass: exact >= s.Alo && exact <= s.Ahi, ref: "Simulation vs renewal theory" }); }
+    // 17 Markov: one repairable unit
+    { const lam = 1e-3, mu = 0.1; const r = RW.analyseMarkov({ states: [{ id: "U", up: true, init: true }, { id: "D", up: false }], trans: [{ from: "U", to: "D", rate: lam }, { from: "D", to: "U", rate: mu }], horizon: 50 });
+      chk("Markov 1 unit: A = μ/(λ+μ)", r.A, mu / (lam + mu), 1e-12, "Two-state Markov");
+      const t = r.curve[r.curve.length - 1].t; chk("Markov 1 unit: A(t) = μ/(λ+μ) + λ/(λ+μ)·e^(−(λ+μ)t)", r.curve[r.curve.length - 1].A, mu / (lam + mu) + lam / (lam + mu) * Math.exp(-(lam + mu) * t), 1e-9, "Transient solution"); }
+    // 18 Markov: two units, one repair crew (shared repair)
+    { const lam = 1e-3, mu = 0.1; const r = RW.analyseMarkov({ states: [{ id: "2", up: true, init: true }, { id: "1", up: true }, { id: "0", up: false }], trans: [{ from: "2", to: "1", rate: 2 * lam }, { from: "1", to: "0", rate: lam }, { from: "1", to: "2", rate: mu }, { from: "0", to: "1", rate: mu }] });
+      const p0 = 1 / (1 + 2 * lam / mu + 2 * lam * lam / (mu * mu));
+      chk("Markov 1oo2, one repair crew: A = 1 − 2λ²/μ²·π₀", r.A, 1 - 2 * lam * lam / (mu * mu) * p0, 1e-12, "Birth-death chain");
+      chk("Markov 1oo2 with repair: MTTFF = (3λ + μ)/(2λ²)", r.mttff, (3 * lam + mu) / (2 * lam * lam), 1e-9, "Absorbing Markov chain"); }
+    // 19 event tree
+    { const r = RW.analyseETA({ init: { f: 1e-4 }, headings: [{ id: "A", src: "fixed", p: 0.1 }, { id: "B", src: "fixed", p: 0.01 }], cats: [{ id: "X", name: "x", tol: 1e-6 }], outcomes: { FF: "X" } }, () => null);
+      chk("Event tree: sequence F,F frequency = f·pA·pB", r.seqs.find(s => s.path === "FF").f, 1e-4 * 0.1 * 0.01, 1e-12, "Event tree algebra");
+      chk("Event tree: sequence frequencies add up to f", r.total, 1e-4, 1e-12, "Conservation"); }
+    // 20 Weibull rank regression on exact median-rank points
+    { const be = 2.2, et = 5000, N = 10; const data = []; for (let i = 1; i <= N; i++) { const F = (i - 0.3) / (N + 0.4); data.push({ t: et * Math.pow(-Math.log(1 - F), 1 / be), failed: true }); }
+      const r = RW.fitWeibull(data);
+      chk("Weibull rank regression recovers β", r.rr.beta, be, 1e-9, "Median ranks (Bernard)");
+      chk("Weibull rank regression recovers η", r.rr.eta, et, 1e-9, "Median ranks (Bernard)"); }
+    // 21 Weibull MLE on exponential data: β = 1 gives η = Σt / r
+    { const data = [{ t: 100 }, { t: 300 }, { t: 700 }, { t: 1500 }, { t: 400, failed: false }];
+      const r = RW.fitWeibull(data); const b = r.mle.beta;
+      const lhs = data.reduce((s, x) => s + Math.pow(x.t, b) * Math.log(x.t), 0) / data.reduce((s, x) => s + Math.pow(x.t, b), 0) - 1 / b - [100, 300, 700, 1500].reduce((s, t) => s + Math.log(t), 0) / 4;
+      out.push({ name: "Weibull MLE with a suspension: likelihood equation satisfied", got: Math.abs(lhs), exp: 0, pass: Math.abs(lhs) < 1e-8, ref: "MLE score equation" }); }
+    // 22 uncertainty: mean-preserving lognormal on a single event
+    { const m = { top: "T", missionTime: 8760, gates: [{ id: "T", type: "or", inputs: ["A"] }], events: [{ id: "A", model: "freq", f: 1e-6, ef: 3 }] };
+      const u = RW.uncertaintyFT(m, { samples: 20000, seed: 3 });
+      chk("Uncertainty (EF 3): sample mean ≈ point value", u.W.mean, 1e-6, 0.03, "Lognormal, mean preserved");
+      chk("Uncertainty (EF 3): 95th / 50th percentile ≈ EF", u.W.p95 / u.W.p50, 3, 0.05, "Definition of the error factor"); }
     return out;
   }
   root.RailIQRWTests = { run };

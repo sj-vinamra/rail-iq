@@ -158,5 +158,58 @@
   const smallRBD = { name: "Blank RBD", desc: "", hoursPerYear: 8760, missionTime: 24, targetA: 99.9, targetMTBSAF: 1000,
     root: S("SYS", "System", [B("B1", "Block 1", 10000, 4), B("B2", "Block 2 (1 of 2)", 10000, 4, 2, 1)]) };
 
-  root.RailIQRWSamples = { ILL, fts: [ftTVS, ftFire], rbds: [rbdMEP], blankFT: small, blankRBD: smallRBD };
+  ftTVS.uid = "SF_MEP_015"; ftFire.uid = "SF_MEP_013_014"; rbdMEP.uid = "RBD_MEP";
+  // generic-data error factor (EF 3) on every sample event, for the uncertainty analysis
+  [ftTVS, ftFire].forEach(t => t.events.forEach(e => { e.ef = 3; }));
+
+  // Event tree: tunnel train fire, barriers linked to the two fault trees above (their Q = probability of failure on demand)
+  const etaFire = {
+    uid: "ETA_TUNNEL_FIRE",
+    name: "Train fire in a running tunnel – escalation",
+    desc: "Event tree for a train fire stopping in a P2427 running tunnel. Barriers: detection and alarm (SF_MEP_013/014), TVS fire mode (SF_MEP_015), evacuation through cross passages. Initiating frequency and tolerable frequencies are illustrative – set them from the QRA and the Employer risk matrix.",
+    init: { desc: "Train fire, train stops in the running tunnel", f: 2e-6 },
+    headings: [
+      { id: "DET", desc: "Fire detected and alarm transmitted to OCC", src: "ft", ft: "SF_MEP_013_014" },
+      { id: "TVS", desc: "TVS fire mode controls the smoke", src: "ft", ft: "SF_MEP_015" },
+      { id: "EVAC", desc: "Passengers reach a cross passage before untenable conditions", src: "fixed", p: 0.02 }
+    ],
+    cats: [
+      { id: "CA", name: "Catastrophic", tol: 1e-9 },
+      { id: "CR", name: "Critical", tol: 1e-8 },
+      { id: "M", name: "Marginal", tol: 1e-7 },
+      { id: "INS", name: "Insignificant", tol: 0 }
+    ],
+    outcomes: { SSS: "INS", SSF: "M", SFS: "M", SFF: "CR", FSS: "M", FSF: "CR", FFS: "CR", FFF: "CA" }
+  };
+
+  // Markov: fire pumps duty / standby with one repair crew (compare with the RBD standby group and the simulation)
+  const lp = 1 / 20000, mp = 1 / 9;
+  const mkPumps = {
+    uid: "MK_FIRE_PUMPS",
+    name: "Fire pumps duty / standby – one repair crew",
+    desc: "Cold standby (the standby pump does not fail while idle), one repair crew, failure to start on demand 0.01. Rates illustrative.",
+    horizon: 200,
+    states: [
+      { id: "S0", name: "Duty running, standby ready", up: true, init: true },
+      { id: "S1", name: "One pump under repair, other running", up: true },
+      { id: "S2", name: "Both pumps failed", up: false }
+    ],
+    trans: [
+      { from: "S0", to: "S1", rate: lp * 0.99, note: "duty fails, standby starts" },
+      { from: "S0", to: "S2", rate: lp * 0.01, note: "duty fails, standby fails to start" },
+      { from: "S1", to: "S2", rate: lp, note: "running pump fails" },
+      { from: "S1", to: "S0", rate: mp, note: "repair completed" },
+      { from: "S2", to: "S1", rate: mp, note: "one pump repaired (one crew)" }
+    ]
+  };
+
+  // Weibull: illustrative escalator drive removals (hours) – F = failure, S = suspension (still running or removed for other reasons)
+  const wbEsc = {
+    uid: "WB_ESC",
+    name: "Escalator drive unit – removals (illustrative)",
+    desc: "Illustrative life data. Replace with DRACAS / supplier field data. Fitted β and η can be applied to an RBD block.",
+    data: [1850, 3200, 4100, 4600, 5300, 5900, 6100, 7400, 8200, 9900].map(t => ({ t, failed: true })).concat([{ t: 5000, failed: false }, { t: 8000, failed: false }, { t: 10000, failed: false }])
+  };
+
+  root.RailIQRWSamples = { ILL, fts: [ftTVS, ftFire], rbds: [rbdMEP], etas: [etaFire], mks: [mkPumps], wbs: [wbEsc], blankFT: small, blankRBD: smallRBD };
 })(typeof window !== "undefined" ? window : globalThis);

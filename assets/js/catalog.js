@@ -255,8 +255,8 @@ window.RAILIQ_CATALOG = [
   },
   {
     id: "rams-workbench",
-    title: "RAMS Workbench: Fault Tree & RBD",
-    summary: "Fault trees with exact top-event frequency, cut sets, β-factor CCF and SIL check, plus reliability block diagrams with SPF check, allocation and Monte Carlo.",
+    title: "RAMS Workbench: FTA, ETA, RBD, Markov",
+    summary: "Project of fault trees, event trees, block diagrams, Markov models and Weibull fits: exact top-event frequency, SIL register, uncertainty, SPF check and Monte Carlo.",
     description:
       "Isograph-style workbench for design-stage safety and RAM analysis. Fault trees: OR, AND and vote gates; repairable, proof-tested, non-repairable, probability and frequency events; β-factor common-cause groups; exact top-event unavailability and failure frequency from a binary decision diagram; minimal cut sets; Birnbaum, Fussell-Vesely, RAW and RRW importance; THR / SIL band check per EN 50126-2. Block diagrams: series, parallel, k-of-n and standby groups; exponential or Weibull blocks; MDT = MALDT + MTTR with MUFT for proof-tested items (Annex 2); availability, MTBSAF, λ(SAF) against subsystem budgets, single points of failure and a Monte Carlo life simulation as an independent cross-check. Samples are built on P2427 HSR safety functions and the MEP-P2427 allocation. Contract deliverables still use the Isograph tools; Excel export makes re-entry and comparison straightforward.",
     domains: ["metro", "apm", "hsr"],
@@ -264,9 +264,9 @@ window.RAILIQ_CATALOG = [
     subsystem: "Fault tree & block diagram (FTA / RBD)",
     status: "beta",
     entry: "modules/rams-workbench/index.html",
-    version: "1.0 (beta)",
+    version: "2.0 (beta)",
     updated: "2026-11-20",
-    standards: ["IEC 61025", "IEC 61078", "EN 50126-1", "EN 50126-2", "IEC 61508-6"],
+    standards: ["IEC 61025", "IEC 62502", "IEC 61078", "IEC 61165", "IEC 61649", "EN 50126-2", "IEC 61508-6"],
     features: [
       "Graphical fault-tree editor with OR / AND / vote gates, repeated events and transfers",
       "Exact top-event Q and frequency W (binary decision diagram), rare-event and MCUB for comparison",
@@ -275,7 +275,10 @@ window.RAILIQ_CATALOG = [
       "Graphical RBD editor: series, parallel, k-of-n, standby; Weibull or exponential blocks",
       "Annex 2 availability with MALDT, MTTR and MUFT; λ(SAF) against subsystem budgets; SPF list",
       "Monte Carlo life simulation with confidence intervals as an independent cross-check",
-      "Excel export / import for re-entry in Isograph; 25 verification checks built in"
+      "Event trees linked to fault-tree results, risk per consequence category",
+      "Markov models (shared repair, standby), uncertainty analysis with error factors, Weibull fitting of life data",
+      "Project file with many models and a SIL register across all safety functions",
+      "Excel export / import for re-entry in Isograph; 36 verification checks built in"
     ],
     outputs: ["Fault tree diagram", "Cut sets", "Importance", "SIL check", "Block diagram", "Allocation check", "SPF list", "Monte Carlo results", "Excel workbook", "PDF report"],
     resources: []

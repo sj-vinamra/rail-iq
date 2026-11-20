@@ -15,37 +15,83 @@
 
   /* ---------------- state ---------------- */
   let S = load() || fresh();
+  // A project holds several models of each kind (like an Isograph project file)
+  const KINDS = { ft: { list: "fts", label: "Fault tree" }, rbd: { list: "rbds", label: "Block diagram" }, eta: { list: "etas", label: "Event tree" }, mk: { list: "mks", label: "Markov model" }, wb: { list: "wbs", label: "Weibull data set" } };
+  const uid = p => p + Math.random().toString(36).slice(2, 8);
+  function withUid(m, p) { if (!m.uid) m.uid = uid(p); return m; }
   function fresh() {
-    const ft = clone(SAMPLES.fts[0]), rbd = clone(SAMPLES.rbds[0]);
-    return { mode: "ft", project: { name: "P2427 Etihad HSR – Dubai section (MEP-P2427)", doc: "RW-SIM-001 (simulation – not a submission)" }, ft, rbd, opt: { maxOrder: 6, cutoff: 1e-15 } };
+    return {
+      mode: "sum", project: { name: "P2427 Etihad HSR – Dubai section (MEP-P2427)", doc: "RW-SIM-001 (simulation – not a submission)" },
+      fts: SAMPLES.fts.map(x => clone(x)), rbds: SAMPLES.rbds.map(x => clone(x)), etas: (SAMPLES.etas || []).map(x => clone(x)), mks: (SAMPLES.mks || []).map(x => clone(x)), wbs: (SAMPLES.wbs || []).map(x => clone(x)),
+      cur: { ft: 0, rbd: 0, eta: 0, mk: 0, wb: 0 }, opt: { maxOrder: 6, cutoff: 1e-15 }
+    };
   }
-  function load() { try { const v = JSON.parse(localStorage.getItem(KEY)); return v && v.ft && v.rbd ? v : null; } catch (e) { return null; } }
+  function migrate(v) {
+    if (!v) return null;
+    if (v.ft && !v.fts) { v.fts = [v.ft]; v.rbds = [v.rbd]; delete v.ft; delete v.rbd; }
+    if (!v.fts || !v.rbds) return null;
+    ["etas", "mks", "wbs"].forEach(k => { if (!v[k]) v[k] = (SAMPLES[k] || []).map(x => clone(x)); });
+    v.cur = Object.assign({ ft: 0, rbd: 0, eta: 0, mk: 0, wb: 0 }, v.cur || {});
+    return v;
+  }
+  function load() { try { return migrate(JSON.parse(localStorage.getItem(KEY))); } catch (e) { return null; } }
+  function ensure() {
+    S.fts.forEach(m => withUid(m, "ft_")); S.rbds.forEach(m => withUid(m, "rbd_")); S.etas.forEach(m => withUid(m, "eta_")); S.mks.forEach(m => withUid(m, "mk_")); S.wbs.forEach(m => withUid(m, "wb_"));
+    if (!S.fts.length) S.fts.push(withUid(clone(SAMPLES.blankFT), "ft_"));
+    if (!S.rbds.length) S.rbds.push(withUid(clone(SAMPLES.blankRBD), "rbd_"));
+    Object.keys(KINDS).forEach(k => { const L = S[KINDS[k].list]; S.cur[k] = Math.min(Math.max(0, S.cur[k] | 0), Math.max(0, L.length - 1)); });
+  }
   let saveT;
   function save() { clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } }, 300); }
 
   let ftRes = null, rbdRes = null, sel = { ft: null, rbd: null };
   const collapsed = new Set();
+  const curModel = k => S[KINDS[k].list][S.cur[k]];
 
   /* ---------------- mode switch ---------------- */
   function setMode(m) {
     S.mode = m; save();
     $$(".mode").forEach(b => b.setAttribute("aria-selected", b.dataset.mode === m));
-    $("#ws-ft").hidden = m !== "ft"; $("#ws-rbd").hidden = m !== "rbd";
+    ["ft", "rbd", "eta", "mk", "wb", "sum"].forEach(k => { const w = $("#ws-" + k); if (w) w.hidden = m !== k; });
+    $$(".ftrbd-only").forEach(x => (x.hidden = !["ft", "rbd"].includes(m)));
     fillHeader(); recompute(); fitView();
   }
 
   function fillHeader() {
     $("#p-name").value = S.project.name; $("#p-doc").value = S.project.doc;
-    const m = S.mode === "ft" ? S.ft : S.rbd;
-    $("#p-model").value = m.name || "";
-    const sel = $("#sample"); sel.innerHTML = '<option value="">Open a sample…</option>' +
+    const k = KINDS[S.mode];
+    $("#modelbar").hidden = !k;
+    $("#p-model").value = k ? curModel(S.mode).name || "" : "Project summary";
+    $("#p-model").readOnly = !k;
+    if (k) {
+      const L = S[k.list];
+      $("#model-kind").textContent = k.label + "s in this project";
+      $("#model-sel").innerHTML = L.map((x, i) => '<option value="' + i + '"' + (i === S.cur[S.mode] ? " selected" : "") + ">" + esc(x.name || "(unnamed)") + "</option>").join("");
+      $("#model-del").disabled = L.length <= 1;
+    }
+    const sel = $("#sample"); sel.innerHTML = '<option value="">Add a sample model…</option>' +
       SAMPLES.fts.map((x, i) => '<option value="ft:' + i + '">Fault tree – ' + esc(x.name) + "</option>").join("") +
+      (SAMPLES.etas || []).map((x, i) => '<option value="eta:' + i + '">Event tree – ' + esc(x.name) + "</option>").join("") +
       SAMPLES.rbds.map((x, i) => '<option value="rbd:' + i + '">RBD – ' + esc(x.name) + "</option>").join("") +
-      '<option value="ft:new">New blank fault tree</option><option value="rbd:new">New blank RBD</option>';
+      (SAMPLES.mks || []).map((x, i) => '<option value="mk:' + i + '">Markov – ' + esc(x.name) + "</option>").join("") +
+      (SAMPLES.wbs || []).map((x, i) => '<option value="wb:' + i + '">Weibull – ' + esc(x.name) + "</option>").join("");
+  }
+  function addModel(kind, m) {
+    const L = S[KINDS[kind].list]; withUid(m, kind + "_");
+    L.push(m); S.cur[kind] = L.length - 1;
+    if (kind === "ft") sel.ft = null; if (kind === "rbd") { sel.rbd = null; collapsed.clear(); initCollapse(); }
+    setMode(kind);
+  }
+  function blankOf(kind) {
+    if (kind === "ft") return clone(SAMPLES.blankFT);
+    if (kind === "rbd") return clone(SAMPLES.blankRBD);
+    if (kind === "eta") return { name: "New event tree", desc: "", init: { desc: "Initiating event", f: 1e-5 }, headings: [{ id: "H1", desc: "First barrier works", src: "fixed", p: 0.01 }], cats: [{ id: "C1", name: "Critical", tol: 1e-8 }], outcomes: {} };
+    if (kind === "mk") return { name: "New Markov model", desc: "", horizon: 0, states: [{ id: "UP", name: "Working", up: true, init: true }, { id: "DN", name: "Failed", up: false }], trans: [{ from: "UP", to: "DN", rate: 1e-4 }, { from: "DN", to: "UP", rate: 0.25 }] };
+    return { name: "New Weibull data set", desc: "", data: [] };
   }
 
   /* ================= FAULT TREE ================= */
-  const ft = () => S.ft;
+  const ft = () => curModel("ft");
   const gateById = id => ft().gates.find(g => g.id === id);
   const eventById = id => ft().events.find(e => e.id === id);
   function parentsOf(id) { return ft().gates.filter(g => g.inputs.includes(id)); }
@@ -219,7 +265,7 @@
     const m = ft(), res = ftRes && ftRes.ok ? ftRes : null;
     $("#cnt-ev").textContent = m.events.length; $("#cnt-g").textContent = m.gates.length; $("#cnt-ccf").textContent = (m.ccf || []).length;
     const groups = (m.ccf || []).map(c => c.id);
-    $("#tbl-ev").innerHTML = "<thead><tr><th>ID</th><th>Description</th><th>Model</th><th class=num>λ (/h)</th><th class=num>τ MDT (h)</th><th class=num>T test (h)</th><th class=num>q</th><th class=num>f (/h)</th><th>CCF</th><th>Ref.</th><th class=num>q calc</th><th class=num>w calc (/h)</th><th></th></tr></thead><tbody>" +
+    $("#tbl-ev").innerHTML = "<thead><tr><th>ID</th><th>Description</th><th>Model</th><th class=num>λ (/h)</th><th class=num>τ MDT (h)</th><th class=num>T test (h)</th><th class=num>q</th><th class=num>f (/h)</th><th>CCF</th><th class=num title='Error factor: 95th / 50th percentile of the rate'>EF</th><th>Ref.</th><th class=num>q calc</th><th class=num>w calc (/h)</th><th></th></tr></thead><tbody>" +
       m.events.map((e, i) => {
         const f = (RW.MODELS[e.model] || { fields: [] }).fields, r = res && res.events[e.id];
         const inp = k => f.includes(k) ? '<input type="number" step="any" min="0" data-et="' + i + ":" + k + '" value="' + esc(e[k] == null ? "" : e[k]) + '">' : '<span class="muted">–</span>';
@@ -227,7 +273,7 @@
           '<td><select data-et="' + i + ':model">' + Object.keys(RW.MODELS).map(k => '<option value="' + k + '"' + (e.model === k ? " selected" : "") + ">" + RW.MODELS[k].short + "</option>").join("") + "</select></td>" +
           "<td>" + inp("lambda") + "</td><td>" + inp("mdt") + "</td><td>" + inp("ti") + "</td><td>" + inp("q") + "</td><td>" + inp("f") + "</td>" +
           '<td><select data-et="' + i + ':ccf"><option value=""></option>' + groups.map(x => "<option" + (x === e.ccf ? " selected" : "") + ">" + esc(x) + "</option>").join("") + "</select></td>" +
-          '<td><input type="text" data-et="' + i + ':ref" value="' + esc(e.ref || "") + '"></td>' +
+          '<td><input type="number" step="0.5" min="1" data-et="' + i + ':ef" value="' + esc(e.ef == null ? "" : e.ef) + '" placeholder="1"></td><td><input type="text" data-et="' + i + ':ref" value="' + esc(e.ref || "") + '"></td>' +
           '<td class="num">' + (r ? fE(r.q) : "—") + '</td><td class="num">' + (r ? fE(r.w) : "—") + '</td><td><button class="btn icon" data-etdel="' + i + '" title="Delete event">✕</button></td></tr>';
       }).join("") + "</tbody>";
     $("#tbl-g").innerHTML = "<thead><tr><th>ID</th><th>Type</th><th class=num>k</th><th>Description</th><th>Inputs (comma separated)</th><th class=num>Q</th><th class=num>W (/h)</th></tr></thead><tbody>" +
@@ -239,7 +285,7 @@
     const m = ft();
     if (t.dataset.et) { const [i, k] = t.dataset.et.split(":"), e = m.events[+i]; if (!e) return;
       if (k === "id") { const v = t.value.trim(); if (!v || (v !== e.id && (gateById(v) || eventById(v)))) { t.classList.add("bad"); return; } t.classList.remove("bad"); renameRef(e.id, v); if (sel.ft === e.id) sel.ft = v; e.id = v; }
-      else if (["lambda", "mdt", "ti", "q", "f"].includes(k)) e[k] = num(t.value, 0); else e[k] = t.value;
+      else if (["lambda", "mdt", "ti", "q", "f", "ef"].includes(k)) e[k] = num(t.value, 0); else e[k] = t.value;
       changed(k === "model", true); return; }
     if (t.dataset.gt) { const [i, k] = t.dataset.gt.split(":"), g = m.gates[+i]; if (!g) return;
       if (k === "id") { const v = t.value.trim(); if (!v || (v !== g.id && (gateById(v) || eventById(v)))) { t.classList.add("bad"); return; } t.classList.remove("bad"); renameRef(g.id, v); if (sel.ft === g.id) sel.ft = v; g.id = v; }
@@ -294,7 +340,7 @@
   function kpi(l, v, s, ok) { return '<div class="kpi' + (ok === true ? " pass" : ok === false ? " fail" : "") + '"><div class="l">' + esc(l) + '</div><div class="v">' + v + '</div><div class="s">' + s + "</div></div>"; }
 
   /* ================= RBD ================= */
-  const rbd = () => S.rbd;
+  const rbd = () => curModel("rbd");
   function findNode(id, n, parent) {
     n = n || rbd().root;
     if (n.id === id) return { node: n, parent };
@@ -654,6 +700,13 @@
   }
   function recompute() {
     $("#status").className = "status";
+    if (!["ft", "rbd"].includes(S.mode)) {
+      const st = window.RWExt ? window.RWExt.render(S.mode) : { ok: true, text: "" };
+      $("#status").className = "status" + (st && st.bad ? " bad" : "");
+      $("#status span").textContent = (st && st.text) || "Ready";
+      $("#tb-result").textContent = (st && st.result) || "—"; $("#tb-result").className = "res " + (st && st.bad ? "bad" : st && st.good ? "good" : "");
+      return;
+    }
     if (S.mode === "ft") {
       ftRes = RW.analyseFT(ft(), S.opt);
       drawFT(); ftTables(); ftResults(); ftPanel();
@@ -683,6 +736,7 @@
   /* ---------------- Excel exchange ---------------- */
   function exportXlsx() {
     if (!window.XLSX) { toast("Excel library not loaded (needs internet once)."); return; }
+    if (!["ft", "rbd"].includes(S.mode)) { if (window.RWExt) window.RWExt.exportXlsx(S.mode); return; }
     const wb = XLSX.utils.book_new(), add = (name, rows) => XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), name);
     const info = [["Rail-IQ RAMS Workbench export"], ["Project", S.project.name], ["Document ref.", S.project.doc], ["Exported", new Date().toISOString()], ["Note", "Rail-IQ is a design-stage checking tool. Contract deliverables use the Isograph tools named in Appendix 5 §2.11.1; re-enter or import these tables there and compare."]];
     if (S.mode === "ft") {
@@ -735,13 +789,13 @@
           });
           const used = new Set(); m.gates.forEach(g => g.inputs.forEach(i => used.add(i)));
           const top = m.gates.find(g => !used.has(g.id)); m.top = top ? top.id : (m.gates[0] || {}).id;
-          S.ft = m; sel.ft = null; setMode("ft"); toast("Fault tree imported: " + m.gates.length + " gates, " + m.events.length + " events.");
+          addModel("ft", m); toast("Fault tree imported: " + m.gates.length + " gates, " + m.events.length + " events.");
         } else if (bs) {
           const byId = new Map(), rows = [];
           bs.forEach(r => { const id = String(pick(r, "ID")).trim(); if (!id) return; const type = String(pick(r, "Type") || "block").toLowerCase(); const n = { id, type, name: String(pick(r, "Name")) }; if (type === "block") { Object.assign(n, { qty: num(pick(r, "Units"), 1), k: num(pick(r, "k needed"), num(pick(r, "Units"), 1)), dist: String(pick(r, "Distribution") || "exp").toLowerCase(), mtbf: num(pick(r, "MTBF"), 0), beta: num(pick(r, "Weibull beta"), 1), eta: num(pick(r, "Weibull eta"), 0), mdt: num(pick(r, "MDT"), 0), saf: String(pick(r, "SAF") || "Y").toUpperCase() !== "N", dormant: String(pick(r, "Dormant")).toUpperCase() === "Y", ti: num(pick(r, "Test interval"), 0), ref: String(pick(r, "Reference")) }); const ml = pick(r, "MALDT"), mr = pick(r, "MTTR"); if (ml !== "" || mr !== "") { n.maldt = num(ml, 0); n.mttr = num(mr, 0); n.mdt = n.maldt + n.mttr; } } else { n.children = []; const k = pick(r, "k needed"); if (k !== "") n.k = num(k, 1); const lb = pick(r, "Lambda budget"); if (lb !== "") n.lamBudget = num(lb, 0); const ta = pick(r, "Target A"); if (ta !== "") n.targetA = num(ta, 0); } byId.set(id, n); rows.push([n, String(pick(r, "Parent")).trim()]); });
           let rootN = null; rows.forEach(([n, p]) => { if (p && byId.has(p)) byId.get(p).children.push(n); else if (!rootN) rootN = n; });
           if (!rootN || rootN.type === "block") throw new Error("The Blocks sheet needs one group without a parent (the system).");
-          S.rbd = { name: file.name.replace(/\.xlsx?$/i, ""), desc: "Imported from " + file.name, hoursPerYear: S.rbd.hoursPerYear || 8760, missionTime: S.rbd.missionTime || 24, targetA: S.rbd.targetA, targetMTBSAF: S.rbd.targetMTBSAF, root: rootN };
+          const prevR = rbd(); addModel("rbd", { name: file.name.replace(/\.xlsx?$/i, ""), desc: "Imported from " + file.name, hoursPerYear: prevR.hoursPerYear || 8760, missionTime: prevR.missionTime || 24, targetA: prevR.targetA, targetMTBSAF: prevR.targetMTBSAF, root: rootN });
           sel.rbd = null; collapsed.clear(); setMode("rbd"); toast("RBD imported: " + byId.size + " rows.");
         } else toast("No Gates/Events or Blocks sheet found. Use an exported workbook as the template.");
       } catch (err) { toast("Import failed: " + err.message); }
@@ -760,17 +814,29 @@
 
   /* ---------------- wiring ---------------- */
   function init() {
+    ensure();
     fillHeader();
     $$(".mode").forEach(b => b.addEventListener("click", () => setMode(b.dataset.mode)));
     $("#p-name").addEventListener("input", e => { S.project.name = e.target.value; save(); });
     $("#p-doc").addEventListener("input", e => { S.project.doc = e.target.value; save(); });
-    $("#p-model").addEventListener("input", e => { (S.mode === "ft" ? S.ft : S.rbd).name = e.target.value; save(); });
+    $("#p-model").addEventListener("input", e => { if (KINDS[S.mode]) { curModel(S.mode).name = e.target.value; save(); const o = $("#model-sel").selectedOptions[0]; if (o) o.textContent = e.target.value; } });
     $("#sample").addEventListener("change", e => {
       const v = e.target.value; e.target.value = ""; if (!v) return;
       const [k, i] = v.split(":");
-      if (k === "ft") { S.ft = clone(i === "new" ? SAMPLES.blankFT : SAMPLES.fts[+i]); sel.ft = null; setMode("ft"); }
-      else { S.rbd = clone(i === "new" ? SAMPLES.blankRBD : SAMPLES.rbds[+i]); sel.rbd = null; collapsed.clear(); initCollapse(); setMode("rbd"); }
+      const src = { ft: SAMPLES.fts, rbd: SAMPLES.rbds, eta: SAMPLES.etas, mk: SAMPLES.mks, wb: SAMPLES.wbs }[k];
+      const m = clone(src[+i]); delete m.uid;
+      if (S[KINDS[k].list].some(x => x.name === m.name)) m.name += " (copy)";
+      addModel(k, m); toast("Added to the project: " + m.name);
     });
+    $("#model-sel").addEventListener("change", e => { S.cur[S.mode] = +e.target.value; if (S.mode === "ft") sel.ft = null; if (S.mode === "rbd") { sel.rbd = null; collapsed.clear(); initCollapse(); } setMode(S.mode); });
+    $("#model-new").addEventListener("click", () => addModel(S.mode, blankOf(S.mode)));
+    $("#model-dup").addEventListener("click", () => { const m = clone(curModel(S.mode)); delete m.uid; m.name = (m.name || "") + " (copy)"; addModel(S.mode, m); });
+    $("#model-del").addEventListener("click", () => {
+      const L = S[KINDS[S.mode].list]; if (L.length <= 1) return;
+      if (!confirm("Delete \"" + (curModel(S.mode).name || "this model") + "\" from the project? Save the project first if you may need it again.")) return;
+      L.splice(S.cur[S.mode], 1); S.cur[S.mode] = Math.max(0, S.cur[S.mode] - 1); sel.ft = null; sel.rbd = null; setMode(S.mode);
+    });
+    if (window.RWExt) window.RWExt.init(host);
     $("#ft-props").addEventListener("input", e => ftPanelInput(e.target));
     $("#ft-props").addEventListener("change", e => { if (e.target.dataset.addex !== undefined) { const g = gateById(sel.ft); if (g && e.target.value) { g.inputs.push(e.target.value); changed(true); } } else if (e.target.tagName === "SELECT") ftPanelInput(e.target); });
     $("#ft-props").addEventListener("click", e => { const b = e.target.closest("button"); if (b) ftPanelClick(b); });
@@ -796,7 +862,7 @@
     $("#f-xlsx").addEventListener("change", e => { if (e.target.files[0]) importXlsx(e.target.files[0]); e.target.value = ""; });
     $("#b-json").addEventListener("click", () => download("RailIQ_RAMS_Workbench.json", JSON.stringify(S, null, 1)));
     $("#b-jsonin").addEventListener("click", () => $("#f-json").click());
-    $("#f-json").addEventListener("change", e => { const f = e.target.files[0]; if (!f) return; f.text().then(t => { const v = JSON.parse(t); if (v.ft && v.rbd) { S = v; fillHeader(); setMode(S.mode || "ft"); toast("Model opened."); } else toast("Not a RAMS Workbench file."); }).catch(err => toast("Could not read: " + err.message)); e.target.value = ""; });
+    $("#f-json").addEventListener("change", e => { const f = e.target.files[0]; if (!f) return; f.text().then(t => { const v = migrate(JSON.parse(t)); if (v) { S = v; ensure(); sel.ft = null; sel.rbd = null; collapsed.clear(); initCollapse(); fillHeader(); setMode(S.mode || "sum"); toast("Project opened."); } else toast("Not a RAMS Workbench file."); }).catch(err => toast("Could not read: " + err.message)); e.target.value = ""; });
     $("#b-print").addEventListener("click", () => window.print());
     window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(fitView, 150); });
     if (window.RailIQSystem && window.RailIQSystem.mountBar) {
@@ -804,8 +870,17 @@
     }
     initCollapse();
     verify();
-    setMode(location.hash === "#rbd" ? "rbd" : location.hash === "#fta" ? "ft" : S.mode || "ft");
+    const h = location.hash.slice(1), hm = { rbd: "rbd", fta: "ft", eta: "eta", markov: "mk", weibull: "wb", summary: "sum" }[h];
+    setMode(hm || S.mode || "sum");
   }
+  // shared helpers for the extra workspaces (event tree, Markov, Weibull, project summary)
+  const host = {
+    get S() { return S; }, KINDS, curModel, save, toast, esc, num, fE, fN, fP, pill, kpi, lineChart, barChart, setMode, clone,
+    ftValue: uidOrIdx => { const m = S.fts.find(x => x.uid === uidOrIdx); if (!m) return null; const r = RW.analyseFT(m, S.opt); return r.ok ? { ok: true, Q: r.top.Q, W: r.top.W, name: m.name } : { ok: false }; },
+    rbdBlocks: () => { const out = []; (function w(n) { if (n.type === "block") out.push(n); else (n.children || []).forEach(w); })(rbd().root); return out; },
+    openModel: (kind, i) => { S.cur[kind] = i; sel.ft = null; sel.rbd = null; collapsed.clear(); initCollapse(); setMode(kind); },
+    analyseFTModel: m => RW.analyseFT(m, S.opt), analyseRBDModel: m => RW.analyseRBD(m)
+  };
   function initCollapse() { const r = rbd().root; if ((r.children || []).length > 5) r.children.forEach(c => { if (c.type !== "block") collapsed.add(c.id); }); }
   document.addEventListener("DOMContentLoaded", init);
 })();

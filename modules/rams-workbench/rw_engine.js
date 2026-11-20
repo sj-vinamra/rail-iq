@@ -151,7 +151,7 @@
       if (model0 === "freq") { warnings.push("CCF group " + g + ": initiating events cannot share a common cause; ignored."); return; }
       const b = def.beta, mean = k => ms.reduce((s, m) => s + num(m[k]), 0) / ms.length;
       const cid = "CCF_" + g;
-      const ce = { id: cid, desc: "Common cause failure of " + ids.join(", ") + " (β = " + b + ")", model: model0, lambda: b * mean("lambda"), mdt: mean("mdt"), ti: mean("ti"), q: b * mean("q"), isCCF: true };
+      const ce = { id: cid, desc: "Common cause failure of " + ids.join(", ") + " (β = " + b + ")", model: model0, lambda: b * mean("lambda"), mdt: mean("mdt"), ti: mean("ti"), q: b * mean("q"), ef: Math.max(...ms.map(m => num(m.ef, 1))), isCCF: true };
       effEvents.set(cid, ce);
       ids.forEach(i => {
         const e = effEvents.get(i);
@@ -610,5 +610,170 @@
     return { step, summary, units: n, standby: standby.length };
   }
 
-  root.RailIQRW = { MODELS, eventQW, eventQt, silFromRate, SIL_THR, compile, analyseFT, rbdToFT, analyseRBD, simulator, blockMTTF, blockMDT, blockMUFT, blockR, gamma, meanDormant, BDD };
+  /* ---------------- shared: compile + BDD of a fault tree ---------------- */
+  function prepare(model) {
+    const c = compile(model);
+    if (c.errors.length) return { errors: c.errors, warnings: c.warnings || [] };
+    const order = [], idx = new Map();
+    (function dfs(id) { if (c.events.has(id)) { if (!idx.has(id)) { idx.set(id, order.length); order.push(id); } return; } const g = c.gates.get(id); if (!g || g._p) return; g._p = 1; g.inputs.forEach(dfs); })(c.top);
+    c.gates.forEach(g => delete g._p);
+    const bdd = new BDD(), memo = new Map();
+    const build = id => {
+      if (c.events.has(id)) return bdd.mk(idx.get(id), 0, 1);
+      if (memo.has(id)) return memo.get(id);
+      const g = c.gates.get(id), ins = g.inputs.map(build); let r;
+      if (g.type === "or") r = ins.reduce((a, b) => bdd.apply("or", a, b), 0);
+      else if (g.type === "and") r = ins.reduce((a, b) => bdd.apply("and", a, b), 1);
+      else { const k = Math.min(g.k, ins.length); let fa = new Array(k + 1).fill(0); fa[0] = 1; for (let i = ins.length - 1; i >= 0; i--) { const nf = new Array(k + 1); nf[0] = 1; for (let j = 1; j <= k; j++) nf[j] = bdd.apply("or", bdd.apply("and", ins[i], fa[j - 1]), fa[j]); fa = nf; } r = fa[k]; }
+      memo.set(id, r); return r;
+    };
+    const rootN = build(c.top);
+    return { errors: [], warnings: c.warnings, c, order, idx, bdd, rootN, nodes: bdd.reach([rootN]) };
+  }
+  // standard normal by Box-Muller
+  function normal(R) { let u = 0; while (u === 0) u = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * R()); }
+  const pct = (sorted, p) => { if (!sorted.length) return NaN; const x = (sorted.length - 1) * p, i = Math.floor(x), f = x - i; return i + 1 < sorted.length ? sorted[i] * (1 - f) + sorted[i + 1] * f : sorted[i]; };
+
+  /* ---------------- uncertainty analysis of a fault tree ---------------- */
+  // Each event's rate (λ, p or f) is lognormal with its point value as the mean and error factor EF = 95th / 50th percentile.
+  function uncertaintyFT(model, opts) {
+    opts = opts || {};
+    const n = Math.max(50, Math.round(num(opts.samples, 2000))), T = num(model.missionTime, 8760), defEF = num(opts.defaultEF, 1);
+    const p = prepare(model);
+    if (p.errors.length) return { ok: false, errors: p.errors };
+    const evs = p.order.map(id => p.c.events.get(id)), nv = evs.length;
+    const sig = evs.map(e => { const ef = num(e.ef, defEF); return ef > 1 ? Math.log(ef) / 1.6449 : 0; });
+    const R = rng(num(opts.seed, 4242)), q = new Float64Array(nv), w = new Float64Array(nv), Ws = [], Qs = [];
+    for (let s = 0; s < n; s++) {
+      evs.forEach((e, i) => {
+        const m = sig[i] > 0 ? Math.exp(sig[i] * normal(R) - sig[i] * sig[i] / 2) : 1;
+        const x = Object.assign({}, e, { lambda: num(e.lambda) * m, q: Math.min(1, num(e.q) * m), f: num(e.f) * m });
+        const r = eventQW(x, T); q[i] = r.q; w[i] = r.w;
+      });
+      const ev = p.bdd.evaluate(p.nodes, q, w); Ws.push(ev.W[p.rootN]); Qs.push(ev.P[p.rootN]);
+    }
+    const mean = a => a.reduce((s, x) => s + x, 0) / a.length;
+    const Wm = mean(Ws), Qm = mean(Qs);
+    Ws.sort((a, b) => a - b); Qs.sort((a, b) => a - b);
+    const thr = num(model.thr, 0);
+    return {
+      ok: true, n, withEF: sig.filter(x => x > 0).length, nv,
+      W: { mean: Wm, p05: pct(Ws, 0.05), p50: pct(Ws, 0.5), p95: pct(Ws, 0.95), min: Ws[0], max: Ws[Ws.length - 1] },
+      Q: { mean: Qm, p05: pct(Qs, 0.05), p50: pct(Qs, 0.5), p95: pct(Qs, 0.95) },
+      probMeetsTHR: thr > 0 ? Ws.filter(x => x <= thr).length / n : null, thr, samples: Ws
+    };
+  }
+
+  /* ---------------- event tree analysis ---------------- */
+  // eta: { init: {desc, f, ft}, headings: [{id, desc, src: "fixed"|"ft", p, ft, cond: {h, s}}], cats: [{id, name, tol}], outcomes: {path: catId} }
+  // ftValue(id) -> {Q, W} of a fault tree in the project (Q used as the failure probability on demand)
+  function analyseETA(eta, ftValue) {
+    const errors = [], H = eta.headings || [];
+    let f0 = num(eta.init && eta.init.f, 0), initSrc = "entered";
+    if (eta.init && eta.init.ft) { const v = ftValue(eta.init.ft); if (v && v.ok) { f0 = v.W; initSrc = "fault tree " + eta.init.ft; } else errors.push("Initiating event: fault tree " + eta.init.ft + " not found or has errors."); }
+    const pf = H.map(h => {
+      if (h.src === "ft") { const v = ftValue(h.ft); if (!v || !v.ok) { errors.push("Heading " + h.id + ": fault tree " + (h.ft || "(none)") + " not found or has errors."); return 0; } return clamp01(v.Q); }
+      return clamp01(num(h.p, 0));
+    });
+    if (H.length > 10) errors.push("At most 10 headings are supported.");
+    if (errors.length) return { ok: false, errors };
+    const seqs = [];
+    (function walk(i, path, prob, states) {
+      if (i === H.length) { seqs.push({ path: path.join(""), prob, f: f0 * prob, states: states.slice() }); return; }
+      const h = H[i];
+      let asked = true;
+      if (h.cond && h.cond.h) { const j = H.findIndex(x => x.id === h.cond.h); if (j >= 0 && j < i) asked = states[j] === h.cond.s; }
+      if (!asked) { states.push("-"); walk(i + 1, path.concat("-"), prob, states); states.pop(); return; }
+      states.push("S"); walk(i + 1, path.concat("S"), prob * (1 - pf[i]), states); states.pop();
+      states.push("F"); walk(i + 1, path.concat("F"), prob * pf[i], states); states.pop();
+    })(0, [], 1, []);
+    const cats = (eta.cats || []).map(c => ({ id: c.id, name: c.name, tol: num(c.tol, 0), f: 0, n: 0 }));
+    const out = eta.outcomes || {};
+    seqs.forEach((s, i) => { s.n = i + 1; s.cat = out[s.path] || ""; const c = cats.find(x => x.id === s.cat); if (c) { c.f += s.f; c.n++; } });
+    cats.forEach(c => { c.pass = c.tol > 0 ? c.f <= c.tol : null; c.ratio = c.tol > 0 ? c.f / c.tol : null; });
+    return { ok: true, errors: [], f0, initSrc, pf, seqs, cats, total: seqs.reduce((s, x) => s + x.f, 0) };
+  }
+
+  /* ---------------- Markov (continuous-time) ---------------- */
+  function solveLinear(A, b) { // Gaussian elimination with partial pivoting, A n×n (copied)
+    const n = b.length, M = A.map((r, i) => r.slice().concat([b[i]]));
+    for (let c = 0; c < n; c++) {
+      let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
+      if (Math.abs(M[p][c]) < 1e-300) throw new Error("The Markov model is singular (check that every state can be left and reached).");
+      [M[c], M[p]] = [M[p], M[c]];
+      for (let r = 0; r < n; r++) if (r !== c) { const f = M[r][c] / M[c][c]; if (f) for (let k = c; k <= n; k++) M[r][k] -= f * M[c][k]; }
+    }
+    return M.map((r, i) => r[n] / r[i]);
+  }
+  function expm(Qm, t) { // scaling and squaring with a Taylor series
+    const n = Qm.length; let nrm = 0; Qm.forEach(r => { nrm = Math.max(nrm, r.reduce((s, x) => s + Math.abs(x), 0) * t); });
+    let sq = Math.max(0, Math.ceil(Math.log2(nrm)) + 4);
+    const sc = t / Math.pow(2, sq), A = Qm.map(r => r.map(x => x * sc));
+    let E = A.map((r, i) => r.map((_, j) => (i === j ? 1 : 0))), term = E.map(r => r.slice());
+    const mul = (X, Y) => X.map((r, i) => Y[0].map((_, j) => { let s = 0; for (let k = 0; k < n; k++) s += r[k] * Y[k][j]; return s; }));
+    for (let k = 1; k <= 18; k++) { term = mul(term, A).map(r => r.map(x => x / k)); E = E.map((r, i) => r.map((x, j) => x + term[i][j])); }
+    while (sq-- > 0) E = mul(E, E);
+    return E;
+  }
+  // mk: { states: [{id, name, up, init}], trans: [{from, to, rate}], horizon }
+  function analyseMarkov(mk) {
+    const errors = [], S = (mk.states || []).filter(s => s.id), n = S.length, ix = new Map(S.map((s, i) => [s.id, i]));
+    if (n < 2) return { ok: false, errors: ["Define at least two states."] };
+    const Qm = S.map(() => new Array(n).fill(0));
+    (mk.trans || []).forEach(t => {
+      const a = ix.get(t.from), b = ix.get(t.to), r = num(t.rate, NaN);
+      if (a === undefined || b === undefined) { errors.push("Transition " + t.from + " → " + t.to + ": unknown state."); return; }
+      if (a === b) { errors.push("Transition from " + t.from + " to itself."); return; }
+      if (!(r >= 0)) { errors.push("Transition " + t.from + " → " + t.to + ": rate must be ≥ 0."); return; }
+      Qm[a][b] += r;
+    });
+    if (!S.some(s => s.up)) errors.push("Mark at least one state as up.");
+    if (!S.some(s => !s.up)) errors.push("Mark at least one state as down.");
+    if (errors.length) return { ok: false, errors };
+    for (let i = 0; i < n; i++) Qm[i][i] = -Qm[i].reduce((s, x, j) => (j === i ? s : s + x), 0);
+    let pi;
+    try { const A = Qm[0].map((_, j) => Qm.map(r => r[j])); A[n - 1] = new Array(n).fill(1); const b = new Array(n).fill(0); b[n - 1] = 1; pi = solveLinear(A, b); }
+    catch (e) { return { ok: false, errors: [e.message] }; }
+    const up = S.map(s => !!s.up);
+    const A = pi.reduce((s, p, i) => s + (up[i] ? p : 0), 0);
+    let W = 0; for (let i = 0; i < n; i++) if (up[i]) for (let j = 0; j < n; j++) if (!up[j]) W += pi[i] * Qm[i][j];
+    // mean time to first failure from the initial state (down states absorbing)
+    const init = Math.max(0, S.findIndex(s => s.init)), U = S.map((s, i) => i).filter(i => up[i]);
+    let mttff = null;
+    if (up[init]) { try { const M = U.map(i => U.map(j => -Qm[i][j])); const tau = solveLinear(M, U.map(() => 1)); mttff = tau[U.indexOf(init)]; } catch (e) { mttff = Infinity; } }
+    // availability and reliability against time
+    const H = num(mk.horizon, 0) || (W > 0 ? Math.min(5 / Math.max(...S.map((s, i) => -Qm[i][i])) * 50, 1e6) : 1000), np = 100, dt = H / np;
+    const E = expm(Qm, dt), QR = Qm.map((r, i) => r.map((x, j) => (up[i] ? x : 0))), ER = expm(QR, dt);
+    let p = S.map((_, i) => (i === init ? 1 : 0)), pr = p.slice(); const curve = [];
+    const step = (v, M) => M[0].map((_, j) => v.reduce((s, x, i) => s + x * M[i][j], 0));
+    for (let k = 0; k <= np; k++) {
+      curve.push({ t: k * dt, A: p.reduce((s, x, i) => s + (up[i] ? x : 0), 0), R: pr.reduce((s, x, i) => s + (up[i] ? x : 0), 0) });
+      p = step(p, E); pr = step(pr, ER);
+    }
+    return { ok: true, errors: [], pi: S.map((s, i) => ({ id: s.id, name: s.name, up: up[i], p: pi[i], stay: -Qm[i][i] > 0 ? 1 / -Qm[i][i] : Infinity })), A, W, mut: W > 0 ? A / W : Infinity, mdt: W > 0 ? (1 - A) / W : 0, mttff, curve, H };
+  }
+
+  /* ---------------- Weibull fitting of life data ---------------- */
+  // data: [{t, failed}] – failed = false for a suspension (unit removed or still running)
+  function fitWeibull(data) {
+    const d = (data || []).filter(x => num(x.t, 0) > 0).map(x => ({ t: num(x.t), f: x.failed !== false })).sort((a, b) => a.t - b.t);
+    const N = d.length, r = d.filter(x => x.f).length;
+    if (r < 2) return { ok: false, errors: ["At least two failure times are needed."] };
+    // Johnson adjusted ranks and Bernard median ranks
+    let prev = 0; const pts = [];
+    d.forEach((x, i) => { if (!x.f) return; const rev = N - i; const inc = (N + 1 - prev) / (1 + rev); prev += inc; pts.push({ t: x.t, F: (prev - 0.3) / (N + 0.4) }); });
+    // rank regression on Y: ln(−ln(1−F)) = β·ln t − β·ln η
+    const X = pts.map(p => Math.log(p.t)), Y = pts.map(p => Math.log(-Math.log(1 - p.F)));
+    const mx = X.reduce((s, x) => s + x, 0) / X.length, my = Y.reduce((s, y) => s + y, 0) / Y.length;
+    let sxy = 0, sxx = 0, syy = 0; X.forEach((x, i) => { sxy += (x - mx) * (Y[i] - my); sxx += (x - mx) * (x - mx); syy += (Y[i] - my) * (Y[i] - my); });
+    const bR = sxy / sxx, eR = Math.exp(mx - my / bR), r2 = sxy * sxy / (sxx * syy);
+    // maximum likelihood with suspensions
+    const lnF = d.filter(x => x.f).reduce((s, x) => s + Math.log(x.t), 0) / r;
+    const g = b => { let a = 0, c = 0; d.forEach(x => { const tb = Math.pow(x.t, b); a += tb * Math.log(x.t); c += tb; }); return a / c - 1 / b - lnF; };
+    let lo = 0.02, hi = 50; for (let k = 0; k < 200; k++) { const m = (lo + hi) / 2; if (g(m) > 0) hi = m; else lo = m; }
+    const bM = (lo + hi) / 2, eM = Math.pow(d.reduce((s, x) => s + Math.pow(x.t, bM), 0) / r, 1 / bM);
+    return { ok: true, errors: [], N, r, pts, rr: { beta: bR, eta: eR, r2, mttf: eR * gamma(1 + 1 / bR) }, mle: { beta: bM, eta: eM, mttf: eM * gamma(1 + 1 / bM) } };
+  }
+
+  root.RailIQRW = { prepare, uncertaintyFT, analyseETA, analyseMarkov, fitWeibull, expm, MODELS, eventQW, eventQt, silFromRate, SIL_THR, compile, analyseFT, rbdToFT, analyseRBD, simulator, blockMTTF, blockMDT, blockMUFT, blockR, gamma, meanDormant, BDD };
 })(typeof window !== "undefined" ? window : globalThis);

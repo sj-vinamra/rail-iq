@@ -204,6 +204,33 @@ tr.nonsaf td{color:var(--ink-3)}
 .method h3{font-size:17px;margin:16px 0 4px}
 .method code{font-family:var(--f-mono);font-size:12.5px;background:var(--panel-2);padding:1px 5px;border-radius:3px}
 .note-box{padding:10px 14px;border-left:3px solid var(--warn);background:var(--warn-soft);color:var(--ink);border-radius:0 6px 6px 0;font-size:13px}
+.modelbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:4px 8px;border:1px solid var(--line-2);border-radius:8px;background:var(--panel)}
+.modelbar select{height:28px;border:1px solid var(--line-2);border-radius:6px;background:var(--input);max-width:380px}
+.modes{flex-wrap:wrap}
+.mode{font-size:16px;padding:8px 14px}
+.formgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px 16px}
+.formgrid .wide{grid-column:1/-1}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.chart .dot{fill:var(--bar);stroke:var(--panel);stroke-width:1}
+.chart .ln1{stroke:var(--bar)} .chart .ln2{stroke:var(--pass);stroke-dasharray:6 4}
+.chart .vl{stroke:var(--fail);stroke-width:1.5;stroke-dasharray:5 4} .chart .vlt{fill:var(--fail)}
+.etsvg{min-width:900px}
+.etsvg .etah{fill:var(--panel-2)}
+.etsvg .eth{font-family:var(--f-mono);font-size:11px;font-weight:600;fill:var(--ink)}
+.etsvg .etd{font-family:var(--f-body);font-size:11px;fill:var(--ink-2)}
+.etsvg .etv{font-family:var(--f-mono);font-size:11px;fill:var(--accent)}
+.etsvg .etsep{stroke:var(--line);stroke-dasharray:3 4}
+.etsvg .etl{fill:none;stroke:var(--ink-2);stroke-width:1.6}
+.etsvg .etl.fail{stroke:var(--fail)}
+.etsvg .etb{font-family:var(--f-mono);font-size:9.5px;fill:var(--ink-3)}
+.etsvg .ets{font-family:var(--f-mono);font-size:11.5px;fill:var(--ink)}
+#mk-svg .mks circle{fill:var(--panel);stroke-width:2.5}
+#mk-svg .mks.up circle{stroke:var(--pass)} #mk-svg .mks.dn circle{stroke:var(--fail)}
+#mk-svg .mkid{font-family:var(--f-disp);font-size:16px;font-weight:600;fill:var(--ink)}
+#mk-svg .mkp{font-family:var(--f-mono);font-size:10px;fill:var(--ink-2)}
+#mk-svg .mkt{fill:none;stroke:var(--ink-3);stroke-width:1.4}
+#mk-svg .arrh{fill:var(--ink-3)}
+#mk-svg .mkl{font-family:var(--f-mono);font-size:10.5px;fill:var(--accent)}
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:13.5px;z-index:50;box-shadow:0 8px 30px rgba(0,0,0,.25)}
 
 @media print{
@@ -234,14 +261,21 @@ tr.nonsaf td{color:var(--ink-3)}
 
   <div class="actions">
     <div class="modes" role="tablist" aria-label="Analysis type">
+      <button class="mode" role="tab" data-mode="sum" aria-selected="false">Project <small>SIL register</small></button>
       <button class="mode" role="tab" data-mode="ft" aria-selected="true">Fault tree <small>FTA</small></button>
+      <button class="mode" role="tab" data-mode="eta" aria-selected="false">Event tree <small>ETA</small></button>
       <button class="mode" role="tab" data-mode="rbd" aria-selected="false">Block diagram <small>RBD</small></button>
+      <button class="mode" role="tab" data-mode="mk" aria-selected="false">Markov</button>
+      <button class="mode" role="tab" data-mode="wb" aria-selected="false">Weibull</button>
     </div>
-    <select id="sample" aria-label="Open a sample model"></select>
+  </div>
+  <div class="actions">
+    <div class="modelbar" id="modelbar"><span class="mono small muted" id="model-kind"></span><select id="model-sel" aria-label="Model in this project"></select><button class="btn sm" id="model-new">+ New</button><button class="btn sm" id="model-dup">Duplicate</button><button class="btn sm danger" id="model-del">Delete</button></div>
+    <select id="sample" aria-label="Add a sample model"></select>
     <button class="btn" id="b-import" title="Gates / Events / CCF, or Blocks sheets">Import Excel</button>
     <button class="btn primary" id="b-export">Export Excel</button>
-    <button class="btn" id="b-json">Save model</button>
-    <button class="btn" id="b-jsonin">Open model</button>
+    <button class="btn" id="b-json" title="All models in one file">Save project</button>
+    <button class="btn" id="b-jsonin">Open project</button>
     <button class="btn" id="b-print">Print / PDF</button>
     <span class="sp"></span>
     <span class="status" id="status"><i></i><span>Ready</span></span>
@@ -291,6 +325,66 @@ tr.nonsaf td{color:var(--ink-3)}
     <section class="panel" id="ft-r-imp"><header><h2>Importance measures</h2><span class="note">FV Fussell-Vesely · RAW risk achievement worth · RRW risk reduction worth</span></header><div class="body"><div class="toolrow"><label class="small">Sort by <select id="imp-sort"><option value="fvW">FV on frequency</option><option value="fvQ">FV on unavailability</option><option value="IB">Birnbaum</option><option value="crit">Criticality</option><option value="raw">RAW</option><option value="rrw">RRW</option></select></label></div><div class="tw" id="ft-imp"></div></div></section>
     <section class="panel" id="ft-r-ccf"><header><h2>Common cause failures</h2><span class="note">β-factor model</span></header><div class="body tw" id="ft-ccfres"></div></section>
     <section class="panel" id="ft-r-qt"><header><h2>Top-event unavailability against time</h2><span class="note">Proof-tested events give the saw-tooth; repairable events reach steady state</span></header><div class="body"><svg class="chart" id="ft-curve" role="img" aria-label="Top event unavailability against time"></svg></div></section>
+    <section class="panel" id="ft-r-unc"><header><h2>Uncertainty analysis</h2><span class="note">Monte Carlo on lognormal failure data · EF = 95th / 50th percentile, entered per event in the Events table</span></header><div class="body">
+      <div class="mcform">
+        <div class="fld"><label for="unc-n">Samples</label><input id="unc-n" type="number" value="5000" min="100" step="1000"></div>
+        <div class="fld"><label for="unc-ef">Default EF for events without one</label><input id="unc-ef" type="number" value="1" min="1" step="0.5"><small>1 = no uncertainty; 3 to 10 is usual for generic data</small></div>
+        <div class="fld"><button class="btn primary" id="b-unc" style="width:100%">Run uncertainty analysis</button></div>
+      </div>
+      <div id="unc-out"><p class="muted">Gives the spread of the top-event frequency from the spread of the failure data, and the confidence that the THR is met.</p></div>
+      <svg class="chart" id="unc-chart" role="img" aria-label="Cumulative distribution of the top-event frequency"></svg>
+    </div></section>
+  </div>
+
+  <!-- ================= PROJECT SUMMARY ================= -->
+  <div id="ws-sum" hidden>
+    <section class="panel"><header><h2>Safety functions – SIL register</h2><span class="note" id="sum-note"></span></header><div class="body tw" id="sum-ft"></div></section>
+    <section class="panel"><header><h2>Availability models</h2><span class="note">RBD results against the system targets and subsystem budgets</span></header><div class="body tw" id="sum-rbd"></div></section>
+    <section class="panel"><header><h2>Event trees</h2><span class="note">Risk per consequence category against the tolerable frequency</span></header><div class="body tw" id="sum-eta"></div></section>
+    <section class="panel"><header><h2>Markov models and Weibull data</h2></header><div class="body"><div class="two"><div class="tw" id="sum-mk"></div><div class="tw" id="sum-wb"></div></div></div></section>
+  </div>
+
+  <!-- ================= EVENT TREE ================= -->
+  <div id="ws-eta" hidden>
+    <section class="panel"><header><h2>Event tree</h2><span class="note">Upper branch = barrier works, lower branch (red) = barrier fails · headings can take Q from a fault tree in this project</span></header><div class="body tw"><svg class="chart etsvg" id="eta-svg" role="img" aria-label="Event tree diagram"></svg></div></section>
+    <section class="panel"><header><h2>Initiating event and barriers</h2></header><div class="body">
+      <div class="issues" id="eta-issues" hidden></div>
+      <div class="formgrid" id="eta-init"></div>
+      <div class="toolrow" style="margin-top:14px"><button class="btn sm" id="eta-addh">+ Heading</button><span class="muted small">Headings are in time order. A heading linked to a fault tree uses that tree's unavailability Q as its probability of failure on demand (independence assumed).</span></div>
+      <div class="tw"><table class="edit" id="eta-heads"></table></div>
+      <div class="toolrow" style="margin-top:14px"><button class="btn sm" id="eta-addc">+ Consequence category</button><span class="muted small">Tolerable frequencies come from the risk acceptance criteria (Employer risk matrix / CSM-RA).</span></div>
+      <div class="tw"><table class="edit" id="eta-cats"></table></div>
+    </div></section>
+    <section class="panel"><header><h2>Risk by consequence</h2></header><div class="body"><div class="kpis" id="eta-kpis"></div></div></section>
+    <section class="panel"><header><h2>Sequences</h2><span class="note">Assign each end state to a consequence category</span></header><div class="body tw" id="eta-seq"></div></section>
+  </div>
+
+  <!-- ================= MARKOV ================= -->
+  <div id="ws-mk" hidden>
+    <section class="panel"><header><h2>Markov model</h2><span class="note">Green = system up, red = system down · arrows show transition rates per hour · numbers in circles are steady-state probabilities</span></header>
+      <div class="body"><div class="two"><div><svg class="chart" id="mk-svg" role="img" aria-label="Markov state diagram"></svg></div><div>
+        <div class="issues" id="mk-issues" hidden></div>
+        <div class="formgrid" id="mk-set"></div>
+        <div class="toolrow" style="margin-top:10px"><button class="btn sm" id="mk-adds">+ State</button></div>
+        <div class="tw"><table class="edit" id="mk-states"></table></div>
+        <div class="toolrow" style="margin-top:14px"><button class="btn sm" id="mk-addt">+ Transition</button><span class="muted small">Failure rate λ = 1/MTBF, repair rate μ = 1/MDT</span></div>
+        <div class="tw"><table class="edit" id="mk-trans"></table></div>
+      </div></div></div></section>
+    <section class="panel"><header><h2>Results</h2></header><div class="body"><div class="kpis" id="mk-kpis"></div><div class="tw" id="mk-pi" style="margin-top:12px"></div></div></section>
+    <section class="panel"><header><h2>Availability and reliability against time</h2><span class="note">From the starting state</span></header><div class="body"><svg class="chart" id="mk-curve" role="img" aria-label="Availability and reliability against time"></svg></div></section>
+  </div>
+
+  <!-- ================= WEIBULL ================= -->
+  <div id="ws-wb" hidden>
+    <section class="panel"><header><h2>Weibull analysis of life data</h2><span class="note">Median-rank regression (Bernard, Johnson adjusted ranks) and maximum likelihood with suspensions</span></header><div class="body"><div class="two">
+      <div><div class="fld"><label for="wb-data">Times to failure (h), one per line · add S after a time for a suspension (unit still running or removed for another reason)</label><textarea id="wb-data" rows="14" class="mono"></textarea></div>
+        <div class="issues" id="wb-issues" hidden></div>
+        <h4 style="margin:12px 0 6px">Use the fit in a block diagram</h4>
+        <div class="toolrow"><select id="wb-block" aria-label="RBD block"></select><select id="wb-method"><option value="rr">rank regression</option><option value="mle">maximum likelihood</option></select><button class="btn sm primary" id="wb-apply">Apply to block</button></div>
+        <p class="muted small">Blocks of the current RBD: <span id="wb-rbdname"></span>. The block switches to a Weibull distribution with the fitted β and η.</p></div>
+      <div><div class="kpis" id="wb-kpis"></div></div>
+    </div></div></section>
+    <section class="panel"><header><h2>Weibull probability plot</h2></header><div class="body"><svg class="chart" id="wb-plot" role="img" aria-label="Weibull probability plot"></svg></div></section>
   </div>
 
   <!-- ================= RBD ================= -->
@@ -350,8 +444,24 @@ tr.nonsaf td{color:var(--ink-3)}
       <li>Subsystems are the top-level groups. Their predicted λ(SAF) is compared with the λ(SAF) budget entered on the group.</li>
       <li>The analytic model treats standby as active redundancy with independent repair (one repair team per unit). Use the Monte Carlo simulation for cold standby, switching failure and non-exponential repair.</li>
     </ul>
+    <h3>Event tree</h3>
+    <ul>
+      <li>Sequence frequency <code>f × Π (1 − pᵢ) or pᵢ</code> along the path; a heading can be asked only after a given earlier outcome.</li>
+      <li>A heading linked to a fault tree uses that tree's unavailability Q as its failure probability on demand, assuming the barriers are independent. The initiating frequency can be the W of a fault tree.</li>
+      <li>Risk per consequence category is the sum of its sequences, compared with the tolerable frequency entered from the risk acceptance criteria.</li>
+    </ul>
+    <h3>Markov</h3>
+    <ul>
+      <li>Continuous-time Markov chain. Steady state from <code>πQ = 0, Σπ = 1</code>; availability <code>Σ π(up)</code>; failure frequency <code>Σ π(up)·q(up→down)</code>; MUT and MDT from these.</li>
+      <li>Mean time to first failure from the starting state with down states made absorbing: <code>(−Q_UU)·τ = 1</code>. A(t) and R(t) by the matrix exponential (scaling and squaring).</li>
+      <li>Use it for shared repair crews, cold standby with switching failures, or any dependency the RBD cannot express.</li>
+    </ul>
+    <h3>Uncertainty</h3>
+    <p>Each event rate is lognormal with its point value as the mean and error factor <code>EF = x95 / x50</code> (σ = ln EF / 1.645). Monte Carlo sampling through the exact BDD gives the 5th, 50th and 95th percentiles of W and the share of samples meeting the THR.</p>
+    <h3>Weibull</h3>
+    <p>Median-rank regression on Y with Bernard's approximation and Johnson's adjusted ranks for suspensions; maximum likelihood with suspensions by solving the score equation for β. Mean life <code>η·Γ(1+1/β)</code>. A fit can be applied to any RBD block.</p>
     <h3>Not covered</h3>
-    <p>Event trees, Markov models with shared repair crews, phased missions, spares and logistic simulation, NOT logic, uncertainty analysis, and failure-data libraries (NPRD, FMD, EN 61709). These are reasons to keep Isograph for the contract deliverables.</p>
+    <p>Phased missions, spares and logistic simulation, NOT logic, failure-data libraries (NPRD, FMD, EN 61709 are licensed and not included), and the tool qualification and track record of a commercial package. These are reasons to keep Isograph for the contract deliverables and use Rail-IQ to check them.</p>
   </div></section>
 </div>
 
@@ -360,6 +470,7 @@ tr.nonsaf td{color:var(--ink-3)}
 <script src="rw_engine.js"></script>
 <script src="rw_tests.js"></script>
 <script src="rw_samples.js"></script>
+<script src="rw_ext.js"></script>
 <script src="rw_app.js"></script>
 </body>
 </html>
